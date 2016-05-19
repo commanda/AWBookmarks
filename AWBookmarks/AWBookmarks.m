@@ -40,11 +40,13 @@
     
     // Create menu items, initialize UI, etc.
     // Sample Menu Item:
-    NSMenuItem *menuItem = [[NSApp mainMenu] itemWithTitle:@"Edit"];
+    NSMenuItem *menuItem = [[NSApp mainMenu] itemWithTitle:@"View"];
     if (menuItem) {
         [[menuItem submenu] addItem:[NSMenuItem separatorItem]];
-        NSMenuItem *actionMenuItem = [[NSMenuItem alloc] initWithTitle:@"Amanda!" action:@selector(doMenuAction) keyEquivalent:@""];
-        //[actionMenuItem setKeyEquivalentModifierMask:NSAlphaShiftKeyMask | NSControlKeyMask];
+        NSMenuItem *actionMenuItem = [[NSMenuItem alloc] initWithTitle:@"Bookmarks"
+                                                                action:@selector(doMenuAction)
+                                                         keyEquivalent:@"b"];
+        [actionMenuItem setKeyEquivalentModifierMask:NSControlKeyMask];
         [actionMenuItem setTarget:self];
         [[menuItem submenu] addItem:actionMenuItem];
     }
