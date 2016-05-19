@@ -7,6 +7,7 @@
 //
 
 #import "AWBookmarks.h"
+#import "CommonDefines.h"
 
 @interface AWBookmarks()
 
@@ -19,7 +20,7 @@
 {
     return sharedPlugin;
 }
-// TODO: test! amanda
+
 - (id)initWithBundle:(NSBundle *)plugin
 {
     if (self = [super init]) {
@@ -44,7 +45,7 @@
     if (menuItem) {
         [[menuItem submenu] addItem:[NSMenuItem separatorItem]];
         NSMenuItem *actionMenuItem = [[NSMenuItem alloc] initWithTitle:@"Bookmarks"
-                                                                action:@selector(doMenuAction)
+                                                                action:@selector(toggleBookmarksWindow)
                                                          keyEquivalent:@"b"];
         [actionMenuItem setKeyEquivalentModifierMask:NSControlKeyMask];
         [actionMenuItem setTarget:self];
@@ -53,11 +54,9 @@
 }
 
 // Sample Action, for menu item:
-- (void)doMenuAction
+- (void)toggleBookmarksWindow
 {
-    NSAlert *alert = [[NSAlert alloc] init];
-    [alert setMessageText:@"Hello, World"];
-    [alert runModal];
+    DLOG(@"wow");
 }
 
 - (void)dealloc

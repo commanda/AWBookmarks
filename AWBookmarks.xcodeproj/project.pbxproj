@@ -25,6 +25,7 @@
 		374A48301CEC0A7500D68C7A /* NSObject_Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSObject_Extension.h; sourceTree = "<group>"; };
 		374A48311CEC0A7500D68C7A /* NSObject_Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSObject_Extension.m; sourceTree = "<group>"; };
 		374A48331CEC0A7500D68C7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		375560441CEE6EB600EECB49 /* CommonDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonDefines.h; sourceTree = "<group>"; };
 		37E966901CEE6ACE00294575 /* BookmarksWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BookmarksWindow.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -77,6 +78,7 @@
 				374A48331CEC0A7500D68C7A /* Info.plist */,
 				374A482A1CEC0A7500D68C7A /* Supporting Files */,
 				37E966901CEE6ACE00294575 /* BookmarksWindow.xib */,
+				375560441CEE6EB600EECB49 /* CommonDefines.h */,
 			);
 			path = AWBookmarks;
 			sourceTree = "<group>";
