@@ -9,11 +9,14 @@
 #import "AWBookmarks.h"
 #import "CommonDefines.h"
 #import "AWBookmarksWindowController.h"
+#import "AWContextMenuHandler.h"
 
 @interface AWBookmarks()
 
 @property (nonatomic, strong, readwrite) NSBundle *bundle;
 @property (strong) AWBookmarksWindowController *windowController;
+@property (strong) AWContextMenuHandler *contextMenuHandler;
+
 @end
 
 @implementation AWBookmarks
@@ -28,38 +31,16 @@
     if (self = [super init]) {
         // reference to plugin's bundle, for resource access
         self.bundle = plugin;
+        
+        self.contextMenuHandler = [[AWContextMenuHandler alloc] init];
+        
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didApplicationFinishLaunchingNotification:)
                                                      name:NSApplicationDidFinishLaunchingNotification
                                                    object:nil];
         
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(handleNotification:)
-                                                     name:NSMenuDidBeginTrackingNotification
-                                                   object:nil];
     }
     return self;
-}
-
-- (void)handleNotification:(NSNotification *)notif
-{
-    NSMenu *contextMenu = (NSMenu *)notif.object;
-    [contextMenu addItem:[NSMenuItem separatorItem]];
-    NSMenuItem *addBookmarkMenuItem = [[NSMenuItem alloc] initWithTitle:@"Bookmark This Line" action:@selector(contextMenuBookmarkOptionSelected) keyEquivalent:@""];
-    addBookmarkMenuItem.target = self;
-    [contextMenu addItem:addBookmarkMenuItem];
-    [contextMenu addItem:[NSMenuItem separatorItem]];
-}
-
-//- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
-//{
-//    return YES;
-//}
-
-- (void)contextMenuBookmarkOptionSelected
-{
-    NSAlert *alert = [[NSAlert alloc] init];
-    [alert runModal];
 }
 
 - (void)didApplicationFinishLaunchingNotification:(NSNotification*)noti
