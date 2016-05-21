@@ -44,19 +44,28 @@
     NSRange selectedLineAllCharactersRange = [wholeText lineRangeForRange:selectedLettersRange];
     NSString *lineText = [wholeText substringWithRange:selectedLineAllCharactersRange];
     
-    NSArray *lines = [wholeText componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-    NSUInteger lineNumber = [lines indexOfObject:lineText];
+    NSUInteger lineNumber = 1;
+    for(NSUInteger i = 0; i < selectedLettersRange.location; i++)
+    {
+        if([[NSCharacterSet newlineCharacterSet] characterIsMember:[wholeText characterAtIndex:i]])
+        {
+            lineNumber++;
+        }
+    }
     
-    NSUInteger index = [[wholeText componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]
-                        indexOfObjectPassingTest:^BOOL(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop){
-        return NO;
-    }];
-    
+//    NSArray *lines = [wholeText componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+//    NSUInteger lineNumber = NSNotFound;
+//    
+//    NSUInteger index = [[wholeText componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]
+//                        indexOfObjectPassingTest:^BOOL(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop){
+//        return [obj isEqualToString:lineText];
+//    }];
+//    
     
     AWBookmarkEntry *newEntry = [[AWBookmarkEntry alloc] init];
     newEntry.lineText = lineText;
     newEntry.filePath = @"/Users/amanda/hey/what/up.dat";
-    newEntry.lineNumber = @(42);
+    newEntry.lineNumber = @(lineNumber);
     
     if(![self.bookmarks containsObject:newEntry])
     {
