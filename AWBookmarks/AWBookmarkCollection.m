@@ -8,6 +8,7 @@
 
 #import "AWBookmarkCollection.h"
 #import "AWBookmarkEntry.h"
+#import "IDEHelpers.h"
 
 @interface AWBookmarkCollection ()
 
@@ -34,8 +35,26 @@
 
 - (void)performBookmarkThisLine:(NSNotification *)notif
 {
+    
+    // Get the selected values
+    IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
+    NSTextView* textView = editor.textView;
+    NSString *wholeText = textView.string;
+    NSRange selectedLettersRange = textView.selectedRange;
+    NSRange selectedLineAllCharactersRange = [wholeText lineRangeForRange:selectedLettersRange];
+    NSString *lineText = [wholeText substringWithRange:selectedLineAllCharactersRange];
+    
+    NSArray *lines = [wholeText componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+    NSUInteger lineNumber = [lines indexOfObject:lineText];
+    
+    NSUInteger index = [[wholeText componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]
+                        indexOfObjectPassingTest:^BOOL(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop){
+        return NO;
+    }];
+    
+    
     AWBookmarkEntry *newEntry = [[AWBookmarkEntry alloc] init];
-    newEntry.lineText = @"hey what's up";
+    newEntry.lineText = lineText;
     newEntry.filePath = @"/Users/amanda/hey/what/up.dat";
     newEntry.lineNumber = @(42);
     

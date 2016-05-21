@@ -9,6 +9,8 @@
 #import "AWContextMenuHandler.h"
 #import "Aspects.h"
 #import "CommonDefines.h"
+#import "IDEHelpers.h"
+
 
 @interface AWContextMenuHandler ()
 
@@ -70,6 +72,7 @@
             }
 
             [invocation setReturnValue:&contextMenu];
+            
         }
     } error:NULL];
 }
