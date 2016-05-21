@@ -56,18 +56,11 @@
         }
     }
     
-//    NSArray *lines = [wholeText componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-//    NSUInteger lineNumber = NSNotFound;
-//    
-//    NSUInteger index = [[wholeText componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]]
-//                        indexOfObjectPassingTest:^BOOL(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop){
-//        return [obj isEqualToString:lineText];
-//    }];
-//    
+    NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
     
     AWBookmarkEntry *newEntry = [[AWBookmarkEntry alloc] init];
     newEntry.lineText = lineText;
-    newEntry.filePath = @"/Users/amanda/hey/what/up.dat";
+    newEntry.filePath = url;
     newEntry.lineNumber = @(lineNumber);
     
     if(![self.bookmarks containsObject:newEntry])
@@ -85,12 +78,9 @@
 
 - (void)saveBookmarks
 {
-    
-    
     NSString* projectPath = [[IDEHelpers currentWorkspaceDocument].workspace.representingFilePath.fileURL path];
     self.projectDir = [projectPath stringByDeletingLastPathComponent];
     self.projectName = [[projectPath lastPathComponent] stringByDeletingPathExtension];
-    
     
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
     NSString *directory = [paths firstObject];
