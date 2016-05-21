@@ -63,7 +63,13 @@
             [invocation getReturnValue:&contextMenu];
             
             DLOG(@"return value: %@", contextMenu);
-//            CFRetain((__bridge CFTypeRef)(contextMenu)); // need to retain return value so it isn't dealloced before being returned
+            CFRetain((__bridge CFTypeRef)(contextMenu)); // need to retain return value so it isn't dealloced before being returned
+            
+            if(self.addBookmarkMenuItem.menu == nil)
+            {
+                [contextMenu addItem:self.addBookmarkMenuItem];
+            }
+            
 //            id holder = [info.instance performSelector:(@selector(realDataSource))];
 //            if ([holder isKindOfClass:NSClassFromString(@"IDEIssueNavigator")] && [contextMenu itemWithTitle:@"Copy Issue"]==nil)
 //            {
@@ -78,7 +84,7 @@
 //                [contextMenu insertItem:_contextMenuSearchMenuItem atIndex:3];
 //                [contextMenu insertItem:[NSMenuItem separatorItem] atIndex:4];
 //            }
-//            [invocation setReturnValue:&contextMenu];
+            [invocation setReturnValue:&contextMenu];
         }
     } error:NULL];
 }
