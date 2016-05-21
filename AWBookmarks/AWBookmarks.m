@@ -8,10 +8,12 @@
 
 #import "AWBookmarks.h"
 #import "CommonDefines.h"
+#import "AWBookmarksWindowController.h"
 
 @interface AWBookmarks()
 
 @property (nonatomic, strong, readwrite) NSBundle *bundle;
+@property (strong) AWBookmarksWindowController *windowController;
 @end
 
 @implementation AWBookmarks
@@ -53,10 +55,23 @@
     }
 }
 
-// Sample Action, for menu item:
 - (void)toggleBookmarksWindow
 {
-    DLOG(@"wow");
+    // Show/hide the bookmarks window
+    if(!self.windowController.window.isVisible)
+    {
+        if(self.windowController == nil)
+        {
+            self.windowController = [[AWBookmarksWindowController alloc] initWithWindowNibName:@"AWBookmarksWindowController"];
+        }
+        
+        [self.windowController.window makeKeyAndOrderFront:nil];
+        
+    }
+    else
+    {
+        [self.windowController close];
+    }
 }
 
 - (void)dealloc
