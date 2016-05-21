@@ -32,8 +32,26 @@
                                                  selector:@selector(didApplicationFinishLaunchingNotification:)
                                                      name:NSApplicationDidFinishLaunchingNotification
                                                    object:nil];
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self
+                                                 selector:@selector(handleNotification:)
+                                                     name:NSMenuDidBeginTrackingNotification
+                                                   object:nil];
     }
     return self;
+}
+
+- (void)handleNotification:(NSNotification *)notif
+{
+    NSMenu *contextMenu = (NSMenu *)notif.object;
+    [contextMenu addItemWithTitle:@"Amanda!!" action:@selector(contextMenuBookmarkOptionSelected) keyEquivalent:@"k"];
+    
+}
+
+- (void)contextMenuBookmarkOptionSelected
+{
+    NSAlert *alert = [[NSAlert alloc] init];
+    [alert runModal];
 }
 
 - (void)didApplicationFinishLaunchingNotification:(NSNotification*)noti
