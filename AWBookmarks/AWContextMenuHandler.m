@@ -33,27 +33,10 @@
     return self;
 }
 
+
 - (void)contextMenuBookmarkOptionSelected
 {
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-    NSString *directory = [paths firstObject];
-    
-    directory = [directory stringByAppendingPathComponent:@"AWBookmarks"];
-    
-    if(![[NSFileManager defaultManager] fileExistsAtPath:directory])
-    {
-        NSError *error;
-        [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:&error];
-    }
-    
-    NSString *filePath = [directory  stringByAppendingPathComponent:@"bookmarks.dat"];
-    NSError *fileWritingError;
-    [@"hello!" writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&fileWritingError];
-    
-//    NSAlert *alert = [[NSAlert alloc] init];
-//    [alert runModal];
-    
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"AW_contextMenuBookmarkOptionSelected" object:nil];
 }
 
 #pragma mark - Swizzling

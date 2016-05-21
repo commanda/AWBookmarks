@@ -10,12 +10,14 @@
 #import "CommonDefines.h"
 #import "AWBookmarksWindowController.h"
 #import "AWContextMenuHandler.h"
+#import "AWBookmarkCollection.h"
 
 @interface AWBookmarks()
 
 @property (nonatomic, strong, readwrite) NSBundle *bundle;
 @property (strong) AWBookmarksWindowController *windowController;
 @property (strong) AWContextMenuHandler *contextMenuHandler;
+@property (strong) AWBookmarkCollection *bookmarkCollection;
 
 @end
 
@@ -33,6 +35,8 @@
         self.bundle = plugin;
         
         self.contextMenuHandler = [[AWContextMenuHandler alloc] init];
+        
+        self.bookmarkCollection = [[AWBookmarkCollection alloc] init];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didApplicationFinishLaunchingNotification:)

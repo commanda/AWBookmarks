@@ -17,6 +17,7 @@
 		374A482F1CEC0A7500D68C7A /* AWBookmarks.m in Sources */ = {isa = PBXBuildFile; fileRef = 374A482E1CEC0A7500D68C7A /* AWBookmarks.m */; };
 		374A48321CEC0A7500D68C7A /* NSObject_Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 374A48311CEC0A7500D68C7A /* NSObject_Extension.m */; };
 		3753E3681CF00E0600890887 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = 3753E3671CF00E0600890887 /* Aspects.m */; };
+		37A454C51CF0E60F00F3D1D8 /* AWBookmarkCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A454C41CF0E60F00F3D1D8 /* AWBookmarkCollection.m */; };
 		37C65F071CF017CC00A2F5D7 /* AWContextMenuHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 37C65F061CF017CC00A2F5D7 /* AWContextMenuHandler.m */; };
 /* End PBXBuildFile section */
 
@@ -40,6 +41,8 @@
 		3753E3661CF00E0600890887 /* Aspects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Aspects.h; sourceTree = "<group>"; };
 		3753E3671CF00E0600890887 /* Aspects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Aspects.m; sourceTree = "<group>"; };
 		375560441CEE6EB600EECB49 /* CommonDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonDefines.h; sourceTree = "<group>"; };
+		37A454C31CF0E60F00F3D1D8 /* AWBookmarkCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarkCollection.h; sourceTree = "<group>"; };
+		37A454C41CF0E60F00F3D1D8 /* AWBookmarkCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWBookmarkCollection.m; sourceTree = "<group>"; };
 		37C65F051CF017CC00A2F5D7 /* AWContextMenuHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWContextMenuHandler.h; sourceTree = "<group>"; };
 		37C65F061CF017CC00A2F5D7 /* AWContextMenuHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWContextMenuHandler.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -121,6 +124,8 @@
 		3753E3631CF00B3100890887 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				37A454C31CF0E60F00F3D1D8 /* AWBookmarkCollection.h */,
+				37A454C41CF0E60F00F3D1D8 /* AWBookmarkCollection.m */,
 				373A07231CF007FC00ED350C /* AWBookmarkEntry.h */,
 				373A07241CF007FC00ED350C /* AWBookmarkEntry.m */,
 				37C65F051CF017CC00A2F5D7 /* AWContextMenuHandler.h */,
@@ -219,6 +224,7 @@
 				373A07221CF0034700ED350C /* IDEHelpers.m in Sources */,
 				374A482F1CEC0A7500D68C7A /* AWBookmarks.m in Sources */,
 				374572391CEFF8AF00D20378 /* AWBookmarksWindowController.m in Sources */,
+				37A454C51CF0E60F00F3D1D8 /* AWBookmarkCollection.m in Sources */,
 				373A07251CF007FC00ED350C /* AWBookmarkEntry.m in Sources */,
 				37C65F071CF017CC00A2F5D7 /* AWContextMenuHandler.m in Sources */,
 				374A48321CEC0A7500D68C7A /* NSObject_Extension.m in Sources */,
