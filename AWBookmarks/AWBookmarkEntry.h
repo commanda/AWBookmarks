@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "IDEHelpers.h"
 
 @interface AWBookmarkEntry : NSObject
 

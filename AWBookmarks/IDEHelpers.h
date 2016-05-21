@@ -9,9 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 
-@interface IDEHelpers : NSObject
 
-@end
 
 
 @interface DVTChoice : NSObject
@@ -133,4 +131,14 @@
 
 @interface IDEWorkspaceDocument : NSDocument
 @property (readonly) IDEWorkspace* workspace;
+@end
+
+
+@interface IDEHelpers : NSObject
+
++ (IDEWorkspaceTabController*)tabController;
++ (IDESourceCodeEditor*)currentEditor;
++ (IDEWorkspaceDocument*)currentWorkspaceDocument;
++ (IDESourceCodeDocument*)currentSourceCodeDocument;
+
 @end
