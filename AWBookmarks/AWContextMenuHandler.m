@@ -8,6 +8,7 @@
 
 #import "AWContextMenuHandler.h"
 #import "Aspects.h"
+#import "CommonDefines.h"
 
 @interface AWContextMenuHandler ()
 
@@ -26,8 +27,8 @@
             self.addBookmarkMenuItem = [[NSMenuItem alloc] initWithTitle:@"Bookmark This Line" action:@selector(contextMenuBookmarkOptionSelected) keyEquivalent:@""];
             self.addBookmarkMenuItem.target = self;
             
-            [self swizzleMenuForEventInNSTableView];
-            [self swizzleSetEnabledInNSMenuItem];
+            [self swizzleMenuForEventInTextView];
+            //[self swizzleSetEnabledInNSMenuItem];
         });
     }
     return self;
@@ -44,14 +45,15 @@
 #pragma GCC diagnostic ignored "-Wundeclared-selector"
 #pragma GCC diagnostic ignored "-Warc-performSelector-leaks"
 
-// this will add the custom context menu items to the issue navigator's context menu
-- (void)swizzleMenuForEventInNSTableView
+- (void)swizzleMenuForEventInTextView
 {
-    Class c = NSClassFromString(@"DVTSourceTextView");
-    [c aspect_hookSelector:@selector(_showMenuForEvent:) withOptions:AspectPositionInstead usingBlock:^(id<AspectInfo> info, NSEvent *event) {
+    NSString *className = @"DVTSourceTextView";
+    Class c = NSClassFromString(className);
+    [c aspect_hookSelector:@selector(menuForEvent:) withOptions:AspectPositionInstead usingBlock:^(id<AspectInfo> info, NSEvent *event) {
         NSObject *object = info.instance;
+        DLOG(@"object: %@", object);
         
-        if(![object isKindOfClass:NSClassFromString(@"DVTSourceTextView")]) {
+        if(![object isKindOfClass:NSClassFromString(className)]) {
             [info.originalInvocation invoke];
         }
         else {
@@ -59,9 +61,12 @@
             NSMenu *contextMenu;
             [invocation invoke];
             [invocation getReturnValue:&contextMenu];
-            CFRetain((__bridge CFTypeRef)(contextMenu)); // need to retain return value so it isn't dealloced before being returned
-            id holder = [info.instance performSelector:(@selector(realDataSource))];
-            if ([holder isKindOfClass:NSClassFromString(@"IDEIssueNavigator")] && [contextMenu itemWithTitle:@"Copy Issue"]==nil) {
+            
+            DLOG(@"return value: %@", contextMenu);
+//            CFRetain((__bridge CFTypeRef)(contextMenu)); // need to retain return value so it isn't dealloced before being returned
+//            id holder = [info.instance performSelector:(@selector(realDataSource))];
+//            if ([holder isKindOfClass:NSClassFromString(@"IDEIssueNavigator")] && [contextMenu itemWithTitle:@"Copy Issue"]==nil)
+//            {
 //                if ([_copyIssueContextMenuItem menu] != nil) {
 //                    NSMenu *oldContextMenu = [_copyIssueContextMenuItem menu];
 //                    [oldContextMenu removeItem:_copyIssueContextMenuItem];
@@ -72,8 +77,8 @@
 //                [contextMenu insertItem:[NSMenuItem separatorItem] atIndex:2];
 //                [contextMenu insertItem:_contextMenuSearchMenuItem atIndex:3];
 //                [contextMenu insertItem:[NSMenuItem separatorItem] atIndex:4];
-            }
-            [invocation setReturnValue:&contextMenu];
+//            }
+//            [invocation setReturnValue:&contextMenu];
         }
     } error:NULL];
 }
