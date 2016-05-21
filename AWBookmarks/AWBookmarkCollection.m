@@ -7,6 +7,13 @@
 //
 
 #import "AWBookmarkCollection.h"
+#import "AWBookmarkEntry.h"
+
+@interface AWBookmarkCollection ()
+
+@property NSMutableArray *bookmarks;
+
+@end
 
 @implementation AWBookmarkCollection
 
@@ -14,6 +21,7 @@
 {
     if(self = [super init])
     {
+        self.bookmarks = [[NSMutableArray alloc] init];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(performBookmarkThisLine:) name:@"AW_contextMenuBookmarkOptionSelected" object:nil];
     }
     return self;
@@ -26,7 +34,22 @@
 
 - (void)performBookmarkThisLine:(NSNotification *)notif
 {
+    AWBookmarkEntry *newEntry = [[AWBookmarkEntry alloc] init];
+    newEntry.lineText = @"hey what's up";
+    newEntry.filePath = @"/Users/amanda/hey/what/up.dat";
+    newEntry.lineNumber = @(42);
+    
+    if(![self.bookmarks containsObject:newEntry])
+    {
+        [self.bookmarks addObject:newEntry];
+    }
+    
     [self saveBookmarks];
+}
+
+- (NSString *)serialize
+{
+    return @"hey here's some serialized objects";
 }
 
 - (void)saveBookmarks
@@ -44,7 +67,9 @@
     
     NSString *filePath = [directory  stringByAppendingPathComponent:@"bookmarks.dat"];
     NSError *fileWritingError;
-    [@"hello!" writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&fileWritingError];
+    
+    NSString *value = [self serialize];
+    [value writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&fileWritingError];
 }
 
 @end

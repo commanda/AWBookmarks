@@ -12,7 +12,7 @@
 @interface AWBookmarkEntry : NSObject
 
 @property (nonatomic, copy) NSString* filePath;
-@property (nonatomic, assign) NSUInteger lineNumber;
+@property (nonatomic, assign) NSNumber *lineNumber;
 @property (copy) NSString *lineText;
 
 @end
