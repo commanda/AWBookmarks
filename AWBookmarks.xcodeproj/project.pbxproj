@@ -16,6 +16,7 @@
 		374A482C1CEC0A7500D68C7A /* AWBookmarks.xcscheme in Resources */ = {isa = PBXBuildFile; fileRef = 374A482B1CEC0A7500D68C7A /* AWBookmarks.xcscheme */; };
 		374A482F1CEC0A7500D68C7A /* AWBookmarks.m in Sources */ = {isa = PBXBuildFile; fileRef = 374A482E1CEC0A7500D68C7A /* AWBookmarks.m */; };
 		374A48321CEC0A7500D68C7A /* NSObject_Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 374A48311CEC0A7500D68C7A /* NSObject_Extension.m */; };
+		3753E3681CF00E0600890887 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = 3753E3671CF00E0600890887 /* Aspects.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,6 +36,8 @@
 		374A48301CEC0A7500D68C7A /* NSObject_Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSObject_Extension.h; sourceTree = "<group>"; };
 		374A48311CEC0A7500D68C7A /* NSObject_Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSObject_Extension.m; sourceTree = "<group>"; };
 		374A48331CEC0A7500D68C7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3753E3661CF00E0600890887 /* Aspects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Aspects.h; sourceTree = "<group>"; };
+		3753E3671CF00E0600890887 /* Aspects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Aspects.m; sourceTree = "<group>"; };
 		375560441CEE6EB600EECB49 /* CommonDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonDefines.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -100,6 +103,8 @@
 		3753E3621CF00B2200890887 /* Adaptor */ = {
 			isa = PBXGroup;
 			children = (
+				3753E3661CF00E0600890887 /* Aspects.h */,
+				3753E3671CF00E0600890887 /* Aspects.m */,
 				374A482D1CEC0A7500D68C7A /* AWBookmarks.h */,
 				374A482E1CEC0A7500D68C7A /* AWBookmarks.m */,
 				373A07201CF0034700ED350C /* IDEHelpers.h */,
@@ -211,6 +216,7 @@
 				374572391CEFF8AF00D20378 /* AWBookmarksWindowController.m in Sources */,
 				373A07251CF007FC00ED350C /* AWBookmarkEntry.m in Sources */,
 				374A48321CEC0A7500D68C7A /* NSObject_Extension.m in Sources */,
+				3753E3681CF00E0600890887 /* Aspects.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
