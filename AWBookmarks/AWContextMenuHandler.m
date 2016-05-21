@@ -47,11 +47,11 @@
 // this will add the custom context menu items to the issue navigator's context menu
 - (void)swizzleMenuForEventInNSTableView
 {
-    Class c = NSClassFromString(@"NSTableView");
-    [c aspect_hookSelector:@selector(menuForEvent:) withOptions:AspectPositionInstead usingBlock:^(id<AspectInfo> info, NSEvent *event) {
+    Class c = NSClassFromString(@"DVTSourceTextView");
+    [c aspect_hookSelector:@selector(_showMenuForEvent:) withOptions:AspectPositionInstead usingBlock:^(id<AspectInfo> info, NSEvent *event) {
         NSObject *object = info.instance;
         
-        if(![object isKindOfClass:NSClassFromString(@"IDENavigatorOutlineView")]) {
+        if(![object isKindOfClass:NSClassFromString(@"DVTSourceTextView")]) {
             [info.originalInvocation invoke];
         }
         else {
