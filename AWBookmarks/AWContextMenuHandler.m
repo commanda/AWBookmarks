@@ -7,35 +7,30 @@
 //
 
 #import "AWContextMenuHandler.h"
+#import "Aspects.h"
+
+@interface AWContextMenuHandler ()
+
+@property NSMenuItem *addBookmarkMenuItem;
+
+@end
 
 @implementation AWContextMenuHandler
+
 
 - (id)init
 {
     if(self = [super init])
     {
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self
-                                                 selector:@selector(handleNotification:)
-                                                     name:NSMenuDidBeginTrackingNotification
-                                                   object:nil];
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.001 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+            self.addBookmarkMenuItem = [[NSMenuItem alloc] initWithTitle:@"Bookmark This Line" action:@selector(contextMenuBookmarkOptionSelected) keyEquivalent:@""];
+            self.addBookmarkMenuItem.target = self;
+            
+            [self swizzleMenuForEventInNSTableView];
+            [self swizzleSetEnabledInNSMenuItem];
+        });
     }
     return self;
-}
-
-- (void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
-
-- (void)handleNotification:(NSNotification *)notif
-{
-    NSMenu *contextMenu = (NSMenu *)notif.object;
-    [contextMenu addItem:[NSMenuItem separatorItem]];
-    NSMenuItem *addBookmarkMenuItem = [[NSMenuItem alloc] initWithTitle:@"Bookmark This Line" action:@selector(contextMenuBookmarkOptionSelected) keyEquivalent:@""];
-    addBookmarkMenuItem.target = self;
-    [contextMenu addItem:addBookmarkMenuItem];
-    [contextMenu addItem:[NSMenuItem separatorItem]];
 }
 
 - (void)contextMenuBookmarkOptionSelected
@@ -43,5 +38,59 @@
     NSAlert *alert = [[NSAlert alloc] init];
     [alert runModal];
 }
+
+#pragma mark - Swizzling
+
+#pragma GCC diagnostic ignored "-Wundeclared-selector"
+#pragma GCC diagnostic ignored "-Warc-performSelector-leaks"
+
+// this will add the custom context menu items to the issue navigator's context menu
+- (void)swizzleMenuForEventInNSTableView
+{
+    Class c = NSClassFromString(@"NSTableView");
+    [c aspect_hookSelector:@selector(menuForEvent:) withOptions:AspectPositionInstead usingBlock:^(id<AspectInfo> info, NSEvent *event) {
+        NSObject *object = info.instance;
+        
+        if(![object isKindOfClass:NSClassFromString(@"IDENavigatorOutlineView")]) {
+            [info.originalInvocation invoke];
+        }
+        else {
+            NSInvocation *invocation = info.originalInvocation;
+            NSMenu *contextMenu;
+            [invocation invoke];
+            [invocation getReturnValue:&contextMenu];
+            CFRetain((__bridge CFTypeRef)(contextMenu)); // need to retain return value so it isn't dealloced before being returned
+            id holder = [info.instance performSelector:(@selector(realDataSource))];
+            if ([holder isKindOfClass:NSClassFromString(@"IDEIssueNavigator")] && [contextMenu itemWithTitle:@"Copy Issue"]==nil) {
+//                if ([_copyIssueContextMenuItem menu] != nil) {
+//                    NSMenu *oldContextMenu = [_copyIssueContextMenuItem menu];
+//                    [oldContextMenu removeItem:_copyIssueContextMenuItem];
+//                    [oldContextMenu removeItem:_contextMenuSearchMenuItem];
+//                }
+//                
+//                [contextMenu insertItem:_copyIssueContextMenuItem atIndex:1];
+//                [contextMenu insertItem:[NSMenuItem separatorItem] atIndex:2];
+//                [contextMenu insertItem:_contextMenuSearchMenuItem atIndex:3];
+//                [contextMenu insertItem:[NSMenuItem separatorItem] atIndex:4];
+            }
+            [invocation setReturnValue:&contextMenu];
+        }
+    } error:NULL];
+}
+
+// This will add logic to the context menu's enable setter to determine whether to enable the custom context menu items
+- (void)swizzleSetEnabledInNSMenuItem {
+    [NSMenuItem aspect_hookSelector:@selector(setEnabled:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info, BOOL enabled) {
+        NSMenuItem *item = info.instance;
+        if ([item.title isEqualToString:@"Copy"] && [item.menu.title isEqualToString:@"Issue navigator contextual menu"])
+        {
+//            _enableContextMenuItems = [item isEnabled];
+//            [self getStringOntoClipboardForItemsInContextMenu:item];
+        }
+    } error:NULL];
+}
+
+
+#pragma clang diagnostic pop
 
 @end
