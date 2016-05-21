@@ -13,6 +13,8 @@
 @interface AWBookmarkCollection ()
 
 @property NSMutableArray *bookmarks;
+@property NSString *projectDir;
+@property NSString *projectName;
 
 @end
 
@@ -24,6 +26,7 @@
     {
         self.bookmarks = [[NSMutableArray alloc] init];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(performBookmarkThisLine:) name:@"AW_contextMenuBookmarkOptionSelected" object:nil];
+        
     }
     return self;
 }
@@ -82,10 +85,17 @@
 
 - (void)saveBookmarks
 {
+    
+    
+    NSString* projectPath = [[IDEHelpers currentWorkspaceDocument].workspace.representingFilePath.fileURL path];
+    self.projectDir = [projectPath stringByDeletingLastPathComponent];
+    self.projectName = [[projectPath lastPathComponent] stringByDeletingPathExtension];
+    
+    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
     NSString *directory = [paths firstObject];
     
-    directory = [directory stringByAppendingPathComponent:@"AWBookmarks"];
+    directory = [[directory stringByAppendingPathComponent:@"AWBookmarks"] stringByAppendingPathComponent:self.projectName];
     
     if(![[NSFileManager defaultManager] fileExistsAtPath:directory])
     {
