@@ -28,7 +28,6 @@
             self.addBookmarkMenuItem.target = self;
             
             [self swizzleMenuForEventInTextView];
-            //[self swizzleSetEnabledInNSMenuItem];
         });
     }
     return self;
@@ -74,19 +73,6 @@
         }
     } error:NULL];
 }
-
-// This will add logic to the context menu's enable setter to determine whether to enable the custom context menu items
-- (void)swizzleSetEnabledInNSMenuItem {
-    [NSMenuItem aspect_hookSelector:@selector(setEnabled:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info, BOOL enabled) {
-        NSMenuItem *item = info.instance;
-        if ([item.title isEqualToString:@"Copy"] && [item.menu.title isEqualToString:@"Issue navigator contextual menu"])
-        {
-//            _enableContextMenuItems = [item isEnabled];
-//            [self getStringOntoClipboardForItemsInContextMenu:item];
-        }
-    } error:NULL];
-}
-
 
 #pragma clang diagnostic pop
 
