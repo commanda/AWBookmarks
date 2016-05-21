@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		373A07221CF0034700ED350C /* IDEHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 373A07211CF0034700ED350C /* IDEHelpers.m */; };
 		374572391CEFF8AF00D20378 /* AWBookmarksWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 374572371CEFF8AF00D20378 /* AWBookmarksWindowController.m */; };
 		3745723A1CEFF8AF00D20378 /* AWBookmarksWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 374572381CEFF8AF00D20378 /* AWBookmarksWindowController.xib */; };
 		374A48261CEC0A7500D68C7A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 374A48251CEC0A7500D68C7A /* AppKit.framework */; };
@@ -17,6 +18,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		373A07201CF0034700ED350C /* IDEHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDEHelpers.h; sourceTree = "<group>"; };
+		373A07211CF0034700ED350C /* IDEHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDEHelpers.m; sourceTree = "<group>"; };
 		374572361CEFF8AF00D20378 /* AWBookmarksWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarksWindowController.h; sourceTree = "<group>"; };
 		374572371CEFF8AF00D20378 /* AWBookmarksWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWBookmarksWindowController.m; sourceTree = "<group>"; };
 		374572381CEFF8AF00D20378 /* AWBookmarksWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AWBookmarksWindowController.xib; sourceTree = "<group>"; };
@@ -76,14 +79,16 @@
 			children = (
 				374A482D1CEC0A7500D68C7A /* AWBookmarks.h */,
 				374A482E1CEC0A7500D68C7A /* AWBookmarks.m */,
-				374A48301CEC0A7500D68C7A /* NSObject_Extension.h */,
-				374A48311CEC0A7500D68C7A /* NSObject_Extension.m */,
-				374A48331CEC0A7500D68C7A /* Info.plist */,
-				374A482A1CEC0A7500D68C7A /* Supporting Files */,
-				375560441CEE6EB600EECB49 /* CommonDefines.h */,
 				374572361CEFF8AF00D20378 /* AWBookmarksWindowController.h */,
 				374572371CEFF8AF00D20378 /* AWBookmarksWindowController.m */,
 				374572381CEFF8AF00D20378 /* AWBookmarksWindowController.xib */,
+				375560441CEE6EB600EECB49 /* CommonDefines.h */,
+				373A07201CF0034700ED350C /* IDEHelpers.h */,
+				373A07211CF0034700ED350C /* IDEHelpers.m */,
+				374A48331CEC0A7500D68C7A /* Info.plist */,
+				374A48301CEC0A7500D68C7A /* NSObject_Extension.h */,
+				374A48311CEC0A7500D68C7A /* NSObject_Extension.m */,
+				374A482A1CEC0A7500D68C7A /* Supporting Files */,
 			);
 			path = AWBookmarks;
 			sourceTree = "<group>";
@@ -164,6 +169,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				373A07221CF0034700ED350C /* IDEHelpers.m in Sources */,
 				374A482F1CEC0A7500D68C7A /* AWBookmarks.m in Sources */,
 				374572391CEFF8AF00D20378 /* AWBookmarksWindowController.m in Sources */,
 				374A48321CEC0A7500D68C7A /* NSObject_Extension.m in Sources */,
