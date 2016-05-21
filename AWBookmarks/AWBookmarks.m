@@ -44,9 +44,17 @@
 - (void)handleNotification:(NSNotification *)notif
 {
     NSMenu *contextMenu = (NSMenu *)notif.object;
-    [contextMenu addItemWithTitle:@"Amanda!!" action:@selector(contextMenuBookmarkOptionSelected) keyEquivalent:@"k"];
-    
+    [contextMenu addItem:[NSMenuItem separatorItem]];
+    NSMenuItem *addBookmarkMenuItem = [[NSMenuItem alloc] initWithTitle:@"Bookmark This Line" action:@selector(contextMenuBookmarkOptionSelected) keyEquivalent:@""];
+    addBookmarkMenuItem.target = self;
+    [contextMenu addItem:addBookmarkMenuItem];
+    [contextMenu addItem:[NSMenuItem separatorItem]];
 }
+
+//- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+//{
+//    return YES;
+//}
 
 - (void)contextMenuBookmarkOptionSelected
 {
