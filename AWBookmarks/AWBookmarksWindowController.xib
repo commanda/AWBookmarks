@@ -7,6 +7,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="AWBookmarksWindowController">
             <connections>
+                <outlet property="tableView" destination="aIP-bz-Bm1" id="vdl-Dz-mbj"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
