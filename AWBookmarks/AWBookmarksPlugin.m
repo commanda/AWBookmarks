@@ -74,7 +74,7 @@
         if(self.windowController == nil)
         {
             self.windowController = [[AWBookmarksWindowController alloc] initWithWindowNibName:@"AWBookmarksWindowController"];
-            self.windowController.bookmarks = self.bookmarkCollection;
+            self.windowController.bookmarkCollection = self.bookmarkCollection;
         }
         
         [self.windowController.window makeKeyAndOrderFront:nil];

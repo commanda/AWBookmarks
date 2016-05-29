@@ -11,7 +11,7 @@
 
 @interface AWBookmarksWindowController : NSWindowController 
 
-@property (strong) AWBookmarkCollection *bookmarks;
+@property (strong) AWBookmarkCollection *bookmarkCollection;
 
 
 
