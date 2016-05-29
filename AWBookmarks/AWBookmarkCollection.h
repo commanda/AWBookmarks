@@ -10,6 +10,9 @@
 
 @interface AWBookmarkCollection : NSObject
 
+
+@property (strong) NSMutableArray *bookmarks;
+
 - (void)saveBookmarks;
 
 @end

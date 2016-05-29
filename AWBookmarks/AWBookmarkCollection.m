@@ -13,7 +13,6 @@
 
 @interface AWBookmarkCollection ()
 
-@property NSMutableArray *bookmarks;
 @property NSString *projectDir;
 @property NSString *projectName;
 
