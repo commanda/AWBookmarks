@@ -52,7 +52,6 @@
     Class c = NSClassFromString(className);
     [c aspect_hookSelector:@selector(menuForEvent:) withOptions:AspectPositionInstead usingBlock:^(id<AspectInfo> info, NSEvent *event) {
         NSObject *object = info.instance;
-        DLOG(@"object: %@", object);
         
         if(![object isKindOfClass:NSClassFromString(className)]) {
             [info.originalInvocation invoke];
@@ -63,7 +62,6 @@
             [invocation invoke];
             [invocation getReturnValue:&contextMenu];
             
-            DLOG(@"return value: %@", contextMenu);
             CFRetain((__bridge CFTypeRef)(contextMenu)); // need to retain return value so it isn't dealloced before being returned
             
             if(self.addBookmarkMenuItem.menu == nil)
