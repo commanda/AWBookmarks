@@ -1,6 +1,6 @@
 //
-//  AWBookmarks.h
-//  AWBookmarks
+//  AWBookmarksPlugin.h
+//  AWBookmarksPlugin
 //
 //  Created by Amanda Wixted on 5/17/16.
 //  Copyright © 2016 Amanda Wixted. All rights reserved.
@@ -8,11 +8,11 @@
 
 #import <AppKit/AppKit.h>
 
-@class AWBookmarks;
+@class AWBookmarksPlugin;
 
-static AWBookmarks *sharedPlugin;
+static AWBookmarksPlugin *sharedPlugin;
 
-@interface AWBookmarks : NSObject
+@interface AWBookmarksPlugin : NSObject
 
 + (instancetype)sharedPlugin;
 - (id)initWithBundle:(NSBundle *)plugin;

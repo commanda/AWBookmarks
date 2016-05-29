@@ -14,7 +14,7 @@
 		374A48261CEC0A7500D68C7A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 374A48251CEC0A7500D68C7A /* AppKit.framework */; };
 		374A48281CEC0A7500D68C7A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 374A48271CEC0A7500D68C7A /* Foundation.framework */; };
 		374A482C1CEC0A7500D68C7A /* AWBookmarks.xcscheme in Resources */ = {isa = PBXBuildFile; fileRef = 374A482B1CEC0A7500D68C7A /* AWBookmarks.xcscheme */; };
-		374A482F1CEC0A7500D68C7A /* AWBookmarks.m in Sources */ = {isa = PBXBuildFile; fileRef = 374A482E1CEC0A7500D68C7A /* AWBookmarks.m */; };
+		374A482F1CEC0A7500D68C7A /* AWBookmarksPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 374A482E1CEC0A7500D68C7A /* AWBookmarksPlugin.m */; };
 		374A48321CEC0A7500D68C7A /* NSObject_Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 374A48311CEC0A7500D68C7A /* NSObject_Extension.m */; };
 		3753E3681CF00E0600890887 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = 3753E3671CF00E0600890887 /* Aspects.m */; };
 		37A454C51CF0E60F00F3D1D8 /* AWBookmarkCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A454C41CF0E60F00F3D1D8 /* AWBookmarkCollection.m */; };
@@ -33,8 +33,8 @@
 		374A48251CEC0A7500D68C7A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		374A48271CEC0A7500D68C7A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		374A482B1CEC0A7500D68C7A /* AWBookmarks.xcscheme */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = AWBookmarks.xcscheme; path = AWBookmarks.xcodeproj/xcshareddata/xcschemes/AWBookmarks.xcscheme; sourceTree = SOURCE_ROOT; };
-		374A482D1CEC0A7500D68C7A /* AWBookmarks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AWBookmarks.h; sourceTree = "<group>"; };
-		374A482E1CEC0A7500D68C7A /* AWBookmarks.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AWBookmarks.m; sourceTree = "<group>"; };
+		374A482D1CEC0A7500D68C7A /* AWBookmarksPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AWBookmarksPlugin.h; sourceTree = "<group>"; };
+		374A482E1CEC0A7500D68C7A /* AWBookmarksPlugin.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AWBookmarksPlugin.m; sourceTree = "<group>"; };
 		374A48301CEC0A7500D68C7A /* NSObject_Extension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSObject_Extension.h; sourceTree = "<group>"; };
 		374A48311CEC0A7500D68C7A /* NSObject_Extension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NSObject_Extension.m; sourceTree = "<group>"; };
 		374A48331CEC0A7500D68C7A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -111,8 +111,8 @@
 			children = (
 				3753E3661CF00E0600890887 /* Aspects.h */,
 				3753E3671CF00E0600890887 /* Aspects.m */,
-				374A482D1CEC0A7500D68C7A /* AWBookmarks.h */,
-				374A482E1CEC0A7500D68C7A /* AWBookmarks.m */,
+				374A482D1CEC0A7500D68C7A /* AWBookmarksPlugin.h */,
+				374A482E1CEC0A7500D68C7A /* AWBookmarksPlugin.m */,
 				373A07201CF0034700ED350C /* IDEHelpers.h */,
 				373A07211CF0034700ED350C /* IDEHelpers.m */,
 				374A48301CEC0A7500D68C7A /* NSObject_Extension.h */,
@@ -222,7 +222,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				373A07221CF0034700ED350C /* IDEHelpers.m in Sources */,
-				374A482F1CEC0A7500D68C7A /* AWBookmarks.m in Sources */,
+				374A482F1CEC0A7500D68C7A /* AWBookmarksPlugin.m in Sources */,
 				374572391CEFF8AF00D20378 /* AWBookmarksWindowController.m in Sources */,
 				37A454C51CF0E60F00F3D1D8 /* AWBookmarkCollection.m in Sources */,
 				373A07251CF007FC00ED350C /* AWBookmarkEntry.m in Sources */,

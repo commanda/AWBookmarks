@@ -1,18 +1,18 @@
 //
-//  AWBookmarks.m
-//  AWBookmarks
+//  AWBookmarksPlugin.m
+//  AWBookmarksPlugin
 //
 //  Created by Amanda Wixted on 5/17/16.
 //  Copyright © 2016 Amanda Wixted. All rights reserved.
 //
 
-#import "AWBookmarks.h"
+#import "AWBookmarksPlugin.h"
 #import "CommonDefines.h"
 #import "AWBookmarksWindowController.h"
 #import "AWContextMenuHandler.h"
 #import "AWBookmarkCollection.h"
 
-@interface AWBookmarks()
+@interface AWBookmarksPlugin()
 
 @property (nonatomic, strong, readwrite) NSBundle *bundle;
 @property (strong) AWBookmarksWindowController *windowController;
@@ -21,7 +21,7 @@
 
 @end
 
-@implementation AWBookmarks
+@implementation AWBookmarksPlugin
 
 + (instancetype)sharedPlugin
 {

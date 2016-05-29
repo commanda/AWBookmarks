@@ -8,7 +8,7 @@
 
 
 #import "NSObject_Extension.h"
-#import "AWBookmarks.h"
+#import "AWBookmarksPlugin.h"
 
 @implementation NSObject (Xcode_Plugin_Template_Extension)
 
@@ -18,7 +18,7 @@
     NSString *currentApplicationName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
     if ([currentApplicationName isEqual:@"Xcode"]) {
         dispatch_once(&onceToken, ^{
-            sharedPlugin = [[AWBookmarks alloc] initWithBundle:plugin];
+            sharedPlugin = [[AWBookmarksPlugin alloc] initWithBundle:plugin];
         });
     }
 }
