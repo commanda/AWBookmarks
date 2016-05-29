@@ -9,7 +9,6 @@
 #import "AWBookmarksWindowController.h"
 
 @interface AWBookmarksWindowController ()
-@property (strong) IBOutlet NSTableView *tableView;
 
 @end
 
