@@ -9,6 +9,7 @@
 #import "AWBookmarkCollection.h"
 #import "AWBookmarkEntry.h"
 #import "IDEHelpers.h"
+#import "CommonDefines.h"
 
 @interface AWBookmarkCollection ()
 
@@ -66,6 +67,7 @@
     if(![self.bookmarks containsObject:newEntry])
     {
         [self.bookmarks addObject:newEntry];
+        DLOG(@"added new bookmark entry:\n%@", newEntry);
     }
     
     [self saveBookmarks];
@@ -99,5 +101,7 @@
     NSString *value = [self serialize];
     [value writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&fileWritingError];
 }
+
+
 
 @end
