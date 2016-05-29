@@ -10,4 +10,9 @@
 
 @implementation AWBookmarkEntry
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%@\nfilePath: %@\nlineNumber: %@\nlineText:%@", [super description], self.filePath, self.lineNumber, self.lineText];
+}
+
 @end
