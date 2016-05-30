@@ -147,7 +147,7 @@
     
     if([aTableColumn.identifier hasSuffix:@"0"])
     {
-        toReturn = entry.filePath.absoluteString;
+        toReturn = entry.filePath.absoluteString.lastPathComponent;
     }
     else if([aTableColumn.identifier hasSuffix:@"1"])
     {

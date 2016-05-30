@@ -36,6 +36,9 @@ static NSString *identifier = @"AWBookmarksCellIdentifier";
         textField.identifier = identifier;
         textField.editable = NO;
         textField.selectable = NO;
+        textField.bezeled = NO;
+        textField.bordered = NO;
+        textField.backgroundColor = [NSColor clearColor];
     }
     
     return textField;
