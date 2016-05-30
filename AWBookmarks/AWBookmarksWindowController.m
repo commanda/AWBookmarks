@@ -53,27 +53,56 @@
     }
 }
 
+#define MAX_HIGHLIGHT_TRIES 15
+
 + (void)openItem:(AWBookmarkEntry*)item
 {
     if(item)
     {
-        IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
         
         id<NSApplicationDelegate> appDelegate = (id<NSApplicationDelegate>)[NSApp delegate];
         
         if ([appDelegate application:NSApp openFile:item.filePath.path])
         {
-            // Wait a bit while the file actually opens, otherwise what's in the editor before will still be there, not replaced with the file we want to open yet
-            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
+            __block int stopCounter = 0;
+            void (^highlightItem)();
+            void (^ __block __weak weakHighlightItem) ();
+            weakHighlightItem = highlightItem = ^{
+                
+                if(stopCounter > MAX_HIGHLIGHT_TRIES)
                 {
-                    NSTextView* textView = editor.textView;
-                    if (textView)
-                    {
-                        [self highlightItem:item inTextView:textView];
-                    }
+                    return;
                 }
-            });
+                
+                stopCounter++;
+                
+                void(^strongHighlightItem)() = weakHighlightItem;
+                
+                // Wait a bit while the file actually opens, otherwise what's in the editor before will still be there, not replaced with the file we want to open yet
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    
+                    IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
+                    if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
+                    {
+                        NSTextView* textView = editor.textView;
+                        if (textView)
+                        {
+                            [self highlightItem:item inTextView:textView];
+                        }
+                        else
+                        {
+                            // The textView isn't ready, wait a bit and try again
+                            strongHighlightItem();
+                        }
+                    }
+                    else
+                    {
+                        // The editor isn't ready, wait a bit and try again
+                        strongHighlightItem();
+                    }
+                });
+            };
+            highlightItem();
         }
     }
 }
