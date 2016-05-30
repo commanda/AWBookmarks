@@ -23,6 +23,20 @@
     self.tableView.dataSource = self.bookmarkCollection;
 }
 
+static NSString *identifier = @"AWBookmarksIdentifier";
 
+- (NSView *)tableView:(NSTableView *)tableView
+   viewForTableColumn:(NSTableColumn *)tableColumn
+                  row:(NSInteger)row
+{
+    NSTextField *textField = [tableView makeViewWithIdentifier:identifier owner:self];
+    if(!textField)
+    {
+        textField = [[NSTextField alloc] initWithFrame:CGRectMake(0, 0, tableColumn.width, 100)];
+        textField.identifier = identifier;
+    }
+    
+    return textField;
+}
 
 @end

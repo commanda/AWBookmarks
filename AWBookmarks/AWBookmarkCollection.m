@@ -145,15 +145,15 @@
     
     AWBookmarkEntry *entry = [self.bookmarks objectAtIndex:rowIndex];
     
-    if([aTableColumn.identifier isEqualToString:@"File Path"])
+    if([aTableColumn.identifier hasSuffix:@"0"])
     {
         toReturn = entry.filePath.absoluteString;
     }
-    else if([aTableColumn.identifier isEqualToString:@"Line Number"])
+    else if([aTableColumn.identifier hasSuffix:@"1"])
     {
         toReturn = entry.lineNumber;
     }
-    else if([aTableColumn.identifier isEqualToString:@"Line Text"])
+    else if([aTableColumn.identifier hasSuffix:@"2"])
     {
         toReturn = entry.lineText;
     }
