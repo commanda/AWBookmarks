@@ -44,31 +44,13 @@
 
 + (void)highlightItem:(AWBookmarkEntry*)item inTextView:(NSTextView*)textView
 {
-    NSUInteger lineNumber = item.lineNumber.integerValue - 1;
     NSString* text = [textView string];
-    
-    NSRegularExpression* re =
-    [NSRegularExpression regularExpressionWithPattern:@"\n"
-                                              options:0
-                                                error:nil];
-    
-    NSArray* result = [re matchesInString:text
-                                  options:NSMatchingReportCompletion
-                                    range:NSMakeRange(0, text.length)];
-    
-    if (result.count <= lineNumber) {
-        return;
+    NSRange rangeInText = [text rangeOfString:item.lineText];
+    if(rangeInText.location != NSNotFound)
+    {
+        [textView scrollRangeToVisible:rangeInText];
+        [textView setSelectedRange:rangeInText];
     }
-    
-    NSUInteger location = 0;
-    NSTextCheckingResult* aim = result[lineNumber];
-    location = aim.range.location;
-    
-    NSRange range = [text lineRangeForRange:NSMakeRange(location, 0)];
-    
-    [textView scrollRangeToVisible:range];
-    
-    [textView setSelectedRange:range];
 }
 
 + (void)openItem:(AWBookmarkEntry*)item
