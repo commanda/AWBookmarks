@@ -81,6 +81,7 @@
         
         if ([appDelegate application:NSApp openFile:item.filePath.path])
         {
+            // Wait a bit while the file actually opens, otherwise what's in the editor before will still be there, not replaced with the file we want to open yet
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                 if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
                 {
@@ -91,7 +92,6 @@
                     }
                 }
             });
-            
         }
     }
 }
