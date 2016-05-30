@@ -30,32 +30,23 @@
         
         // Just for testing, have some items in the collection
         /*
-         <__NSArrayM 0x60800105acd0>(
-         <AWBookmarkEntry: 0x608006e2bfe0>
-         filePath: file:///Users/amanda/Playpen/AWBookmarks/AWBookmarks/AWBookmarksWindowController.h
-         lineNumber: 12
-         lineText:@interface AWBookmarksWindowController : NSWindowController
-         ,
-         <AWBookmarkEntry: 0x60800662e560>
-         filePath: file:///Users/amanda/Playpen/AWBookmarks/AWBookmarks/AWBookmarksWindowController.h
-         lineNumber: 14
-         lineText:@property (strong) AWBookmarkCollection *bookmarkCollection;
-         
-         )
+         filePath: file:///Users/amanda/Playpen/Rayrolling/Rayrolling/Rayrolling.m
+         lineNumber: 77
+         lineText:    [[NSNotificationCenter defaultCenter] removeObserver:self];
+         */
         
         AWBookmarkEntry *one = [[AWBookmarkEntry alloc] init];
-        one.filePath = [NSURL URLWithString:@"file:///Users/amanda/Playpen/AWBookmarks/AWBookmarks/AWBookmarksWindowController.h"];
-        one.lineNumber = @(12);
-        one.lineText = @"@@interface AWBookmarksWindowController : NSWindowController";
+        one.filePath = [NSURL URLWithString:@"file:///Users/amanda/Playpen/Rayrolling/Rayrolling/Rayrolling.m"];
+        one.lineNumber = @(77);
+        one.lineText = @"[[NSNotificationCenter defaultCenter] removeObserver:self];";
         [self.bookmarks addObject:one];
         
-        AWBookmarkEntry *two = [[AWBookmarkEntry alloc] init];
-        two.filePath = [NSURL URLWithString:@"file:///Users/amanda/Playpen/AWBookmarks/AWBookmarks/AWBookmarksWindowController.h"];
-        two.lineNumber = @(14);
-        two.lineText = @"@@property (strong) AWBookmarkCollection *bookmarkCollection;";
-        [self.bookmarks addObject:two];
-         
-         */
+//        AWBookmarkEntry *two = [[AWBookmarkEntry alloc] init];
+//        two.filePath = [NSURL URLWithString:@"file:///Users/amanda/Playpen/AWBookmarks/AWBookmarks/AWBookmarksWindowController.h"];
+//        two.lineNumber = @(14);
+//        two.lineText = @"@@property (strong) AWBookmarkCollection *bookmarkCollection;";
+//        [self.bookmarks addObject:two];
+        
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(performBookmarkThisLine:) name:@"AW_contextMenuBookmarkOptionSelected" object:nil];
         
