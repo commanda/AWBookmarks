@@ -42,7 +42,6 @@
          lineText:@property (strong) AWBookmarkCollection *bookmarkCollection;
          
          )
-         */
         
         AWBookmarkEntry *one = [[AWBookmarkEntry alloc] init];
         one.filePath = [NSURL URLWithString:@"file:///Users/amanda/Playpen/AWBookmarks/AWBookmarks/AWBookmarksWindowController.h"];
@@ -55,7 +54,8 @@
         two.lineNumber = @(14);
         two.lineText = @"@@property (strong) AWBookmarkCollection *bookmarkCollection;";
         [self.bookmarks addObject:two];
-        
+         
+         */
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(performBookmarkThisLine:) name:@"AW_contextMenuBookmarkOptionSelected" object:nil];
         
@@ -107,7 +107,11 @@
 
 - (AWBookmarkEntry *)objectAtIndex:(NSUInteger)index
 {
-    return self.bookmarks[index];
+    if(index < self.bookmarks.count)
+    {
+        return self.bookmarks[index];
+    }
+    return nil;
 }
 
 - (NSString *)serialize
