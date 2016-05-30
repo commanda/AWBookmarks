@@ -97,9 +97,12 @@
     
     if(![self.bookmarks containsObject:newEntry])
     {
+        [self willChangeValueForKey:@"count"];
         [self.bookmarks addObject:newEntry];
-        DLOG(@"added new bookmark entry:\n%@", newEntry);
+        [self didChangeValueForKey:@"count"];
     }
+    
+   // [[NSNotificationCenter defaultCenter] postNotificationName:@"AWBookmark Added" object:self];
     
     [self saveBookmarks];
 }

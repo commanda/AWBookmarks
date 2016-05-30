@@ -21,6 +21,13 @@
     self.window.title = @"Bookmarks";
     
     self.tableView.dataSource = self.bookmarkCollection;
+    
+    [self.bookmarkCollection addObserver:self forKeyPath:@"count" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
+    [self.tableView reloadData];
 }
 
 static NSString *identifier = @"AWBookmarksCellIdentifier";

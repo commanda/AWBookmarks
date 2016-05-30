@@ -11,4 +11,6 @@
 
 @interface AWBookmarkCollection : NSObject <NSTableViewDataSource>
 
+@property (readonly) NSUInteger count;
+
 @end
