@@ -73,8 +73,6 @@
 
 + (BOOL)openItem:(AWBookmarkEntry*)item
 {
-    
-    
     IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
     
     id<NSApplicationDelegate> appDelegate = (id<NSApplicationDelegate>)[NSApp delegate];
@@ -86,14 +84,11 @@
             NSTextView* textView = editor.textView;
             if (textView)
             {
-                
                 [self highlightItem:item inTextView:textView];
-                
                 return YES;
             }
         }
     }
-
     
     // open the file
     BOOL result = [[NSWorkspace sharedWorkspace] openFile:item.filePath.path withApplication:@"Xcode"];
