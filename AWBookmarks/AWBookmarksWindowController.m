@@ -71,42 +71,29 @@
     [textView setSelectedRange:range];
 }
 
-+ (BOOL)openItem:(AWBookmarkEntry*)item
++ (void)openItem:(AWBookmarkEntry*)item
 {
-    IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
-    
-    id<NSApplicationDelegate> appDelegate = (id<NSApplicationDelegate>)[NSApp delegate];
-    
-    if ([appDelegate application:NSApp openFile:item.filePath.path])
+    if(item)
     {
-        if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
+        IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
+        
+        id<NSApplicationDelegate> appDelegate = (id<NSApplicationDelegate>)[NSApp delegate];
+        
+        if ([appDelegate application:NSApp openFile:item.filePath.path])
         {
-            NSTextView* textView = editor.textView;
-            if (textView)
-            {
-                [self highlightItem:item inTextView:textView];
-                return YES;
-            }
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
+                {
+                    NSTextView* textView = editor.textView;
+                    if (textView)
+                    {
+                        [self highlightItem:item inTextView:textView];
+                    }
+                }
+            });
+            
         }
     }
-    
-    // open the file
-    BOOL result = [[NSWorkspace sharedWorkspace] openFile:item.filePath.path withApplication:@"Xcode"];
-    
-    // open the line
-    if (result)
-    {
-        // Use AppleScript to open it
-        NSString* theSource = [NSString stringWithFormat:@"do shell script \"xed --line %ld \" & quoted form of \"%@\"", item.lineNumber.integerValue, item.filePath.absoluteString];
-        
-        NSAppleScript* theScript = [[NSAppleScript alloc] initWithSource:theSource];
-        
-        [theScript performSelectorInBackground:@selector(executeAndReturnError:) withObject:nil];
-        
-        return NO;
-    }
-    
-    return result;
 }
 
 static NSString *identifier = @"AWBookmarksCellIdentifier";

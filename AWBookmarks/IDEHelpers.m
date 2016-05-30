@@ -25,25 +25,16 @@
 
 + (id)currentEditor
 {
-    IDEWorkspaceWindowController* workspaceController = [self currentWorkspaceWindowController];
-    IDEEditorArea* editorArea = [workspaceController editorArea];
-    IDEEditorContext* editorContext = [editorArea lastActiveEditorContext];
-    return [editorContext editor];
-}
-
-+ (IDEWorkspaceWindowController *)currentWorkspaceWindowController
-{
-    IDEWorkspaceWindowController *currentWindowController;
-    NSArray *windows = [[NSApplication sharedApplication] windows];
-    for(NSWindow *window in windows)
-    {
-        if([window.windowController isKindOfClass:NSClassFromString(@"IDEWorkspaceWindowController")])
-        {
-            currentWindowController = (IDEWorkspaceWindowController *)[window windowController];
-            break;
-        }
+    NSWindowController* currentWindowController =
+    [[NSApp mainWindow] windowController];
+    if ([currentWindowController
+         isKindOfClass:NSClassFromString(@"IDEWorkspaceWindowController")]) {
+        IDEWorkspaceWindowController* workspaceController = (IDEWorkspaceWindowController*)currentWindowController;
+        IDEEditorArea* editorArea = [workspaceController editorArea];
+        IDEEditorContext* editorContext = [editorArea lastActiveEditorContext];
+        return [editorContext editor];
     }
-    return currentWindowController;
+    return nil;
 }
 
 + (IDEWorkspaceDocument*)currentWorkspaceDocument
