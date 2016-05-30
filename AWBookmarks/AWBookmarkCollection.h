@@ -7,12 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 
-@interface AWBookmarkCollection : NSObject
-
-
-@property (strong) NSMutableArray *bookmarks;
-
-- (void)saveBookmarks;
+@interface AWBookmarkCollection : NSObject <NSTableViewDataSource>
 
 @end

@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "AWBookmarkCollection.h"
 
-@interface AWBookmarksWindowController : NSWindowController 
+@interface AWBookmarksWindowController : NSWindowController <NSTableViewDelegate>
 
 @property (strong) AWBookmarkCollection *bookmarkCollection;
 

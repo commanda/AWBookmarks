@@ -13,6 +13,8 @@
 
 @interface AWBookmarkCollection ()
 
+
+@property (strong) NSMutableArray *bookmarks;
 @property NSString *projectDir;
 @property NSString *projectName;
 
@@ -131,6 +133,41 @@
     [value writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&fileWritingError];
 }
 
+
+- (NSInteger)numberOfRowsInTableView:(NSTableView *)aTableView
+{
+    return self.bookmarks.count;
+}
+
+- (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
+{
+    id toReturn;
+    
+    AWBookmarkEntry *entry = [self.bookmarks objectAtIndex:rowIndex];
+    
+    if([aTableColumn.identifier isEqualToString:@"File Path"])
+    {
+        toReturn = entry.filePath.absoluteString;
+    }
+    else if([aTableColumn.identifier isEqualToString:@"Line Number"])
+    {
+        toReturn = entry.lineNumber;
+    }
+    else if([aTableColumn.identifier isEqualToString:@"Line Text"])
+    {
+        toReturn = entry.lineText;
+    }
+    
+    return toReturn;
+}
+
+- (void)tableView:(NSTableView *)aTableView
+   setObjectValue:(id)anObject
+   forTableColumn:(NSTableColumn *)aTableColumn
+              row:(NSInteger)rowIndex
+{
+    
+}
 
 
 @end

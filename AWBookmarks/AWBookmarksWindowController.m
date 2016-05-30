@@ -9,6 +9,7 @@
 #import "AWBookmarksWindowController.h"
 
 @interface AWBookmarksWindowController ()
+@property (strong) IBOutlet NSTableView *tableView;
 
 @end
 
@@ -18,7 +19,10 @@
     [super windowDidLoad];
     
     self.window.title = @"Bookmarks";
+    
+    self.tableView.dataSource = self.bookmarkCollection;
 }
+
 
 
 @end
