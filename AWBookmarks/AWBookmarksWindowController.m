@@ -42,8 +42,11 @@
 }
 
 
-+ (void)highlightItem:(AWBookmarkEntry*)item inTextView:(NSTextView*)textView
++ (void)highlightItem:(AWBookmarkEntry*)item inTextView:(DVTSourceTextView *)textView
 {
+    // Unfold the source, in case it is currently folded
+    [textView unfoldAll:nil];
+    
     NSString* text = [textView string];
     NSRange rangeInText = [text rangeOfString:item.lineText];
     if(rangeInText.location != NSNotFound)
@@ -84,7 +87,7 @@
                     IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
                     if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
                     {
-                        NSTextView* textView = editor.textView;
+                        DVTSourceTextView* textView = (DVTSourceTextView *)editor.textView;
                         if (textView)
                         {
                             [self highlightItem:item inTextView:textView];

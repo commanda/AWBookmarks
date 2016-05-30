@@ -10,7 +10,9 @@
 #import <AppKit/AppKit.h>
 
 
-
+@interface DVTSourceTextView : NSTextView
+- (void)unfoldAll:(id)arg1;
+@end
 
 @interface DVTChoice : NSObject
 - (id)initWithTitle:(id)arg1 toolTip:(id)arg2 image:(id)arg3 representedObject:(id)arg4;
