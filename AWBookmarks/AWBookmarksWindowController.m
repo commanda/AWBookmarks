@@ -74,47 +74,39 @@
 + (BOOL)openItem:(AWBookmarkEntry*)item
 {
     
-    NSWindowController* currentWindowController =
-    [[NSApp mainWindow] windowController];
     
-    DLOG(@"currentWindowController %@",[currentWindowController description]);
+    IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
     
-    if ([currentWindowController
-         isKindOfClass:NSClassFromString(@"IDEWorkspaceWindowController")]) {
-        
-        // NSLog(@"Open in current Xocde");
-        id<NSApplicationDelegate> appDelegate = (id<NSApplicationDelegate>)[NSApp delegate];
-        if ([appDelegate application:NSApp openFile:item.filePath.absoluteString]) {
-            
-            IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
-            if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")]) {
-                NSTextView* textView = editor.textView;
-                if (textView) {
-                    
-                    [self highlightItem:item inTextView:textView];
-                    
-                    return YES;
-                }
+    id<NSApplicationDelegate> appDelegate = (id<NSApplicationDelegate>)[NSApp delegate];
+    
+    if ([appDelegate application:NSApp openFile:item.filePath.path])
+    {
+        if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
+        {
+            NSTextView* textView = editor.textView;
+            if (textView)
+            {
+                
+                [self highlightItem:item inTextView:textView];
+                
+                return YES;
             }
         }
     }
+
     
     // open the file
-    BOOL result = [[NSWorkspace sharedWorkspace] openFile:item.filePath.absoluteString
-                                          withApplication:@"Xcode"];
+    BOOL result = [[NSWorkspace sharedWorkspace] openFile:item.filePath.path withApplication:@"Xcode"];
     
     // open the line
-    if (result) {
+    if (result)
+    {
+        // Use AppleScript to open it
+        NSString* theSource = [NSString stringWithFormat:@"do shell script \"xed --line %ld \" & quoted form of \"%@\"", item.lineNumber.integerValue, item.filePath.absoluteString];
         
-        // pretty slow to open file with applescript
-        
-        NSString* theSource = [NSString
-                               stringWithFormat:
-                               @"do shell script \"xed --line %ld \" & quoted form of \"%@\"",
-                               item.lineNumber.integerValue, item.filePath.absoluteString];
         NSAppleScript* theScript = [[NSAppleScript alloc] initWithSource:theSource];
-        [theScript performSelectorInBackground:@selector(executeAndReturnError:)
-                                    withObject:nil];
+        
+        [theScript performSelectorInBackground:@selector(executeAndReturnError:) withObject:nil];
         
         return NO;
     }
