@@ -23,7 +23,7 @@
     self.tableView.dataSource = self.bookmarkCollection;
 }
 
-static NSString *identifier = @"AWBookmarksIdentifier";
+static NSString *identifier = @"AWBookmarksCellIdentifier";
 
 - (NSView *)tableView:(NSTableView *)tableView
    viewForTableColumn:(NSTableColumn *)tableColumn
@@ -32,8 +32,10 @@ static NSString *identifier = @"AWBookmarksIdentifier";
     NSTextField *textField = [tableView makeViewWithIdentifier:identifier owner:self];
     if(!textField)
     {
-        textField = [[NSTextField alloc] initWithFrame:CGRectMake(0, 0, tableColumn.width, 100)];
+        textField = [[NSTextField alloc] initWithFrame:CGRectMake(0, 0, tableColumn.width, tableView.rowHeight)];
         textField.identifier = identifier;
+        textField.editable = NO;
+        textField.selectable = NO;
     }
     
     return textField;
