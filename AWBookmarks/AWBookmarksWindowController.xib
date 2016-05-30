@@ -20,108 +20,11 @@
             <view key="contentView" id="se5-gp-TjO">
                 <rect key="frame" x="0.0" y="0.0" width="471" height="472"/>
                 <autoresizingMask key="autoresizingMask"/>
-                <subviews>
-                    <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="19" horizontalPageScroll="10" verticalLineScroll="19" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yf6-bE-AzH">
-                        <rect key="frame" x="48" y="287" width="240" height="135"/>
-                        <clipView key="contentView" ambiguous="YES" id="FMt-eQ-ICC">
-                            <rect key="frame" x="1" y="0.0" width="238" height="134"/>
-                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                            <subviews>
-                                <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" columnSelection="YES" multipleSelection="NO" autosaveColumns="NO" rowSizeStyle="automatic" headerView="I3U-aa-cLh" viewBased="YES" id="oJ8-eQ-isS">
-                                    <rect key="frame" x="0.0" y="0.0" width="238" height="111"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <size key="intercellSpacing" width="3" height="2"/>
-                                    <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                    <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
-                                    <tableColumns>
-                                        <tableColumn width="235" minWidth="40" maxWidth="1000" id="yFn-OJ-gak">
-                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
-                                                <font key="font" metaFont="smallSystem"/>
-                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
-                                            </tableHeaderCell>
-                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" title="Text Cell" id="tFl-UM-KCM">
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
-                                            <prototypeCellViews>
-                                                <tableCellView id="aO4-sp-JvL">
-                                                    <rect key="frame" x="1" y="1" width="235" height="17"/>
-                                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                                    <subviews>
-                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="emU-T5-OQ7">
-                                                            <rect key="frame" x="0.0" y="0.0" width="100" height="17"/>
-                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="i6i-AC-7to">
-                                                                <font key="font" metaFont="system"/>
-                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
-                                                                <connections>
-                                                                    <binding destination="aO4-sp-JvL" name="value" keyPath="objectValue.lineText" id="Pp9-oT-lyJ"/>
-                                                                </connections>
-                                                            </textFieldCell>
-                                                            <connections>
-                                                                <binding destination="aO4-sp-JvL" name="value" keyPath="objectValue.lineText" id="KiR-cJ-KqH"/>
-                                                            </connections>
-                                                        </textField>
-                                                    </subviews>
-                                                    <connections>
-                                                        <outlet property="textField" destination="emU-T5-OQ7" id="KPp-Ll-DG7"/>
-                                                    </connections>
-                                                </tableCellView>
-                                            </prototypeCellViews>
-                                            <connections>
-                                                <binding destination="y8Q-Q5-qAr" name="value" keyPath="arrangedObjects.lineText" id="8HJ-eW-2w3">
-                                                    <dictionary key="options">
-                                                        <bool key="NSContinuouslyUpdatesValue" value="YES"/>
-                                                        <string key="NSMultipleValuesPlaceholder">?</string>
-                                                        <string key="NSNoSelectionPlaceholder">??</string>
-                                                        <string key="NSNotApplicablePlaceholder">???</string>
-                                                        <string key="NSNullPlaceholder">????</string>
-                                                        <bool key="NSValidatesImmediately" value="YES"/>
-                                                    </dictionary>
-                                                </binding>
-                                            </connections>
-                                        </tableColumn>
-                                    </tableColumns>
-                                </tableView>
-                            </subviews>
-                            <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </clipView>
-                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="LUc-jf-ccI">
-                            <rect key="frame" x="1" y="7" width="0.0" height="16"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                        <scroller key="verticalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="NO" id="uxU-S7-YgQ">
-                            <rect key="frame" x="224" y="17" width="15" height="102"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </scroller>
-                        <tableHeaderView key="headerView" id="I3U-aa-cLh">
-                            <rect key="frame" x="0.0" y="0.0" width="238" height="23"/>
-                            <autoresizingMask key="autoresizingMask"/>
-                        </tableHeaderView>
-                    </scrollView>
-                </subviews>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
             <point key="canvasLocation" x="268.5" y="651"/>
         </window>
-        <arrayController objectClassName="AWBookmarkEntry" id="y8Q-Q5-qAr">
-            <declaredKeys>
-                <string>filePath</string>
-                <string>lineNumber</string>
-                <string>lineText</string>
-            </declaredKeys>
-            <connections>
-                <binding destination="-2" name="contentArray" keyPath="self.bookmarkCollection.bookmarks" id="30l-Uk-AlE">
-                    <dictionary key="options">
-                        <bool key="NSDeletesObjectsOnRemove" value="YES"/>
-                    </dictionary>
-                </binding>
-            </connections>
-        </arrayController>
     </objects>
 </document>
