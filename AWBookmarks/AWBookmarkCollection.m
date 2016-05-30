@@ -102,9 +102,12 @@
         [self didChangeValueForKey:@"count"];
     }
     
-   // [[NSNotificationCenter defaultCenter] postNotificationName:@"AWBookmark Added" object:self];
-    
     [self saveBookmarks];
+}
+
+- (AWBookmarkEntry *)objectAtIndex:(NSUInteger)index
+{
+    return self.bookmarks[index];
 }
 
 - (NSString *)serialize

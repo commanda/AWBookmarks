@@ -8,9 +8,12 @@
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
+#import "AWBookmarkEntry.h"
 
 @interface AWBookmarkCollection : NSObject <NSTableViewDataSource>
 
 @property (readonly) NSUInteger count;
+
+- (AWBookmarkEntry *)objectAtIndex:(NSUInteger)index;
 
 @end

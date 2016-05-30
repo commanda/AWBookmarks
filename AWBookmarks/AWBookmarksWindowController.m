@@ -7,6 +7,8 @@
 //
 
 #import "AWBookmarksWindowController.h"
+#import "CommonDefines.h"
+#import "AWBookmarkEntry.h"
 
 @interface AWBookmarksWindowController ()
 @property (strong) IBOutlet NSTableView *tableView;
@@ -28,6 +30,96 @@
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
 {
     [self.tableView reloadData];
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
+    NSInteger selectedRow = self.tableView.selectedRow;
+    AWBookmarkEntry *entry = [self.bookmarkCollection objectAtIndex:selectedRow];
+    
+    // Open the file it references and scroll to that line
+    [[self class] openItem:entry];
+}
+
+
++ (void)highlightItem:(AWBookmarkEntry*)item inTextView:(NSTextView*)textView
+{
+    NSUInteger lineNumber = item.lineNumber.integerValue - 1;
+    NSString* text = [textView string];
+    
+    NSRegularExpression* re =
+    [NSRegularExpression regularExpressionWithPattern:@"\n"
+                                              options:0
+                                                error:nil];
+    
+    NSArray* result = [re matchesInString:text
+                                  options:NSMatchingReportCompletion
+                                    range:NSMakeRange(0, text.length)];
+    
+    if (result.count <= lineNumber) {
+        return;
+    }
+    
+    NSUInteger location = 0;
+    NSTextCheckingResult* aim = result[lineNumber];
+    location = aim.range.location;
+    
+    NSRange range = [text lineRangeForRange:NSMakeRange(location, 0)];
+    
+    [textView scrollRangeToVisible:range];
+    
+    [textView setSelectedRange:range];
+}
+
++ (BOOL)openItem:(AWBookmarkEntry*)item
+{
+    
+    NSWindowController* currentWindowController =
+    [[NSApp mainWindow] windowController];
+    
+    DLOG(@"currentWindowController %@",[currentWindowController description]);
+    
+    if ([currentWindowController
+         isKindOfClass:NSClassFromString(@"IDEWorkspaceWindowController")]) {
+        
+        // NSLog(@"Open in current Xocde");
+        id<NSApplicationDelegate> appDelegate = (id<NSApplicationDelegate>)[NSApp delegate];
+        if ([appDelegate application:NSApp openFile:item.filePath.absoluteString]) {
+            
+            IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
+            if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")]) {
+                NSTextView* textView = editor.textView;
+                if (textView) {
+                    
+                    [self highlightItem:item inTextView:textView];
+                    
+                    return YES;
+                }
+            }
+        }
+    }
+    
+    // open the file
+    BOOL result = [[NSWorkspace sharedWorkspace] openFile:item.filePath.absoluteString
+                                          withApplication:@"Xcode"];
+    
+    // open the line
+    if (result) {
+        
+        // pretty slow to open file with applescript
+        
+        NSString* theSource = [NSString
+                               stringWithFormat:
+                               @"do shell script \"xed --line %ld \" & quoted form of \"%@\"",
+                               item.lineNumber.integerValue, item.filePath.absoluteString];
+        NSAppleScript* theScript = [[NSAppleScript alloc] initWithSource:theSource];
+        [theScript performSelectorInBackground:@selector(executeAndReturnError:)
+                                    withObject:nil];
+        
+        return NO;
+    }
+    
+    return result;
 }
 
 static NSString *identifier = @"AWBookmarksCellIdentifier";
