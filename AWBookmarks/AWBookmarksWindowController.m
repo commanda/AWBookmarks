@@ -39,6 +39,8 @@
     
     // Open the file it references and scroll to that line
     [[self class] openItem:entry];
+    
+    [self.tableView deselectRow:selectedRow];
 }
 
 
