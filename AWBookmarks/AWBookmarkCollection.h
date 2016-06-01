@@ -15,5 +15,6 @@
 @property (readonly) NSUInteger count;
 
 - (AWBookmarkEntry *)objectAtIndex:(NSUInteger)index;
+- (void)resolveAllBookmarks;
 
 @end

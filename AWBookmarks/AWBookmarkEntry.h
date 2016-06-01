@@ -15,4 +15,6 @@
 @property (nonatomic, assign) NSNumber *lineNumber;
 @property (copy) NSString *lineText;
 
+- (void)resolve;
+
 @end

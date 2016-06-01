@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		373A07221CF0034700ED350C /* IDEHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 373A07211CF0034700ED350C /* IDEHelpers.m */; };
 		373A07251CF007FC00ED350C /* AWBookmarkEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 373A07241CF007FC00ED350C /* AWBookmarkEntry.m */; };
+		374360B91CFE799700D048EF /* NSString+Score.m in Sources */ = {isa = PBXBuildFile; fileRef = 374360B81CFE799700D048EF /* NSString+Score.m */; };
 		374572391CEFF8AF00D20378 /* AWBookmarksWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 374572371CEFF8AF00D20378 /* AWBookmarksWindowController.m */; };
 		3745723A1CEFF8AF00D20378 /* AWBookmarksWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 374572381CEFF8AF00D20378 /* AWBookmarksWindowController.xib */; };
 		374A48261CEC0A7500D68C7A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 374A48251CEC0A7500D68C7A /* AppKit.framework */; };
@@ -26,6 +27,8 @@
 		373A07211CF0034700ED350C /* IDEHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDEHelpers.m; sourceTree = "<group>"; };
 		373A07231CF007FC00ED350C /* AWBookmarkEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarkEntry.h; sourceTree = "<group>"; };
 		373A07241CF007FC00ED350C /* AWBookmarkEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWBookmarkEntry.m; sourceTree = "<group>"; };
+		374360B71CFE799700D048EF /* NSString+Score.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Score.h"; sourceTree = "<group>"; };
+		374360B81CFE799700D048EF /* NSString+Score.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Score.m"; sourceTree = "<group>"; };
 		374572361CEFF8AF00D20378 /* AWBookmarksWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarksWindowController.h; sourceTree = "<group>"; };
 		374572371CEFF8AF00D20378 /* AWBookmarksWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWBookmarksWindowController.m; sourceTree = "<group>"; };
 		374572381CEFF8AF00D20378 /* AWBookmarksWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AWBookmarksWindowController.xib; sourceTree = "<group>"; };
@@ -60,6 +63,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		374360B61CFE798500D048EF /* Fuzzy Matching */ = {
+			isa = PBXGroup;
+			children = (
+				374360B71CFE799700D048EF /* NSString+Score.h */,
+				374360B81CFE799700D048EF /* NSString+Score.m */,
+			);
+			name = "Fuzzy Matching";
+			sourceTree = "<group>";
+		};
 		374A48191CEC0A7500D68C7A = {
 			isa = PBXGroup;
 			children = (
@@ -89,6 +101,7 @@
 		374A48291CEC0A7500D68C7A /* AWBookmarks */ = {
 			isa = PBXGroup;
 			children = (
+				374360B61CFE798500D048EF /* Fuzzy Matching */,
 				3753E3631CF00B3100890887 /* Models */,
 				3753E3641CF00B3C00890887 /* Views */,
 				3753E3621CF00B2200890887 /* Adaptor */,
@@ -221,6 +234,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				374360B91CFE799700D048EF /* NSString+Score.m in Sources */,
 				373A07221CF0034700ED350C /* IDEHelpers.m in Sources */,
 				374A482F1CEC0A7500D68C7A /* AWBookmarksPlugin.m in Sources */,
 				374572391CEFF8AF00D20378 /* AWBookmarksWindowController.m in Sources */,
