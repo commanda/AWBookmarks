@@ -17,33 +17,6 @@
 
 @implementation AWBookmarksWindowController
 
-- (void)windowDidLoad {
-    [super windowDidLoad];
-    
-    self.window.title = @"Bookmarks";
-    
-    self.tableView.dataSource = self.bookmarkCollection;
-    
-    [self.bookmarkCollection addObserver:self forKeyPath:@"count" options:NSKeyValueObservingOptionNew context:nil];
-}
-
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
-{
-    [self.tableView reloadData];
-}
-
-- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
-{
-    NSInteger selectedRow = self.tableView.selectedRow;
-    AWBookmarkEntry *entry = [self.bookmarkCollection objectAtIndex:selectedRow];
-    
-    // Open the file it references and scroll to that line
-    [[self class] openItem:entry];
-    
-    [self.tableView deselectRow:selectedRow];
-}
-
-
 + (void)highlightItem:(AWBookmarkEntry*)item inTextView:(DVTSourceTextView *)textView
 {
     // Unfold the source, in case it is currently folded
@@ -110,6 +83,33 @@
             highlightItem();
         }
     }
+}
+
+- (void)windowDidLoad
+{
+    [super windowDidLoad];
+    
+    self.window.title = @"Bookmarks";
+    
+    self.tableView.dataSource = self.bookmarkCollection;
+    
+    [self.bookmarkCollection addObserver:self forKeyPath:@"count" options:NSKeyValueObservingOptionNew context:nil];
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
+    [self.tableView reloadData];
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
+{
+    NSInteger selectedRow = self.tableView.selectedRow;
+    AWBookmarkEntry *entry = [self.bookmarkCollection objectAtIndex:selectedRow];
+    
+    // Open the file it references and scroll to that line
+    [[self class] openItem:entry];
+    
+    [self.tableView deselectRow:selectedRow];
 }
 
 static NSString *identifier = @"AWBookmarksCellIdentifier";
