@@ -68,22 +68,14 @@
 
 - (void)toggleBookmarksWindow
 {
-    // Show/hide the bookmarks window
-    if(!self.windowController.window.isVisible)
+    if(self.windowController == nil)
     {
-        if(self.windowController == nil)
-        {
-            self.windowController = [[AWBookmarksWindowController alloc] initWithWindowNibName:@"AWBookmarksWindowController"];
-            self.windowController.bookmarkCollection = self.bookmarkCollection;
-        }
-        
-        [self.windowController.window makeKeyAndOrderFront:nil];
-        
+        self.windowController = [[AWBookmarksWindowController alloc] initWithWindowNibName:@"AWBookmarksWindowController"];
+        self.windowController.bookmarkCollection = self.bookmarkCollection;
     }
-    else
-    {
-        [self.windowController close];
-    }
+    
+    [self.windowController.window makeKeyAndOrderFront:self.windowController];
+    [self.windowController.window setOrderedIndex:0];
 }
 
 - (void)dealloc
