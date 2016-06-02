@@ -10,18 +10,20 @@
 #import "CommonDefines.h"
 #import "NSString+LevenshteinDistance.h"
 
+#define THRESHOLD_SCORE 100
+
 @interface AWMatch : NSObject
 @property NSString *text;
 @property CGFloat score;
 @property NSInteger lineDistance;
-@property int lineNo;
+@property int lineIndex;
 @property CGFloat weightedScore;
 @end
 
 @implementation AWMatch
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"\ntext: %@\nscore: %f\ndistance: %d\nlineNo: %d\nWEIGHTEDSCORE: %f\n", self.text, self.score, self.lineDistance, self.lineNo, self.weightedScore];
+    return [NSString stringWithFormat:@"\ntext: %@\nscore: %f\ndistance: %ld\nlineNumber: %d\nWEIGHTEDSCORE: %f\n", self.text, self.score, self.lineDistance, self.lineIndex, self.weightedScore];
 }
 @end
 
@@ -53,39 +55,40 @@
         
         int myLineIndex = _lineNumber.intValue - 1;
         
-        CGFloat bestScore = NSIntegerMax;
-        int bestLineIndex = 0;
         for(int lineIndex = 0; lineIndex < lines.count; lineIndex++)
         {
             NSString *line = lines[lineIndex];
             NSInteger lineScore = [line levenshteinDistanceFromString:_lineText];
             NSInteger lineDistance = abs(myLineIndex - lineIndex);
-            NSInteger weightedLineScore = (lineScore + 1) * lineDistance;
             
             AWMatch *match = [[AWMatch alloc] init];
             match.text = line;
             match.score = lineScore;
             match.lineDistance = lineDistance;
-            match.lineNo = lineIndex;
-            match.weightedScore = weightedLineScore;
+            match.lineIndex = lineIndex;
             [debuggingMatches addObject:match];
             
-            if(weightedLineScore < bestScore)
-            {
-                bestScore = weightedLineScore;
-                bestLineIndex = lineIndex;
-            }
-            DLOG(@"bp");
         }
         
-        
         [debuggingMatches sortUsingComparator:^NSComparisonResult(AWMatch *obj1, AWMatch *obj2){
-            return obj1.weightedScore > obj2.weightedScore;
+            if(obj1.score == obj2.score)
+            {
+                return obj1.lineDistance > obj2.lineDistance;
+            }
+            else return obj1.score > obj2.score;
         }];
-        DLOG(@"bp");
         
-        self.lineNumber = @(bestLineIndex + 1);
-        self.lineText = lines[bestLineIndex];
+        AWMatch *best = [debuggingMatches firstObject];
+        
+        if(best.score < THRESHOLD_SCORE && best.text.length > 0)
+        {
+            self.lineNumber = @(best.lineIndex + 1);
+            self.lineText = best.text;
+        }
+        else
+        {
+            // Delete this entry
+        }
     }
 }
 // 54, 53, 55, 52, 56,
