@@ -140,6 +140,15 @@
 
     [self willChangeValueForKey:@"count"];
     [self.bookmarks makeObjectsPerformSelector:@selector(resolve)];
+    
+    for(AWBookmarkEntry *entry in [self.bookmarks copy])
+    {
+        if(entry.toBeDeleted)
+        {
+            [self.bookmarks removeObject:entry];
+        }
+    }
+    
     [self didChangeValueForKey:@"count"];
 }
 

@@ -10,7 +10,7 @@
 #import "CommonDefines.h"
 #import "NSString+LevenshteinDistance.h"
 
-#define THRESHOLD_SCORE 100
+#define THRESHOLD_SCORE 50
 
 @interface AWMatch : NSObject
 @property NSString *text;
@@ -40,18 +40,17 @@
     
     /*
      search through the file fuzzy matching for that old line text
-     there will probalby be several lines that are exactly the same, so then weight them by distance from the original line number
+     there will probably be several lines that are exactly the same, so then weight them by distance from the original line number
      have some threshold, so if we don't get a good enough match, delete that bookmark entry
      use edit distance algorithm, use fuzzy matching algorithm
      */
-    DLOG(@"----------------------\n%@", self.lineText);
     NSError *error;
     NSString *text = [NSString stringWithContentsOfURL:self.filePath encoding:NSUTF8StringEncoding error:&error];
     if(!error)
     {
         NSArray *lines = [text componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
         
-        NSMutableArray *debuggingMatches = [[NSMutableArray alloc] init];
+        NSMutableArray *lineEvaluations = [[NSMutableArray alloc] init];
         
         int myLineIndex = _lineNumber.intValue - 1;
         
@@ -66,11 +65,10 @@
             match.score = lineScore;
             match.lineDistance = lineDistance;
             match.lineIndex = lineIndex;
-            [debuggingMatches addObject:match];
-            
+            [lineEvaluations addObject:match];
         }
         
-        [debuggingMatches sortUsingComparator:^NSComparisonResult(AWMatch *obj1, AWMatch *obj2){
+        [lineEvaluations sortUsingComparator:^NSComparisonResult(AWMatch *obj1, AWMatch *obj2){
             if(obj1.score == obj2.score)
             {
                 return obj1.lineDistance > obj2.lineDistance;
@@ -78,7 +76,7 @@
             else return obj1.score > obj2.score;
         }];
         
-        AWMatch *best = [debuggingMatches firstObject];
+        AWMatch *best = [lineEvaluations firstObject];
         
         if(best.score < THRESHOLD_SCORE && best.text.length > 0)
         {
@@ -87,7 +85,7 @@
         }
         else
         {
-            // Delete this entry
+            _toBeDeleted = YES;
         }
     }
 }
