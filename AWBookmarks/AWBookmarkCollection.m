@@ -35,11 +35,11 @@
          lineText:    [[NSNotificationCenter defaultCenter] removeObserver:self];
          */
         
-        AWBookmarkEntry *one = [[AWBookmarkEntry alloc] init];
-        one.filePath = [NSURL URLWithString:@"file:///Users/amanda/Playpen/Rayrolling/Rayrolling/Rayrolling.m"];
-        one.lineNumber = @(54);
-        one.lineText = @"   [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidFinishLaunchingNotification object:nil]";
-        [self.bookmarks addObject:one];
+//        AWBookmarkEntry *one = [[AWBookmarkEntry alloc] init];
+//        one.filePath = [NSURL URLWithString:@"file:///Users/amanda/Playpen/Rayrolling/Rayrolling/Rayrolling.m"];
+//        one.lineNumber = @(54);
+//        one.lineText = @"   [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidFinishLaunchingNotification object:nil]";
+//        [self.bookmarks addObject:one];
         
 //        AWBookmarkEntry *two = [[AWBookmarkEntry alloc] init];
 //        two.filePath = [NSURL URLWithString:@"file:///Users/amanda/Playpen/AWBookmarks/AWBookmarks/AWBookmarksWindowController.h"];
