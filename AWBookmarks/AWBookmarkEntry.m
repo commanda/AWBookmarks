@@ -28,16 +28,70 @@
 @end
 
 
+@interface AWBookmarkEntry ()
+
+@property (nonatomic) NSData *fileBookmark;
+
+@end
+
 @implementation AWBookmarkEntry
+
++ (NSData*)bookmarkForURL:(NSURL*)url
+{
+    NSError* theError = nil;
+    NSData* bookmark = [url bookmarkDataWithOptions:NSURLBookmarkCreationSuitableForBookmarkFile
+                     includingResourceValuesForKeys:nil
+                                      relativeToURL:nil
+                                              error:&theError];
+    if (theError || (bookmark == nil))
+    {
+        // Handle any errors.
+        return nil;
+    }
+    return bookmark;
+}
+
++ (NSURL*)urlForBookmark:(NSData*)bookmark
+{
+    BOOL bookmarkIsStale = NO;
+    NSError* theError = nil;
+    NSURL* bookmarkURL = [NSURL URLByResolvingBookmarkData:bookmark
+                                                   options:NSURLBookmarkResolutionWithoutUI
+                                             relativeToURL:nil
+                                       bookmarkDataIsStale:&bookmarkIsStale
+                                                     error:&theError];
+    
+    if (bookmarkIsStale || (theError != nil))
+    {
+        // Handle any errors
+        return nil;
+    }
+    return bookmarkURL;
+}
 
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"%@\nfilePath: %@\nlineNumber: %@\nlineText:%@", [super description], self.fileURL, self.lineNumber, self.lineText];
 }
 
+- (void)setFileBookmark:(NSData *)fileBookmark
+{
+    _fileBookmark = fileBookmark;
+}
+
+- (NSURL *)fileURL
+{
+    return [AWBookmarkEntry urlForBookmark:self.fileBookmark];
+}
+
+- (void)setFileURL:(NSURL *)fileURL
+{
+    self.fileBookmark = [AWBookmarkEntry bookmarkForURL:fileURL];
+    DLOG(@"fileBookmark: %@", [AWBookmarkEntry urlForBookmark:self.fileBookmark]);
+}
+
 - (void)resolve
 {
-    
     /*
      search through the file fuzzy matching for that old line text
      there will probably be several lines that are exactly the same, so then weight them by distance from the original line number
