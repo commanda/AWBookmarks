@@ -13,7 +13,7 @@
 @interface AWMatch : NSObject
 @property NSString *text;
 @property CGFloat score;
-@property int lineDistance;
+@property NSInteger lineDistance;
 @property int lineNo;
 @property CGFloat weightedScore;
 @end
@@ -51,30 +51,31 @@
         
         NSMutableArray *debuggingMatches = [[NSMutableArray alloc] init];
         
+        int myLineIndex = _lineNumber.intValue - 1;
         
-        CGFloat bestScore = NSIntegerMin;
-        int bestLine = _lineNumber.intValue;
-        for(int lineNo = 0; lineNo < lines.count; lineNo++)
+        CGFloat bestScore = NSIntegerMax;
+        int bestLineIndex = 0;
+        for(int lineIndex = 0; lineIndex < lines.count; lineIndex++)
         {
-            NSString *line = lines[lineNo];
+            NSString *line = lines[lineIndex];
             NSInteger lineScore = [line levenshteinDistanceFromString:_lineText];
-            int lineDistance = abs(_lineNumber.intValue - lineNo);
-            CGFloat weightedDistance = 0.1 * lineDistance;
-            CGFloat weightedLineScore = lineScore;
+            NSInteger lineDistance = abs(myLineIndex - lineIndex);
+            NSInteger weightedLineScore = (lineScore + 1) * lineDistance;
             
             AWMatch *match = [[AWMatch alloc] init];
             match.text = line;
             match.score = lineScore;
             match.lineDistance = lineDistance;
-            match.lineNo = lineNo;
+            match.lineNo = lineIndex;
             match.weightedScore = weightedLineScore;
             [debuggingMatches addObject:match];
             
-            if(weightedLineScore > bestScore)
+            if(weightedLineScore < bestScore)
             {
                 bestScore = weightedLineScore;
-                bestLine = lineNo;
+                bestLineIndex = lineIndex;
             }
+            DLOG(@"bp");
         }
         
         
@@ -83,8 +84,8 @@
         }];
         DLOG(@"bp");
         
-        self.lineNumber = @(bestLine + 1);
-        self.lineText = lines[bestLine];
+        self.lineNumber = @(bestLineIndex + 1);
+        self.lineText = lines[bestLineIndex];
     }
 }
 // 54, 53, 55, 52, 56,
