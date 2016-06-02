@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		373A07221CF0034700ED350C /* IDEHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 373A07211CF0034700ED350C /* IDEHelpers.m */; };
 		373A07251CF007FC00ED350C /* AWBookmarkEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 373A07241CF007FC00ED350C /* AWBookmarkEntry.m */; };
-		374360B91CFE799700D048EF /* NSString+Score.m in Sources */ = {isa = PBXBuildFile; fileRef = 374360B81CFE799700D048EF /* NSString+Score.m */; };
 		374572391CEFF8AF00D20378 /* AWBookmarksWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 374572371CEFF8AF00D20378 /* AWBookmarksWindowController.m */; };
 		3745723A1CEFF8AF00D20378 /* AWBookmarksWindowController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 374572381CEFF8AF00D20378 /* AWBookmarksWindowController.xib */; };
 		374A48261CEC0A7500D68C7A /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 374A48251CEC0A7500D68C7A /* AppKit.framework */; };
@@ -18,6 +17,7 @@
 		374A482F1CEC0A7500D68C7A /* AWBookmarksPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 374A482E1CEC0A7500D68C7A /* AWBookmarksPlugin.m */; };
 		374A48321CEC0A7500D68C7A /* NSObject_Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 374A48311CEC0A7500D68C7A /* NSObject_Extension.m */; };
 		3753E3681CF00E0600890887 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = 3753E3671CF00E0600890887 /* Aspects.m */; };
+		378107C41D00A67400776523 /* NSString+LevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 378107C31D00A67400776523 /* NSString+LevenshteinDistance.m */; };
 		37A454C51CF0E60F00F3D1D8 /* AWBookmarkCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A454C41CF0E60F00F3D1D8 /* AWBookmarkCollection.m */; };
 		37C65F071CF017CC00A2F5D7 /* AWContextMenuHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 37C65F061CF017CC00A2F5D7 /* AWContextMenuHandler.m */; };
 /* End PBXBuildFile section */
@@ -27,8 +27,6 @@
 		373A07211CF0034700ED350C /* IDEHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDEHelpers.m; sourceTree = "<group>"; };
 		373A07231CF007FC00ED350C /* AWBookmarkEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarkEntry.h; sourceTree = "<group>"; };
 		373A07241CF007FC00ED350C /* AWBookmarkEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWBookmarkEntry.m; sourceTree = "<group>"; };
-		374360B71CFE799700D048EF /* NSString+Score.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+Score.h"; sourceTree = "<group>"; };
-		374360B81CFE799700D048EF /* NSString+Score.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Score.m"; sourceTree = "<group>"; };
 		374572361CEFF8AF00D20378 /* AWBookmarksWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarksWindowController.h; sourceTree = "<group>"; };
 		374572371CEFF8AF00D20378 /* AWBookmarksWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWBookmarksWindowController.m; sourceTree = "<group>"; };
 		374572381CEFF8AF00D20378 /* AWBookmarksWindowController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AWBookmarksWindowController.xib; sourceTree = "<group>"; };
@@ -44,6 +42,8 @@
 		3753E3661CF00E0600890887 /* Aspects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Aspects.h; sourceTree = "<group>"; };
 		3753E3671CF00E0600890887 /* Aspects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Aspects.m; sourceTree = "<group>"; };
 		375560441CEE6EB600EECB49 /* CommonDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonDefines.h; sourceTree = "<group>"; };
+		378107C21D00A67400776523 /* NSString+LevenshteinDistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+LevenshteinDistance.h"; sourceTree = "<group>"; };
+		378107C31D00A67400776523 /* NSString+LevenshteinDistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+LevenshteinDistance.m"; sourceTree = "<group>"; };
 		37A454C31CF0E60F00F3D1D8 /* AWBookmarkCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarkCollection.h; sourceTree = "<group>"; };
 		37A454C41CF0E60F00F3D1D8 /* AWBookmarkCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWBookmarkCollection.m; sourceTree = "<group>"; };
 		37C65F051CF017CC00A2F5D7 /* AWContextMenuHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWContextMenuHandler.h; sourceTree = "<group>"; };
@@ -66,8 +66,8 @@
 		374360B61CFE798500D048EF /* Fuzzy Matching */ = {
 			isa = PBXGroup;
 			children = (
-				374360B71CFE799700D048EF /* NSString+Score.h */,
-				374360B81CFE799700D048EF /* NSString+Score.m */,
+				378107C21D00A67400776523 /* NSString+LevenshteinDistance.h */,
+				378107C31D00A67400776523 /* NSString+LevenshteinDistance.m */,
 			);
 			name = "Fuzzy Matching";
 			sourceTree = "<group>";
@@ -234,10 +234,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				374360B91CFE799700D048EF /* NSString+Score.m in Sources */,
 				373A07221CF0034700ED350C /* IDEHelpers.m in Sources */,
 				374A482F1CEC0A7500D68C7A /* AWBookmarksPlugin.m in Sources */,
 				374572391CEFF8AF00D20378 /* AWBookmarksWindowController.m in Sources */,
+				378107C41D00A67400776523 /* NSString+LevenshteinDistance.m in Sources */,
 				37A454C51CF0E60F00F3D1D8 /* AWBookmarkCollection.m in Sources */,
 				373A07251CF007FC00ED350C /* AWBookmarkEntry.m in Sources */,
 				37C65F071CF017CC00A2F5D7 /* AWContextMenuHandler.m in Sources */,
