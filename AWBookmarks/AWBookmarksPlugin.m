@@ -76,8 +76,6 @@
     
     [self.windowController.window makeKeyAndOrderFront:self.windowController];
     [self.windowController.window setOrderedIndex:0];
-    
-    [self.bookmarkCollection resolveAllBookmarks];
 }
 
 - (void)dealloc

@@ -10,6 +10,7 @@
 #import "AWBookmarkEntry.h"
 #import "IDEHelpers.h"
 #import "CommonDefines.h"
+#import "Aspects.h"
 
 @interface AWBookmarkCollection ()
 
@@ -49,6 +50,8 @@
         
         
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(performBookmarkThisLine:) name:@"AW_contextMenuBookmarkOptionSelected" object:nil];
+        
+        [self swizzleTextChangedInTextView];
         
     }
     return self;
@@ -136,20 +139,24 @@
 
 - (void)resolveAllBookmarks
 {
-    // In case any of our bookmarks have changed location, or their text has changed a little on the line, or been deleted, update their entries
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        // In case any of our bookmarks have changed location, or their text has changed a little on the line, or been deleted, update their entries
 
-    [self willChangeValueForKey:@"count"];
-    [self.bookmarks makeObjectsPerformSelector:@selector(resolve)];
-    
-    for(AWBookmarkEntry *entry in [self.bookmarks copy])
-    {
-        if(entry.toBeDeleted)
+        [self willChangeValueForKey:@"count"];
+        [self.bookmarks makeObjectsPerformSelector:@selector(resolve)];
+        
+        for(AWBookmarkEntry *entry in [self.bookmarks copy])
         {
-            [self.bookmarks removeObject:entry];
+            if(entry.toBeDeleted)
+            {
+                [self.bookmarks removeObject:entry];
+            }
         }
-    }
-    
-    [self didChangeValueForKey:@"count"];
+        
+        [self didChangeValueForKey:@"count"];
+        
+    });
 }
 
 #pragma NSTableViewDataSource protocol methods
@@ -189,5 +196,25 @@
     
 }
 
+#pragma mark - Swizzling
+
+#pragma GCC diagnostic ignored "-Wundeclared-selector"
+#pragma GCC diagnostic ignored "-Warc-performSelector-leaks"
+
+- (void)swizzleTextChangedInTextView
+{
+    __weak AWBookmarkCollection *weakSelf = self;
+    NSString *className = @"DVTSourceTextView";
+    Class c = NSClassFromString(className);
+    [c aspect_hookSelector:@selector(didChangeText)
+               withOptions:AspectPositionAfter
+                usingBlock:^(id<AspectInfo> info) {
+                    AWBookmarkCollection *strongSelf = weakSelf;
+                    [strongSelf resolveAllBookmarks];
+                }
+                     error:nil];
+}
+
+#pragma clang diagnostic pop
 
 @end
