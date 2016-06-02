@@ -40,7 +40,9 @@
         
         id<NSApplicationDelegate> appDelegate = (id<NSApplicationDelegate>)[NSApp delegate];
         
-        if ([appDelegate application:NSApp openFile:item.fileURL.path])
+        NSString *path = item.fileURL.path;
+        
+        if (path && [appDelegate application:NSApp openFile:path])
         {
             __block int stopCounter = 0;
             void (^highlightItem)();
