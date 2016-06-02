@@ -32,7 +32,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"%@\nfilePath: %@\nlineNumber: %@\nlineText:%@", [super description], self.filePath, self.lineNumber, self.lineText];
+    return [NSString stringWithFormat:@"%@\nfilePath: %@\nlineNumber: %@\nlineText:%@", [super description], self.fileURL, self.lineNumber, self.lineText];
 }
 
 - (void)resolve
@@ -45,9 +45,20 @@
      use edit distance algorithm, use fuzzy matching algorithm
      */
     NSError *error;
-    NSString *text = [NSString stringWithContentsOfURL:self.filePath encoding:NSUTF8StringEncoding error:&error];
+    NSString *text = [NSString stringWithContentsOfURL:self.fileURL encoding:NSUTF8StringEncoding error:&error];
+    
+    
     if(!error)
     {
+        // If our document is currently open, it might be different from the saved version on disk because the user is editing it and might not have saved
+        
+        NSURL *openURL = [[IDEHelpers currentSourceCodeDocument] fileURL];
+        if([openURL isEqual:self.fileURL])
+        {
+            // Use the text from the open document instead of the text on disk
+            text = [IDEHelpers currentSourceTextView].string;
+        }
+        
         NSArray *lines = [text componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
         
         NSMutableArray *lineEvaluations = [[NSMutableArray alloc] init];

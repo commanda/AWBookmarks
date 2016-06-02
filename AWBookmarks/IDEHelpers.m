@@ -69,4 +69,14 @@
     return nil;
 }
 
++ (DVTSourceTextView *)currentSourceTextView
+{
+    DVTSourceTextView *textView;
+    IDESourceCodeEditor *editor = [IDEHelpers currentEditor];
+    if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
+    {
+        textView = (DVTSourceTextView *)editor.textView;
+    }
+    return textView;
+}
 @end

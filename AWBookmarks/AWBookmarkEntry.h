@@ -11,7 +11,7 @@
 
 @interface AWBookmarkEntry : NSObject
 
-@property (nonatomic, copy) NSURL *filePath;
+@property (nonatomic, copy) NSURL *fileURL;
 @property (nonatomic, assign) NSNumber *lineNumber;
 @property (copy) NSString *lineText;
 @property (readonly) BOOL toBeDeleted;

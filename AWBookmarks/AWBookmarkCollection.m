@@ -64,8 +64,6 @@
 
 - (void)performBookmarkThisLine:(NSNotification *)notif
 {
-    
-    // Get the selected values
     IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
     NSTextView* textView = editor.textView;
     NSString *wholeText = textView.string;
@@ -86,7 +84,7 @@
     
     AWBookmarkEntry *newEntry = [[AWBookmarkEntry alloc] init];
     newEntry.lineText = lineText;
-    newEntry.filePath = url;
+    newEntry.fileURL = url;
     newEntry.lineNumber = @(lineNumber);
     
     if(![self.bookmarks containsObject:newEntry])
@@ -174,7 +172,7 @@
     
     if([aTableColumn.identifier hasSuffix:@"0"])
     {
-        toReturn = entry.filePath.absoluteString.lastPathComponent;
+        toReturn = entry.fileURL.absoluteString.lastPathComponent;
     }
     else if([aTableColumn.identifier hasSuffix:@"1"])
     {

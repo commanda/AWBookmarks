@@ -142,5 +142,6 @@
 + (IDESourceCodeEditor*)currentEditor;
 + (IDEWorkspaceDocument*)currentWorkspaceDocument;
 + (IDESourceCodeDocument*)currentSourceCodeDocument;
++ (DVTSourceTextView *)currentSourceTextView;
 
 @end
