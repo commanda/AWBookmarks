@@ -9,6 +9,7 @@
 #import "AWBookmarkEntry.h"
 #import "CommonDefines.h"
 #import "NSString+LevenshteinDistance.h"
+#import "AWBookmarksPlugin.h"
 
 #define THRESHOLD_SCORE 50
 
@@ -21,6 +22,7 @@
 @end
 
 @implementation AWMatch
+
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"\ntext: %@\nscore: %f\ndistance: %ld\nlineNumber: %d\nWEIGHTEDSCORE: %f\n", self.text, self.score, self.lineDistance, self.lineIndex, self.weightedScore];
@@ -31,6 +33,7 @@
 @interface AWBookmarkEntry ()
 
 @property (nonatomic) NSData *fileBookmark;
+@property (nonatomic) NSString *uuid;
 
 @end
 
@@ -74,9 +77,24 @@
     return [NSString stringWithFormat:@"%@\nfilePath: %@\nlineNumber: %@\nlineText:%@", [super description], self.fileURL, self.lineNumber, self.lineText];
 }
 
+- (NSString *)uuid
+{
+    if(!_uuid)
+    {
+        _uuid = [[NSUUID UUID] UUIDString];
+    }
+    return _uuid;
+}
+
 - (void)setFileBookmark:(NSData *)fileBookmark
 {
     _fileBookmark = fileBookmark;
+    
+    // Write it to disk
+    NSString *filePath = [[AWBookmarksPlugin pathToApplicationSupportForProjectName:@"AWBookmarks-FileBookmarks"] stringByAppendingPathComponent:self.uuid];
+    NSURL *saveToURL = [NSURL fileURLWithPath:filePath];
+    NSError *error;
+    [NSURL writeBookmarkData:_fileBookmark toURL:saveToURL options:NSURLBookmarkCreationSuitableForBookmarkFile error:&error];
 }
 
 - (NSURL *)fileURL
@@ -100,7 +118,6 @@
      */
     NSError *error;
     NSString *text = [NSString stringWithContentsOfURL:self.fileURL encoding:NSUTF8StringEncoding error:&error];
-    
     
     if(!error)
     {

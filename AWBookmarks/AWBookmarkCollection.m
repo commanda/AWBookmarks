@@ -11,6 +11,7 @@
 #import "IDEHelpers.h"
 #import "CommonDefines.h"
 #import "Aspects.h"
+#import "AWBookmarksPlugin.h"
 
 @interface AWBookmarkCollection ()
 
@@ -117,16 +118,7 @@
     self.projectDir = [projectPath stringByDeletingLastPathComponent];
     self.projectName = [[projectPath lastPathComponent] stringByDeletingPathExtension];
     
-    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-    NSString *directory = [paths firstObject];
-    
-    directory = [[directory stringByAppendingPathComponent:@"AWBookmarks"] stringByAppendingPathComponent:self.projectName];
-    
-    if(![[NSFileManager defaultManager] fileExistsAtPath:directory])
-    {
-        NSError *error;
-        [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:&error];
-    }
+    NSString *directory = [AWBookmarksPlugin pathToApplicationSupportForProjectName:self.projectName];
     
     NSString *filePath = [directory  stringByAppendingPathComponent:@"bookmarks.dat"];
     NSError *fileWritingError;

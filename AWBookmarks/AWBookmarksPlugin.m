@@ -28,9 +28,25 @@
     return sharedPlugin;
 }
 
++ (NSString *)pathToApplicationSupportForProjectName:(NSString *)projectName
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+    NSString *directory = [paths firstObject];
+    
+    directory = [[directory stringByAppendingPathComponent:@"AWBookmarks"] stringByAppendingPathComponent:projectName];
+    
+    if(![[NSFileManager defaultManager] fileExistsAtPath:directory])
+    {
+        NSError *error;
+        [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:&error];
+    }
+    
+    return directory;
+}
+
 - (id)initWithBundle:(NSBundle *)plugin
 {
-    if (self = [super init]) {
+    if(self = [super init]) {
         // reference to plugin's bundle, for resource access
         self.bundle = plugin;
         
