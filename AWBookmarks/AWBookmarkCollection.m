@@ -111,6 +111,12 @@
     return nil;
 }
 
+- (void)deleteBookmarkEntryAtIndex:(NSUInteger)index
+{
+    AWBookmarkEntry *entry = [self objectAtIndex:index];
+    entry.toBeDeleted = YES;
+}
+
 - (NSString *)serialize
 {
     NSMutableArray *uuids = [[NSMutableArray alloc] initWithCapacity:self.bookmarks.count];
@@ -151,6 +157,8 @@
         [self willChangeValueForKey:@"count"];
         [self.bookmarks removeObject:object];
         [self didChangeValueForKey:@"count"];
+        [object removeObserver:self forKeyPath:@"toBeDeleted"];
+        [object removeObserver:self forKeyPath:@"changed"];
     }
     else if([keyPath isEqualToString:@"changed"])
     {

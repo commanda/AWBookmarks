@@ -10,6 +10,14 @@
 #import "CommonDefines.h"
 #import "AWBookmarkEntry.h"
 
+@interface AWDeleteButton : NSButton
+@property (copy) void (^onDelete) (void);
+@end
+
+@implementation AWDeleteButton
+
+@end
+
 @interface AWBookmarksWindowController ()
 @property (strong) IBOutlet NSTableView *tableView;
 
@@ -111,7 +119,13 @@
 
 - (void)deletePressed:(id)sender
 {
-    DLOG(@"bp");
+    AWDeleteButton *button = (AWDeleteButton *)sender;
+    button.onDelete();
+    
+    //    NSTableRowView *rowView = [(NSView *)sender superview];
+//    NSInteger rowNumber = [self.tableView rowForView:rowView];
+//    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:rowNumber];
+//    [self.tableView removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
 }
 
 static NSString *identifier = @"AWBookmarksTextCellIdentifier";
@@ -125,16 +139,20 @@ static NSString *buttonIdentifier = @"AWBookmarksDeleteButtonCellIdentifier";
     if([tableColumn.identifier hasSuffix:@"3"])
     {
         // The delete button
-        NSButton *button = [tableView makeViewWithIdentifier:buttonIdentifier owner:self];
+        AWDeleteButton *button = [tableView makeViewWithIdentifier:buttonIdentifier owner:self];
         if(!button)
         {
-            button = [[NSButton alloc] initWithFrame:CGRectMake(0, 0, tableColumn.width, tableView.rowHeight)];
+            button = [[AWDeleteButton alloc] initWithFrame:CGRectMake(0, 0, tableColumn.width, tableView.rowHeight)];
             button.identifier = buttonIdentifier;
             button.target = self;
             button.action = @selector(deletePressed:);
             button.title = @"";
         }
-        button.tag = row;
+        __weak AWBookmarksWindowController *weakSelf = self;
+        button.onDelete = ^{
+            AWBookmarksWindowController *strongSelf = weakSelf;
+            [strongSelf.bookmarkCollection deleteBookmarkEntryAtIndex:row];
+        };
         toReturn = button;
     }
     else

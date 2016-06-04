@@ -15,7 +15,7 @@
 @property (nonatomic) NSURL *fileURL;
 @property (nonatomic, assign) NSNumber *lineNumber;
 @property (copy) NSString *lineText;
-@property (readonly) BOOL toBeDeleted;
+@property BOOL toBeDeleted;
 @property (readonly) BOOL changed;
 @property (nonatomic) NSString *uuid;
 
