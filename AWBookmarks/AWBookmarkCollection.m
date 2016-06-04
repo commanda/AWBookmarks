@@ -114,7 +114,17 @@
 - (void)deleteBookmarkEntryAtIndex:(NSUInteger)index
 {
     AWBookmarkEntry *entry = [self objectAtIndex:index];
-    entry.toBeDeleted = YES;
+    [self deleteBookmarkEntry:entry];
+}
+
+- (void)deleteBookmarkEntry:(AWBookmarkEntry *)entry
+{
+    if([self.bookmarks containsObject:entry])
+    {
+        [entry removeObserver:self forKeyPath:@"toBeDeleted"];
+        [entry removeObserver:self forKeyPath:@"changed"];
+        [self.bookmarks removeObject:entry];
+    }
 }
 
 - (NSString *)serialize
@@ -155,10 +165,8 @@
     if([keyPath isEqualToString:@"toBeDeleted"])
     {
         [self willChangeValueForKey:@"count"];
-        [self.bookmarks removeObject:object];
+        [self deleteBookmarkEntry:object];
         [self didChangeValueForKey:@"count"];
-        [object removeObserver:self forKeyPath:@"toBeDeleted"];
-        [object removeObserver:self forKeyPath:@"changed"];
     }
     else if([keyPath isEqualToString:@"changed"])
     {

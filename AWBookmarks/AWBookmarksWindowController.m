@@ -11,7 +11,7 @@
 #import "AWBookmarkEntry.h"
 
 @interface AWDeleteButton : NSButton
-@property (copy) void (^onDelete) (void);
+@property AWBookmarkEntry *entry;
 @end
 
 @implementation AWDeleteButton
@@ -120,12 +120,14 @@
 - (void)deletePressed:(id)sender
 {
     AWDeleteButton *button = (AWDeleteButton *)sender;
-    button.onDelete();
     
-    //    NSTableRowView *rowView = [(NSView *)sender superview];
-//    NSInteger rowNumber = [self.tableView rowForView:rowView];
-//    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:rowNumber];
-//    [self.tableView removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
+    [self.tableView beginUpdates];
+    [self.bookmarkCollection deleteBookmarkEntry:button.entry];
+    NSInteger currentRow = [self.tableView rowForView:button];
+    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:currentRow];
+    [self.tableView removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
+    [self.tableView endUpdates];
+    
 }
 
 static NSString *identifier = @"AWBookmarksTextCellIdentifier";
@@ -148,11 +150,8 @@ static NSString *buttonIdentifier = @"AWBookmarksDeleteButtonCellIdentifier";
             button.action = @selector(deletePressed:);
             button.title = @"";
         }
-        __weak AWBookmarksWindowController *weakSelf = self;
-        button.onDelete = ^{
-            AWBookmarksWindowController *strongSelf = weakSelf;
-            [strongSelf.bookmarkCollection deleteBookmarkEntryAtIndex:row];
-        };
+        AWBookmarkEntry *entry = [self.bookmarkCollection objectAtIndex:row];
+        button.entry = entry;
         toReturn = button;
     }
     else

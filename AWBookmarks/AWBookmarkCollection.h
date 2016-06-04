@@ -16,6 +16,6 @@
 
 - (AWBookmarkEntry *)objectAtIndex:(NSUInteger)index;
 - (void)resolveAllBookmarks;
-- (void)deleteBookmarkEntryAtIndex:(NSUInteger)index;
+- (void)deleteBookmarkEntry:(AWBookmarkEntry *)entry;
 
 @end
