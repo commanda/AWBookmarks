@@ -109,25 +109,51 @@
     [self.tableView deselectRow:selectedRow];
 }
 
-static NSString *identifier = @"AWBookmarksCellIdentifier";
+- (void)deletePressed:(id)sender
+{
+    DLOG(@"bp");
+}
+
+static NSString *identifier = @"AWBookmarksTextCellIdentifier";
+static NSString *buttonIdentifier = @"AWBookmarksDeleteButtonCellIdentifier";
 
 - (NSView *)tableView:(NSTableView *)tableView
    viewForTableColumn:(NSTableColumn *)tableColumn
                   row:(NSInteger)row
 {
-    NSTextField *textField = [tableView makeViewWithIdentifier:identifier owner:self];
-    if(!textField)
+    NSView *toReturn;
+    if([tableColumn.identifier hasSuffix:@"3"])
     {
-        textField = [[NSTextField alloc] initWithFrame:CGRectMake(0, 0, tableColumn.width, tableView.rowHeight)];
-        textField.identifier = identifier;
-        textField.editable = NO;
-        textField.selectable = NO;
-        textField.bezeled = NO;
-        textField.bordered = NO;
-        textField.backgroundColor = [NSColor clearColor];
+        // The delete button
+        NSButton *button = [tableView makeViewWithIdentifier:buttonIdentifier owner:self];
+        if(!button)
+        {
+            button = [[NSButton alloc] initWithFrame:CGRectMake(0, 0, tableColumn.width, tableView.rowHeight)];
+            button.identifier = buttonIdentifier;
+            button.target = self;
+            button.action = @selector(deletePressed:);
+            button.title = @"";
+        }
+        button.tag = row;
+        toReturn = button;
     }
-    
-    return textField;
+    else
+    {
+        // The three text fields - line number, line text, file path
+        NSTextField *textField = [tableView makeViewWithIdentifier:identifier owner:self];
+        if(!textField)
+        {
+            textField = [[NSTextField alloc] initWithFrame:CGRectMake(0, 0, tableColumn.width, tableView.rowHeight)];
+            textField.identifier = identifier;
+            textField.editable = NO;
+            textField.selectable = NO;
+            textField.bezeled = NO;
+            textField.bordered = NO;
+            textField.backgroundColor = [NSColor clearColor];
+        }
+        toReturn = textField;
+    }
+    return toReturn;
 }
 
 @end
