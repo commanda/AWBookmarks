@@ -8,6 +8,8 @@
 
 #import "IDEHelpers.h"
 
+@class IDESourceCodeEditor;
+
 @implementation IDEHelpers
 
 + (IDEWorkspaceTabController*)tabController
@@ -35,6 +37,22 @@
         return [editorContext editor];
     }
     return nil;
+}
+
++ (NSView *)gutterView
+{
+    NSView *__nullable gutterView = nil;
+    IDESourceCodeEditor *editor = [self currentEditor];
+    if([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
+    {
+        for (NSView *view in [editor.scrollView subviews]) {
+            if ([NSStringFromClass([view class]) isEqualToString:@"DVTTextSidebarView"]) {
+                gutterView = view;
+                break;
+            }
+        }
+    }
+    return gutterView;
 }
 
 + (IDEWorkspaceDocument*)currentWorkspaceDocument

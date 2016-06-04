@@ -107,6 +107,7 @@
 
 @interface IDESourceCodeEditor : NSObject
 @property (retain) NSTextView* textView;
+@property(retain) NSScrollView *scrollView; 
 - (IDESourceCodeDocument*)sourceCodeDocument;
 @end
 
@@ -143,5 +144,6 @@
 + (IDEWorkspaceDocument*)currentWorkspaceDocument;
 + (IDESourceCodeDocument*)currentSourceCodeDocument;
 + (DVTSourceTextView *)currentSourceTextView;
++ (NSView *)gutterView;
 
 @end

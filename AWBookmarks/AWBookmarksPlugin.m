@@ -11,6 +11,7 @@
 #import "AWBookmarksWindowController.h"
 #import "AWContextMenuHandler.h"
 #import "AWBookmarkCollection.h"
+#import "AWGutterViewHandler.h"
 
 @interface AWBookmarksPlugin()
 
@@ -53,6 +54,8 @@
         self.contextMenuHandler = [[AWContextMenuHandler alloc] init];
         
         self.bookmarkCollection = [[AWBookmarkCollection alloc] init];
+        
+        [AWGutterViewHandler start];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didApplicationFinishLaunchingNotification:)
