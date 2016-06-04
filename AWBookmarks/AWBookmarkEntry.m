@@ -32,45 +32,9 @@
 
 @interface AWBookmarkEntry ()
 
-@property (nonatomic) NSData *fileBookmark;
-@property (nonatomic) NSString *uuid;
-
 @end
 
 @implementation AWBookmarkEntry
-
-+ (NSData*)bookmarkForURL:(NSURL*)url
-{
-    NSError* theError = nil;
-    NSData* bookmark = [url bookmarkDataWithOptions:NSURLBookmarkCreationSuitableForBookmarkFile
-                     includingResourceValuesForKeys:nil
-                                      relativeToURL:nil
-                                              error:&theError];
-    if (theError || (bookmark == nil))
-    {
-        // Handle any errors.
-        return nil;
-    }
-    return bookmark;
-}
-
-+ (NSURL*)urlForBookmark:(NSData*)bookmark
-{
-    BOOL bookmarkIsStale = NO;
-    NSError* theError = nil;
-    NSURL* bookmarkURL = [NSURL URLByResolvingBookmarkData:bookmark
-                                                   options:NSURLBookmarkResolutionWithoutUI
-                                             relativeToURL:nil
-                                       bookmarkDataIsStale:&bookmarkIsStale
-                                                     error:&theError];
-    
-    if (bookmarkIsStale || (theError != nil))
-    {
-        // Handle any errors
-        return nil;
-    }
-    return bookmarkURL;
-}
 
 - (NSString *)description
 {
@@ -86,26 +50,29 @@
     return _uuid;
 }
 
-- (void)setFileBookmark:(NSData *)fileBookmark
+- (NSURL *)fileBookmarkSaveFilename
 {
-    _fileBookmark = fileBookmark;
-    
-    // Write it to disk
-    NSString *filePath = [[AWBookmarksPlugin pathToApplicationSupportForProjectName:@"AWBookmarks-FileBookmarks"] stringByAppendingPathComponent:self.uuid];
+    NSString *filePath = [[AWBookmarksPlugin pathToApplicationSupportForProjectName:@"FileBookmarks"] stringByAppendingPathComponent:self.uuid];
     NSURL *saveToURL = [NSURL fileURLWithPath:filePath];
-    NSError *error;
-    [NSURL writeBookmarkData:_fileBookmark toURL:saveToURL options:NSURLBookmarkCreationSuitableForBookmarkFile error:&error];
-}
-
-- (NSURL *)fileURL
-{
-    return [AWBookmarkEntry urlForBookmark:self.fileBookmark];
+    return saveToURL;
 }
 
 - (void)setFileURL:(NSURL *)fileURL
 {
-    self.fileBookmark = [AWBookmarkEntry bookmarkForURL:fileURL];
-    DLOG(@"fileBookmark: %@", [AWBookmarkEntry urlForBookmark:self.fileBookmark]);
+    [[FileWatcher sharedInstance] stopWatchingFileAtURL:_fileURL];
+    
+    [self willChangeValueForKey:@"changed"];
+    _fileURL = fileURL;
+    [self didChangeValueForKey:@"changed"];
+    
+    __weak AWBookmarkEntry *weakSelf = self;
+    [[FileWatcher sharedInstance] watchFileAtURL:fileURL onChanged:^(NSURL *currentURL){
+        DLOG(@"hey the file changed %@", currentURL);
+        AWBookmarkEntry *strongSelf = weakSelf;
+        [strongSelf willChangeValueForKey:@"changed"];
+        strongSelf->_fileURL = currentURL;
+        [strongSelf didChangeValueForKey:@"changed"];
+    }];
 }
 
 - (void)resolve
@@ -171,6 +138,11 @@
         }
     }
 }
-// 54, 53, 55, 52, 56,
-// 0, -1, +2, -3, +4
+
+#pragma FileWatcherDelegate method
+- (void)fileDidChangeAtURL:(NSURL *)notification;
+{
+    [self resolve];
+}
+
 @end

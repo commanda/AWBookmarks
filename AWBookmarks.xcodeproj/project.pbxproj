@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3723D74F1D024DBF00C1A5A7 /* FileWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 3723D74D1D024DBF00C1A5A7 /* FileWatcher.m */; };
 		373A07221CF0034700ED350C /* IDEHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 373A07211CF0034700ED350C /* IDEHelpers.m */; };
 		373A07251CF007FC00ED350C /* AWBookmarkEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 373A07241CF007FC00ED350C /* AWBookmarkEntry.m */; };
 		374572391CEFF8AF00D20378 /* AWBookmarksWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 374572371CEFF8AF00D20378 /* AWBookmarksWindowController.m */; };
@@ -23,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		3723D74D1D024DBF00C1A5A7 /* FileWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileWatcher.m; sourceTree = "<group>"; };
+		3723D74E1D024DBF00C1A5A7 /* FileWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileWatcher.h; sourceTree = "<group>"; };
 		373A07201CF0034700ED350C /* IDEHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDEHelpers.h; sourceTree = "<group>"; };
 		373A07211CF0034700ED350C /* IDEHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDEHelpers.m; sourceTree = "<group>"; };
 		373A07231CF007FC00ED350C /* AWBookmarkEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarkEntry.h; sourceTree = "<group>"; };
@@ -63,6 +66,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3723D74C1D024DAD00C1A5A7 /* File Watcher */ = {
+			isa = PBXGroup;
+			children = (
+				3723D74E1D024DBF00C1A5A7 /* FileWatcher.h */,
+				3723D74D1D024DBF00C1A5A7 /* FileWatcher.m */,
+			);
+			name = "File Watcher";
+			sourceTree = "<group>";
+		};
 		374360B61CFE798500D048EF /* Fuzzy Matching */ = {
 			isa = PBXGroup;
 			children = (
@@ -101,6 +113,7 @@
 		374A48291CEC0A7500D68C7A /* AWBookmarks */ = {
 			isa = PBXGroup;
 			children = (
+				3723D74C1D024DAD00C1A5A7 /* File Watcher */,
 				374360B61CFE798500D048EF /* Fuzzy Matching */,
 				3753E3631CF00B3100890887 /* Models */,
 				3753E3641CF00B3C00890887 /* Views */,
@@ -242,6 +255,7 @@
 				373A07251CF007FC00ED350C /* AWBookmarkEntry.m in Sources */,
 				37C65F071CF017CC00A2F5D7 /* AWContextMenuHandler.m in Sources */,
 				374A48321CEC0A7500D68C7A /* NSObject_Extension.m in Sources */,
+				3723D74F1D024DBF00C1A5A7 /* FileWatcher.m in Sources */,
 				3753E3681CF00E0600890887 /* Aspects.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -93,6 +93,10 @@
         [self willChangeValueForKey:@"count"];
         [self.bookmarks addObject:newEntry];
         [self didChangeValueForKey:@"count"];
+        
+        // Watch this entry for changes
+        [newEntry addObserver:self forKeyPath:@"changed" options:0 context:nil];
+        [newEntry addObserver:self forKeyPath:@"toBeDeleted" options:0 context:nil];
     }
     
     [self saveBookmarks];
@@ -109,7 +113,12 @@
 
 - (NSString *)serialize
 {
-    return @"hey here's some serialized objects";
+    NSMutableArray *uuids = [[NSMutableArray alloc] initWithCapacity:self.bookmarks.count];
+    [self.bookmarks enumerateObjectsUsingBlock:^(AWBookmarkEntry *entry, NSUInteger idx, BOOL * _Nonnull stop){
+        [uuids addObject:entry.uuid];
+    }];
+    
+    return [uuids componentsJoinedByString:@", "];
 }
 
 - (void)saveBookmarks
@@ -130,23 +139,24 @@
 - (void)resolveAllBookmarks
 {
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        
         // In case any of our bookmarks have changed location, or their text has changed a little on the line, or been deleted, update their entries
-
-        [self willChangeValueForKey:@"count"];
-        [self.bookmarks makeObjectsPerformSelector:@selector(resolve)];
-        
-        for(AWBookmarkEntry *entry in [self.bookmarks copy])
-        {
-            if(entry.toBeDeleted)
-            {
-                [self.bookmarks removeObject:entry];
-            }
-        }
-        
-        [self didChangeValueForKey:@"count"];
-        
+        [[self.bookmarks copy] makeObjectsPerformSelector:@selector(resolve)];
     });
+}
+
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+{
+    if([keyPath isEqualToString:@"toBeDeleted"])
+    {
+        [self willChangeValueForKey:@"count"];
+        [self.bookmarks removeObject:object];
+        [self didChangeValueForKey:@"count"];
+    }
+    else if([keyPath isEqualToString:@"changed"])
+    {
+        [self willChangeValueForKey:@"count"];
+        [self didChangeValueForKey:@"count"];
+    }
 }
 
 #pragma NSTableViewDataSource protocol methods

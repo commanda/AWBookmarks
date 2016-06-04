@@ -8,13 +8,16 @@
 
 #import <Foundation/Foundation.h>
 #import "IDEHelpers.h"
+#import "FileWatcher.h"
 
-@interface AWBookmarkEntry : NSObject
+@interface AWBookmarkEntry : NSObject 
 
-@property (nonatomic, copy) NSURL *fileURL;
+@property (nonatomic) NSURL *fileURL;
 @property (nonatomic, assign) NSNumber *lineNumber;
 @property (copy) NSString *lineText;
 @property (readonly) BOOL toBeDeleted;
+@property (readonly) BOOL changed;
+@property (nonatomic) NSString *uuid;
 
 - (void)resolve;
 

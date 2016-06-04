@@ -77,6 +77,11 @@
     }
 }
 
+- (void)dealloc
+{
+    [self.bookmarkCollection removeObserver:self forKeyPath:@"count"];
+}
+
 - (void)windowDidLoad
 {
     [super windowDidLoad];
