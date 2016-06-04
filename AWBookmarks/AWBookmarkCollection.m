@@ -182,7 +182,7 @@
     }
     else if([aTableColumn.identifier hasSuffix:@"2"])
     {
-        toReturn = entry.lineText;
+        toReturn = [entry.lineText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     }
     
     return toReturn;
