@@ -78,7 +78,7 @@ static FileWatcher *instance;
     wf.modDate = modDate;
     wf.onFileChanged = onFileChanged;
     
-    [self.fileModificationDates setObject:wf forKey:bookmark];
+    self.fileModificationDates[bookmark] = wf;
 }
 
 - (void)stopWatchingFileAtURL:(NSURL *)url {
@@ -138,11 +138,10 @@ static FileWatcher *instance;
 }
 
 - (NSData *)bookmarkFromURL:(NSURL *)url {
-    NSData *bookmark = [url bookmarkDataWithOptions:NSURLBookmarkCreationSuitableForBookmarkFile
+    return [url bookmarkDataWithOptions:NSURLBookmarkCreationSuitableForBookmarkFile
                      includingResourceValuesForKeys:NULL
                                       relativeToURL:NULL
                                               error:NULL];
-    return bookmark;
 }
 
 - (NSURL *)urlFromBookmark:(NSData *)bookmark {
@@ -162,8 +161,7 @@ static FileWatcher *instance;
 
 - (id)initWithCoder:(NSCoder *)decoder {
     if ((self = [self init])) {
-        NSDictionary *decoded = [decoder decodeObjectForKey:@"fileModificationDates"];
-        [self.fileModificationDates setDictionary:decoded];
+        self.fileModificationDates = [decoder decodeObjectForKey:@"fileModificationDates"];
     }
     
     return self;
