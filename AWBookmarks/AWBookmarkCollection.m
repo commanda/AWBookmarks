@@ -63,6 +63,11 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (NSUInteger) count
+{
+    return self.bookmarks.count;
+}
+
 - (void)performBookmarkThisLine:(NSNotification *)notif
 {
     IDESourceCodeEditor* editor = [IDEHelpers currentEditor];

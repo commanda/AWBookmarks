@@ -19,6 +19,7 @@
 @property (strong) AWBookmarksWindowController *windowController;
 @property (strong) AWContextMenuHandler *contextMenuHandler;
 @property (strong) AWBookmarkCollection *bookmarkCollection;
+@property (strong) AWGutterViewHandler *gutterViewHandler;
 
 @end
 
@@ -55,7 +56,7 @@
         
         self.bookmarkCollection = [[AWBookmarkCollection alloc] init];
         
-        [AWGutterViewHandler start];
+        self.gutterViewHandler = [[AWGutterViewHandler alloc] initWithBookmarkCollection:self.bookmarkCollection];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didApplicationFinishLaunchingNotification:)

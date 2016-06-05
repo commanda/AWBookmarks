@@ -8,9 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+@class AWBookmarkEntry;
+@class AWBookmarkCollection;
+
 @interface AWGutterViewHandler : NSObject
 
+- (AWGutterViewHandler *)initWithBookmarkCollection:(AWBookmarkCollection *)bookmarkCollection;
+- (void)addMarkerForBookmarkEntry:(AWBookmarkEntry *)entry;
 
-+ (void)start;
 
 @end

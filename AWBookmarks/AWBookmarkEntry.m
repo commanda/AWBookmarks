@@ -36,6 +36,16 @@
 
 @implementation AWBookmarkEntry
 
+- (id)copyWithZone:(NSZone *)zone
+{
+    AWBookmarkEntry *newEntry = [[self class] allocWithZone:zone];
+    newEntry->_fileURL = self.fileURL;
+    newEntry->_lineText = self.lineText;
+    newEntry->_lineNumber = self.lineNumber;
+    newEntry->_uuid = self.uuid;
+    return newEntry;
+}
+
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"%@\nfilePath: %@\nlineNumber: %@\nlineText:%@", [super description], self.fileURL, self.lineNumber, self.lineText];

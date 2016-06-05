@@ -10,7 +10,7 @@
 #import "IDEHelpers.h"
 #import "FileWatcher.h"
 
-@interface AWBookmarkEntry : NSObject 
+@interface AWBookmarkEntry : NSObject <NSCopying>
 
 @property (nonatomic) NSURL *fileURL;
 @property (nonatomic, assign) NSNumber *lineNumber;

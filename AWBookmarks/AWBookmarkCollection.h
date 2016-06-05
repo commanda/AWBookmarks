@@ -12,7 +12,7 @@
 
 @interface AWBookmarkCollection : NSObject <NSTableViewDataSource>
 
-@property (readonly) NSUInteger count;
+@property (readonly, nonatomic) NSUInteger count;
 
 - (AWBookmarkEntry *)objectAtIndex:(NSUInteger)index;
 - (void)resolveAllBookmarks;
