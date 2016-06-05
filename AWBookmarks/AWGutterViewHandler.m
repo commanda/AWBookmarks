@@ -23,7 +23,7 @@
 {
     NSImageView *marker;
     NSBundle *pluginBundle = [NSBundle bundleWithIdentifier:@"com.amandawixted.AWBookmarks"];
-    NSImage *image = [pluginBundle imageForResource:@"marker.png"];
+    NSImage *image = [pluginBundle imageForResource:@"marker"];
     CGRect frame = CGRectMake(0, 0, image.size.width, image.size.height);
     marker = [[NSImageView alloc] initWithFrame:frame];
     marker.image = image;
