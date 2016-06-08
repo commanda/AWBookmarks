@@ -17,29 +17,18 @@
 
 @interface AWGutterViewHandler ()
 @property (nonatomic) AWBookmarkCollection *bookmarkCollection;
-@property NSMutableDictionary *imagesForBookmarks;
+@property NSMutableDictionary *lineNumbersForBookmarks;
 @property NSImage *markerImage;
 @end
 
 @implementation AWGutterViewHandler
-
-+ (NSImageView *)createMarkerImageView
-{
-    NSImageView *marker;
-    NSBundle *pluginBundle = [NSBundle bundleWithIdentifier:@"com.amandawixted.AWBookmarks"];
-    NSImage *image = [pluginBundle imageForResource:@"marker"];
-    CGRect frame = CGRectMake(0, 0, image.size.width, image.size.height);
-    marker = [[NSImageView alloc] initWithFrame:frame];
-    marker.image = image;
-    return marker;
-}
 
 - (AWGutterViewHandler *)initWithBookmarkCollection:(AWBookmarkCollection *)bookmarkCollection
 {
     if(self = [super init])
     {
         self.bookmarkCollection = bookmarkCollection;
-        self.imagesForBookmarks = [[NSMutableDictionary alloc] init];
+        self.lineNumbersForBookmarks = [[NSMutableDictionary alloc] init];
         
         NSBundle *pluginBundle = [NSBundle bundleWithIdentifier:@"com.amandawixted.AWBookmarks"];
         NSImage *image = [pluginBundle imageForResource:@"marker"];
@@ -85,9 +74,10 @@
                         
                         for (int i = 0; i < count; i++)
                         {
-                            if(i % 2 == 0)
+                            
+                            NSUInteger lineNumber = indexes[i];
+                            if([[self.lineNumbersForBookmarks allValues] containsObject:@(lineNumber)])
                             {
-                                NSUInteger lineNumber = indexes[i];
                                 
                                 NSRect a0, a1;
                                 [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
@@ -113,41 +103,26 @@
     [self.bookmarkCollection addObserver:self forKeyPath:@"count" options:NSKeyValueObservingOptionNew context:nil];
 }
 
-- (void)addMarkerForBookmarkEntry:(AWBookmarkEntry *)entry
+- (void)addOrUpdateMarkerForBookmarkEntry:(AWBookmarkEntry *)entry
 {
-    NSView *gutterView = [IDEHelpers gutterView];
-    
-    NSImageView *marker;
-    
-    if(!self.imagesForBookmarks[entry])
+    if(!self.lineNumbersForBookmarks[entry])
     {
-        marker = [[self class] createMarkerImageView];
-        
-        [gutterView addSubview:marker];
-        
         [entry addObserver:self forKeyPath:@"toBeDeleted" options:NSKeyValueObservingOptionNew context:nil];
         [entry addObserver:self forKeyPath:@"changed" options:NSKeyValueObservingOptionNew context:nil];
     }
-    else
-    {
-        marker = self.imagesForBookmarks[entry];
-    }
     
-    self.imagesForBookmarks[entry] = marker;
-    
-    // Put the marker on the line we want
+    self.lineNumbersForBookmarks[entry] = entry.lineNumber;
     
     DLOG(@"bp");
 }
 
 - (void)deleteMarkerForEntry:(AWBookmarkEntry *)entry
 {
-    NSImageView *marker = self.imagesForBookmarks[entry];
-    if(marker)
+    if(self.lineNumbersForBookmarks[entry])
     {
         [entry removeObserver:self forKeyPath:@"toBeDeleted"];
         [entry removeObserver:self forKeyPath:@"changed"];
-        [self.imagesForBookmarks removeObjectForKey:entry];
+        [self.lineNumbersForBookmarks removeObjectForKey:entry];
     }
 }
 
@@ -157,12 +132,20 @@
     {
         for(int i = 0; i < self.bookmarkCollection.count; i++)
         {
-            [self addMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
+            [self addOrUpdateMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
         }
     }
-    else
+    else if([[self.lineNumbersForBookmarks allKeys] containsObject:object])
     {
-        
+        AWBookmarkEntry *entry = (AWBookmarkEntry *)object;
+        if([keyPath isEqualToString:@"toBeDeleted"])
+        {
+            [self deleteMarkerForEntry:entry];
+        }
+        else if([keyPath isEqualToString:@"changed"])
+        {
+            [self addOrUpdateMarkerForBookmarkEntry:entry];
+        }
     }
 }
 
