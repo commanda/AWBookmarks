@@ -9,6 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
 
+@interface DVTTextSidebarView : NSRulerView
+
+- (void)getParagraphRect:(struct CGRect *)arg1 firstLineRect:(struct CGRect *)arg2 forLineNumber:(unsigned long long)arg3;
+@end
 
 @interface DVTSourceTextView : NSTextView
 - (void)unfoldAll:(id)arg1;
