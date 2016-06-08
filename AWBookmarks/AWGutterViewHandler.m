@@ -56,7 +56,7 @@
     NSString *className = @"DVTTextSidebarView";
     Class c = NSClassFromString(className);
     [c aspect_hookSelector:@selector(_drawLineNumbersInSidebarRect:foldedIndexes:count:linesToInvert:linesToReplace:getParaRectBlock:)
-               withOptions:AspectPositionInstead
+               withOptions:AspectPositionAfter
      /*
       - (void)_drawLineNumbersInSidebarRect:(struct CGRect)arg1 
       foldedIndexes:(unsigned long long *)arg2 
@@ -85,12 +85,15 @@
                         
                         for (int i = 0; i < count; i++)
                         {
-                            NSUInteger lineNumber = indexes[i];
-                            
-                            NSRect a0, a1;
-                            [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
-                            NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"❤️"];
-                            [str drawAtPoint:a0.origin];
+                            if(i % 2 == 0)
+                            {
+                                NSUInteger lineNumber = indexes[i];
+                                
+                                NSRect a0, a1;
+                                [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
+                                NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"❤️"];
+                                [str drawAtPoint:a0.origin];
+                            }
                         }
                         
                         [view unlockFocus];
