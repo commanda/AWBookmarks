@@ -18,6 +18,7 @@
 @interface AWGutterViewHandler ()
 @property (nonatomic) AWBookmarkCollection *bookmarkCollection;
 @property NSMutableDictionary *imagesForBookmarks;
+@property NSImage *markerImage;
 @end
 
 @implementation AWGutterViewHandler
@@ -39,6 +40,10 @@
     {
         self.bookmarkCollection = bookmarkCollection;
         self.imagesForBookmarks = [[NSMutableDictionary alloc] init];
+        
+        NSBundle *pluginBundle = [NSBundle bundleWithIdentifier:@"com.amandawixted.AWBookmarks"];
+        NSImage *image = [pluginBundle imageForResource:@"marker"];
+        self.markerImage = image;
         
         [self swizzleMethodForDrawLineNumbers];
     }
@@ -84,12 +89,7 @@
                             
                             NSRect a0, a1;
                             [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
-//                            
-//                            a0.origin.x += 8.0;
-//                            a0.origin.y -= 1.0;
-//                            
-                            NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"🦄"];
-                            
+                            NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"❤️"];
                             [str drawAtPoint:a0.origin];
                         }
                         
