@@ -39,8 +39,7 @@
         NSImage *image = [pluginBundle imageForResource:@"marker-correct-size"];
         self.markerImage = image;
         
-        //[self swizzleMethodForDrawLineNumbers];
-        [self swizzleMethodForDrawSidebarMarkers];
+        [self swizzleMethodForDrawLineNumbers];
     }
     return self;
 }
@@ -57,7 +56,8 @@
                     
                     DVTTextSidebarView *view = info.instance;
                     
-                    if(![view isKindOfClass:NSClassFromString(className)]) {
+                    if(![view isKindOfClass:NSClassFromString(className)])
+                    {
                         [info.originalInvocation invoke];
                     }
                     else
@@ -88,25 +88,6 @@
                 }
                      error:nil];
 }
-
-- (void)swizzleMethodForDrawSidebarMarkers
-{
-    NSString *className = @"DVTTextSidebarView";
-    Class c = NSClassFromString(className);
-    [c aspect_hookSelector:@selector(_drawSidebarMarkersForAnnotations:atIndexes:textView:getParaRectBlock:)
-               withOptions:AspectPositionAfter
-                usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexes, DVTSourceTextView *textView, id paraRectBlock) {
-                    
-                    DVTTextSidebarView *view = info.instance;
-                    
-                    if([view isKindOfClass:NSClassFromString(className)])
-                    {
-                        
-                    }
-                }
-                     error:nil];
-}
-
 
 #pragma clang diagnostic pop
 
