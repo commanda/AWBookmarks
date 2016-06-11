@@ -20,7 +20,7 @@
 
 @interface AWBookmarksWindowController ()
 @property (strong) IBOutlet NSTableView *tableView;
-
+@property (getter=isObservingBookmarksCount) BOOL observingBookmarksCount;
 @end
 
 @implementation AWBookmarksWindowController
@@ -87,7 +87,7 @@
 
 - (void)dealloc
 {
-    [self.bookmarkCollection removeObserver:self forKeyPath:@"count"];
+    [self unobserveBookmarksCount];
 }
 
 - (void)windowDidLoad
@@ -98,12 +98,30 @@
     
     self.tableView.dataSource = self.bookmarkCollection;
     
-    [self.bookmarkCollection addObserver:self forKeyPath:@"count" options:NSKeyValueObservingOptionNew context:nil];
+    [self observeBookmarksCount];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
 {
     [self.tableView reloadData];
+}
+
+- (void)observeBookmarksCount
+{
+    if(!self.isObservingBookmarksCount)
+    {
+        self.observingBookmarksCount = YES;
+        [self.bookmarkCollection addObserver:self forKeyPath:@"count" options:NSKeyValueObservingOptionNew context:nil];
+    }
+}
+
+- (void)unobserveBookmarksCount
+{
+    if(self.isObservingBookmarksCount)
+    {
+        self.observingBookmarksCount = NO;
+        [self.bookmarkCollection removeObserver:self forKeyPath:@"count"];
+    }
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
@@ -121,12 +139,14 @@
 {
     AWDeleteButton *button = (AWDeleteButton *)sender;
     
+    [self unobserveBookmarksCount];
     [self.tableView beginUpdates];
     [self.bookmarkCollection deleteBookmarkEntry:button.entry];
     NSInteger currentRow = [self.tableView rowForView:button];
     NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:currentRow];
     [self.tableView removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
     [self.tableView endUpdates];
+    [self observeBookmarksCount];
     
 }
 
