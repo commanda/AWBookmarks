@@ -15,7 +15,7 @@ static AWBookmarksPlugin *sharedPlugin;
 @interface AWBookmarksPlugin : NSObject
 
 + (instancetype)sharedPlugin;
-+ (NSString *)pathToApplicationSupportForProjectName:(NSString *)projectName;
++ (NSString *)pathToApplicationSupport;
 
 - (id)initWithBundle:(NSBundle *)plugin;
 

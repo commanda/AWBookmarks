@@ -30,12 +30,12 @@
     return sharedPlugin;
 }
 
-+ (NSString *)pathToApplicationSupportForProjectName:(NSString *)projectName
++ (NSString *)pathToApplicationSupport
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
     NSString *directory = [paths firstObject];
     
-    directory = [[directory stringByAppendingPathComponent:@"AWBookmarks"] stringByAppendingPathComponent:projectName];
+    directory = [directory stringByAppendingPathComponent:@"Xcode-AWBookmarks"];
     
     if(![[NSFileManager defaultManager] fileExistsAtPath:directory])
     {
@@ -111,7 +111,7 @@
     }
     
     [self.windowController.window makeKeyAndOrderFront:self.windowController];
-    [self.windowController.window setOrderedIndex:0];
+    //[self.windowController.window setOrderedIndex:0];
 }
 
 - (void)bookmarkCurrentLine

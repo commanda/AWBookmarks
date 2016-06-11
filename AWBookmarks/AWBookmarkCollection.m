@@ -25,10 +25,7 @@
 
 + (NSString *)savedBookmarksFilePath
 {
-    NSString* projectPath = [[IDEHelpers currentWorkspaceDocument].workspace.representingFilePath.fileURL path];
-    NSString *projectName = [[projectPath lastPathComponent] stringByDeletingPathExtension];
-    
-    NSString *directory = [AWBookmarksPlugin pathToApplicationSupportForProjectName:projectName];
+    NSString *directory = [AWBookmarksPlugin pathToApplicationSupport];
     
     NSString *filePath = [directory stringByAppendingPathComponent:@"bookmarks.dat"];
     
@@ -95,23 +92,27 @@
     
     NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
     
-    AWBookmarkEntry *newEntry = [[AWBookmarkEntry alloc] init];
-    newEntry.lineText = lineText;
-    newEntry.fileURL = url;
-    newEntry.lineNumber = @(lineNumber);
-    
-    if(![self.bookmarks containsObject:newEntry])
+    if(url)
     {
-        [self willChangeValueForKey:@"count"];
-        [self.bookmarks addObject:newEntry];
-        [self didChangeValueForKey:@"count"];
         
-        // Watch this entry for changes
-        [newEntry addObserver:self forKeyPath:@"changed" options:0 context:nil];
-        [newEntry addObserver:self forKeyPath:@"toBeDeleted" options:0 context:nil];
+        AWBookmarkEntry *newEntry = [[AWBookmarkEntry alloc] init];
+        newEntry.lineText = lineText;
+        newEntry.fileURL = url;
+        newEntry.lineNumber = @(lineNumber);
+        
+        if(![self.bookmarks containsObject:newEntry])
+        {
+            [self willChangeValueForKey:@"count"];
+            [self.bookmarks addObject:newEntry];
+            [self didChangeValueForKey:@"count"];
+            
+            // Watch this entry for changes
+            [newEntry addObserver:self forKeyPath:@"changed" options:0 context:nil];
+            [newEntry addObserver:self forKeyPath:@"toBeDeleted" options:0 context:nil];
+        }
+        
+        [self saveBookmarks];
     }
-    
-    [self saveBookmarks];
 }
 
 - (AWBookmarkEntry *)objectAtIndex:(NSUInteger)index

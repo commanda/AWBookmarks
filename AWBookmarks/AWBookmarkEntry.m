@@ -80,13 +80,6 @@
     return _uuid;
 }
 
-- (NSURL *)fileBookmarkSaveFilename
-{
-    NSString *filePath = [[AWBookmarksPlugin pathToApplicationSupportForProjectName:@"FileBookmarks"] stringByAppendingPathComponent:self.uuid];
-    NSURL *saveToURL = [NSURL fileURLWithPath:filePath];
-    return saveToURL;
-}
-
 - (void)setFileURL:(NSURL *)fileURL
 {
     [[FileWatcher sharedInstance] stopWatchingFileAtURL:_fileURL];
