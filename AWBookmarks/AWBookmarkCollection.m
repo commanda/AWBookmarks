@@ -17,23 +17,52 @@
 
 
 @property (strong) NSMutableArray *bookmarks;
-@property NSString *projectDir;
-@property NSString *projectName;
 
 @end
 
 @implementation AWBookmarkCollection
 
+
++ (NSString *)savedBookmarksFilePath
+{
+    NSString* projectPath = [[IDEHelpers currentWorkspaceDocument].workspace.representingFilePath.fileURL path];
+    NSString *projectName = [[projectPath lastPathComponent] stringByDeletingPathExtension];
+    
+    NSString *directory = [AWBookmarksPlugin pathToApplicationSupportForProjectName:projectName];
+    
+    NSString *filePath = [directory stringByAppendingPathComponent:@"bookmarks.dat"];
+    
+    return filePath;
+}
+
 - (id)init
 {
     if(self = [super init])
     {
-        self.bookmarks = [[NSMutableArray alloc] init];
-        
         [self swizzleTextChangedInTextView];
-        
+        self.bookmarks = [@[] mutableCopy];
     }
     return self;
+}
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    if(self = [self init])
+    {
+        self.bookmarks = [decoder decodeObjectForKey:@"bookmarkEntries"];
+        
+        if(!self.bookmarks)
+        {
+            self.bookmarks = [@[] mutableCopy];
+        }
+    }
+    
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    [encoder encodeObject:self.bookmarks forKey:@"bookmarkEntries"];
 }
 
 - (void)dealloc
@@ -113,29 +142,9 @@
     }
 }
 
-- (NSString *)serialize
-{
-    NSMutableArray *uuids = [[NSMutableArray alloc] initWithCapacity:self.bookmarks.count];
-    [self.bookmarks enumerateObjectsUsingBlock:^(AWBookmarkEntry *entry, NSUInteger idx, BOOL * _Nonnull stop){
-        [uuids addObject:entry.uuid];
-    }];
-    
-    return [uuids componentsJoinedByString:@", "];
-}
-
 - (void)saveBookmarks
 {
-    NSString* projectPath = [[IDEHelpers currentWorkspaceDocument].workspace.representingFilePath.fileURL path];
-    self.projectDir = [projectPath stringByDeletingLastPathComponent];
-    self.projectName = [[projectPath lastPathComponent] stringByDeletingPathExtension];
-    
-    NSString *directory = [AWBookmarksPlugin pathToApplicationSupportForProjectName:self.projectName];
-    
-    NSString *filePath = [directory stringByAppendingPathComponent:@"bookmarks.dat"];
-    NSError *fileWritingError;
-    
-    NSString *value = [self serialize];
-    [value writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:&fileWritingError];
+    [NSKeyedArchiver archiveRootObject:self toFile:[[self class] savedBookmarksFilePath]];
 }
 
 - (void)resolveAllBookmarks

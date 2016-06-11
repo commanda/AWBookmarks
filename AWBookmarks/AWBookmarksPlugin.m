@@ -53,7 +53,11 @@
         self.bundle = plugin;
         
         
-        self.bookmarkCollection = [[AWBookmarkCollection alloc] init];
+        self.bookmarkCollection = [NSKeyedUnarchiver unarchiveObjectWithFile:[AWBookmarkCollection savedBookmarksFilePath]];
+        if(!self.bookmarkCollection)
+        {
+            self.bookmarkCollection = [[AWBookmarkCollection alloc] init];
+        }
         
         self.contextMenuHandler = [[AWContextMenuHandler alloc] initWithBookmarkCollection:self.bookmarkCollection];
         

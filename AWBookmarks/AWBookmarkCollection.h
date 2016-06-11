@@ -10,9 +10,11 @@
 #import <AppKit/AppKit.h>
 #import "AWBookmarkEntry.h"
 
-@interface AWBookmarkCollection : NSObject <NSTableViewDataSource>
+@interface AWBookmarkCollection : NSObject <NSTableViewDataSource, NSCoding>
 
 @property (readonly, nonatomic) NSUInteger count;
+
++ (NSString *)savedBookmarksFilePath;
 
 - (AWBookmarkEntry *)objectAtIndex:(NSUInteger)index;
 - (void)resolveAllBookmarks;

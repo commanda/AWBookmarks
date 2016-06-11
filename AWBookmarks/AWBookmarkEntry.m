@@ -36,6 +36,26 @@
 
 @implementation AWBookmarkEntry
 
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    if(self = [super init])
+    {
+        self.fileURL = [decoder decodeObjectForKey:@"fileURL"];
+        self.lineNumber = [decoder decodeObjectForKey:@"lineNumber"];
+        self.lineText = [decoder decodeObjectForKey:@"lineText"];
+        self.uuid = [decoder decodeObjectForKey:@"uuid"];
+    }
+    return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+    [encoder encodeObject:self.fileURL forKey:@"fileURL"];
+    [encoder encodeObject:self.lineNumber forKey:@"lineNumber"];
+    [encoder encodeObject:self.lineText forKey:@"lineText"];
+    [encoder encodeObject:self.uuid forKey:@"uuid"];
+}
+
 - (id)copyWithZone:(NSZone *)zone
 {
     AWBookmarkEntry *newEntry = [[self class] allocWithZone:zone];
