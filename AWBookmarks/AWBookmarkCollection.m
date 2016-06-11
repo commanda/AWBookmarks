@@ -30,28 +30,6 @@
     {
         self.bookmarks = [[NSMutableArray alloc] init];
         
-        // Just for testing, have some items in the collection
-        /*
-         filePath: file:///Users/amanda/Playpen/Rayrolling/Rayrolling/Rayrolling.m
-         lineNumber: 77
-         lineText:    [[NSNotificationCenter defaultCenter] removeObserver:self];
-         */
-        
-//        AWBookmarkEntry *one = [[AWBookmarkEntry alloc] init];
-//        one.filePath = [NSURL URLWithString:@"file:///Users/amanda/Playpen/Rayrolling/Rayrolling/Rayrolling.m"];
-//        one.lineNumber = @(54);
-//        one.lineText = @"   [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidFinishLaunchingNotification object:nil]";
-//        [self.bookmarks addObject:one];
-        
-//        AWBookmarkEntry *two = [[AWBookmarkEntry alloc] init];
-//        two.filePath = [NSURL URLWithString:@"file:///Users/amanda/Playpen/AWBookmarks/AWBookmarks/AWBookmarksWindowController.h"];
-//        two.lineNumber = @(14);
-//        two.lineText = @"@@property (strong) AWBookmarkCollection *bookmarkCollection;";
-//        [self.bookmarks addObject:two];
-        
-        
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(performBookmarkThisLine:) name:@"AW_contextMenuBookmarkOptionSelected" object:nil];
-        
         [self swizzleTextChangedInTextView];
         
     }
@@ -68,7 +46,7 @@
     return self.bookmarks.count;
 }
 
-- (void)performBookmarkThisLine:(NSNotification *)notif
+- (void)performBookmarkThisLine
 {
     IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
     NSTextView* textView = editor.textView;

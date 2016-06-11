@@ -52,9 +52,10 @@
         // reference to plugin's bundle, for resource access
         self.bundle = plugin;
         
-        self.contextMenuHandler = [[AWContextMenuHandler alloc] init];
         
         self.bookmarkCollection = [[AWBookmarkCollection alloc] init];
+        
+        self.contextMenuHandler = [[AWContextMenuHandler alloc] initWithBookmarkCollection:self.bookmarkCollection];
         
         self.gutterViewHandler = [[AWGutterViewHandler alloc] initWithBookmarkCollection:self.bookmarkCollection];
         
@@ -74,15 +75,26 @@
     
     // Create menu items, initialize UI, etc.
     // Sample Menu Item:
-    NSMenuItem *menuItem = [[NSApp mainMenu] itemWithTitle:@"View"];
-    if (menuItem) {
-        [[menuItem submenu] addItem:[NSMenuItem separatorItem]];
-        NSMenuItem *actionMenuItem = [[NSMenuItem alloc] initWithTitle:@"Bookmarks"
+    NSMenuItem *viewMenuItem = [[NSApp mainMenu] itemWithTitle:@"View"];
+    if (viewMenuItem) {
+        [[viewMenuItem submenu] addItem:[NSMenuItem separatorItem]];
+        NSMenuItem *actionMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Bookmarked Items"
                                                                 action:@selector(showBookmarksWindow)
                                                          keyEquivalent:@"b"];
         [actionMenuItem setKeyEquivalentModifierMask:NSControlKeyMask|NSCommandKeyMask];
         [actionMenuItem setTarget:self];
-        [[menuItem submenu] addItem:actionMenuItem];
+        [[viewMenuItem submenu] addItem:actionMenuItem];
+    }
+    
+    NSMenuItem *editorMenuItem = [[NSApp mainMenu] itemWithTitle:@"Edit"];
+    if(editorMenuItem)
+    {
+        NSMenuItem *bookmarkThisLine = [[NSMenuItem alloc] initWithTitle:@"Bookmark Current Line"
+                                                                  action:@selector(bookmarkCurrentLine)
+                                                           keyEquivalent:@"b"];
+        [bookmarkThisLine setKeyEquivalentModifierMask:NSControlKeyMask];
+        [bookmarkThisLine setTarget:self];
+        [[editorMenuItem submenu] addItem:bookmarkThisLine];
     }
 }
 
@@ -96,6 +108,11 @@
     
     [self.windowController.window makeKeyAndOrderFront:self.windowController];
     [self.windowController.window setOrderedIndex:0];
+}
+
+- (void)bookmarkCurrentLine
+{
+    [self.bookmarkCollection performBookmarkThisLine];
 }
 
 - (void)dealloc

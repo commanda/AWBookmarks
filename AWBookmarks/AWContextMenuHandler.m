@@ -15,18 +15,24 @@
 @interface AWContextMenuHandler ()
 
 @property NSMenuItem *addBookmarkMenuItem;
+@property AWBookmarkCollection *bookmarkCollection;
 
 @end
 
 @implementation AWContextMenuHandler
 
 
-- (id)init
+- (id)initWithBookmarkCollection:(AWBookmarkCollection *)bookmarkCollection;
 {
     if(self = [super init])
     {
+        self.bookmarkCollection = bookmarkCollection;
+        
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.001 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            self.addBookmarkMenuItem = [[NSMenuItem alloc] initWithTitle:@"Bookmark This Line" action:@selector(contextMenuBookmarkOptionSelected) keyEquivalent:@""];
+            self.addBookmarkMenuItem = [[NSMenuItem alloc] initWithTitle:@"Bookmark This Line"
+                                                                  action:@selector(contextMenuBookmarkOptionSelected)
+                                                           keyEquivalent:@"b"];
+            [self.addBookmarkMenuItem setKeyEquivalentModifierMask:NSControlKeyMask];
             self.addBookmarkMenuItem.target = self;
             
             [self swizzleMenuForEventInTextView];
@@ -38,7 +44,7 @@
 
 - (void)contextMenuBookmarkOptionSelected
 {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"AW_contextMenuBookmarkOptionSelected" object:nil];
+    [self.bookmarkCollection performBookmarkThisLine];
 }
 
 #pragma mark - Swizzling

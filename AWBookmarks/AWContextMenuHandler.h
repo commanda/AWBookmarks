@@ -8,7 +8,8 @@
 
 #import <Foundation/Foundation.h>
 #import <AppKit/AppKit.h>
+#import "AWBookmarkCollection.h"
 
 @interface AWContextMenuHandler : NSObject
-
+- (id)initWithBookmarkCollection:(AWBookmarkCollection *)bookmarkCollection;
 @end

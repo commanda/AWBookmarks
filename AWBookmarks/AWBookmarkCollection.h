@@ -18,5 +18,6 @@
 - (void)resolveAllBookmarks;
 - (void)deleteBookmarkEntry:(AWBookmarkEntry *)entry;
 - (NSArray *)lineNumbersForURL:(NSURL *)url;
+- (void)performBookmarkThisLine;
 
 @end
