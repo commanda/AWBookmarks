@@ -68,17 +68,25 @@
                             NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
                             
                             NSArray *bookmarkedLineNumbers = [self.bookmarkCollection lineNumbersForURL:url];
+                            
                             if(url && bookmarkedLineNumbers.count > 0)
                             {
-                                for (int i = 0; i < count; i++)
+                                for (int i = 0; i < count-1; i++)
                                 {
                                     NSUInteger lineNumber = indexes[i];
-                                    if([bookmarkedLineNumbers containsObject:@(lineNumber)])
+                                    NSUInteger nextLineNumber = indexes[i+1];
+                                    NSRange foldedRange = NSMakeRange(lineNumber, nextLineNumber - lineNumber);
+                                    
+                                    for(NSUInteger j = foldedRange.location; j < NSMaxRange(foldedRange); j++)
                                     {
-                                        NSRect a0, a1;
-                                        [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
-                                        NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"❤️"];
-                                        [str drawAtPoint:a0.origin];
+                                        if([bookmarkedLineNumbers containsObject:@(j)])
+                                        {
+                                            NSRect a0, a1;
+                                            [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
+                                            
+                                            NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"⛺"];
+                                            [str drawAtPoint:a1.origin];
+                                        }
                                     }
                                 }
                             }
