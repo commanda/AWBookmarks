@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		3723D74F1D024DBF00C1A5A7 /* FileWatcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 3723D74D1D024DBF00C1A5A7 /* FileWatcher.m */; };
-		373156651D0CA92C0039DEF0 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 373156641D0CA92C0039DEF0 /* Media.xcassets */; };
 		373A07221CF0034700ED350C /* IDEHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = 373A07211CF0034700ED350C /* IDEHelpers.m */; };
 		373A07251CF007FC00ED350C /* AWBookmarkEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 373A07241CF007FC00ED350C /* AWBookmarkEntry.m */; };
 		374572391CEFF8AF00D20378 /* AWBookmarksWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 374572371CEFF8AF00D20378 /* AWBookmarksWindowController.m */; };
@@ -23,14 +22,11 @@
 		37A454C51CF0E60F00F3D1D8 /* AWBookmarkCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A454C41CF0E60F00F3D1D8 /* AWBookmarkCollection.m */; };
 		37C65F071CF017CC00A2F5D7 /* AWContextMenuHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 37C65F061CF017CC00A2F5D7 /* AWContextMenuHandler.m */; };
 		37DE16731D035004008AF731 /* AWGutterViewHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 37DE16721D035004008AF731 /* AWGutterViewHandler.m */; };
-		37DE16791D03A26A008AF731 /* marker-pink@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DE16781D03A26A008AF731 /* marker-pink@2x.png */; };
-		37DE167B1D03C45F008AF731 /* marker-pink.png in Resources */ = {isa = PBXBuildFile; fileRef = 37DE167A1D03C45F008AF731 /* marker-pink.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		3723D74D1D024DBF00C1A5A7 /* FileWatcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FileWatcher.m; sourceTree = "<group>"; };
 		3723D74E1D024DBF00C1A5A7 /* FileWatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FileWatcher.h; sourceTree = "<group>"; };
-		373156641D0CA92C0039DEF0 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
 		373A07201CF0034700ED350C /* IDEHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IDEHelpers.h; sourceTree = "<group>"; };
 		373A07211CF0034700ED350C /* IDEHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IDEHelpers.m; sourceTree = "<group>"; };
 		373A07231CF007FC00ED350C /* AWBookmarkEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarkEntry.h; sourceTree = "<group>"; };
@@ -58,8 +54,6 @@
 		37C65F061CF017CC00A2F5D7 /* AWContextMenuHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWContextMenuHandler.m; sourceTree = "<group>"; };
 		37DE16711D035004008AF731 /* AWGutterViewHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWGutterViewHandler.h; sourceTree = "<group>"; };
 		37DE16721D035004008AF731 /* AWGutterViewHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWGutterViewHandler.m; sourceTree = "<group>"; };
-		37DE16781D03A26A008AF731 /* marker-pink@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "marker-pink@2x.png"; sourceTree = "<group>"; };
-		37DE167A1D03C45F008AF731 /* marker-pink.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "marker-pink.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -129,7 +123,6 @@
 				3753E3621CF00B2200890887 /* Adaptor */,
 				3753E3651CF00B6200890887 /* Misc */,
 				374A482A1CEC0A7500D68C7A /* Supporting Files */,
-				373156641D0CA92C0039DEF0 /* Media.xcassets */,
 			);
 			path = AWBookmarks;
 			sourceTree = "<group>";
@@ -173,8 +166,6 @@
 		3753E3641CF00B3C00890887 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				37DE167A1D03C45F008AF731 /* marker-pink.png */,
-				37DE16781D03A26A008AF731 /* marker-pink@2x.png */,
 				374572361CEFF8AF00D20378 /* AWBookmarksWindowController.h */,
 				374572371CEFF8AF00D20378 /* AWBookmarksWindowController.m */,
 				374572381CEFF8AF00D20378 /* AWBookmarksWindowController.xib */,
@@ -249,11 +240,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				373156651D0CA92C0039DEF0 /* Media.xcassets in Resources */,
 				374A482C1CEC0A7500D68C7A /* AWBookmarks.xcscheme in Resources */,
-				37DE16791D03A26A008AF731 /* marker-pink@2x.png in Resources */,
 				3745723A1CEFF8AF00D20378 /* AWBookmarksWindowController.xib in Resources */,
-				37DE167B1D03C45F008AF731 /* marker-pink.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

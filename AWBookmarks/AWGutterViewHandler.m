@@ -17,7 +17,6 @@
 
 @interface AWGutterViewHandler ()
 @property (nonatomic) AWBookmarkCollection *bookmarkCollection;
-@property NSImage *markerImage;
 @property NSMutableSet *observedBookmarkEntries;
 @end
 
@@ -34,10 +33,6 @@
         {
             [self addOrUpdateMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
         }
-        
-        NSBundle *pluginBundle = [NSBundle bundleWithIdentifier:@"com.amandawixted.AWBookmarks"];
-        NSImage *image = [pluginBundle imageForResource:@"marker-correct-size"];
-        self.markerImage = image;
         
         [self swizzleMethodForDrawLineNumbers];
     }
