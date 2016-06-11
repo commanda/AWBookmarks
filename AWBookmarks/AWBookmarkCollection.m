@@ -63,7 +63,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-- (NSUInteger) count
+- (NSUInteger)count
 {
     return self.bookmarks.count;
 }
@@ -128,7 +128,10 @@
     {
         [entry removeObserver:self forKeyPath:@"toBeDeleted"];
         [entry removeObserver:self forKeyPath:@"changed"];
+        
+        [self willChangeValueForKey:@"count"];
         [self.bookmarks removeObject:entry];
+        [self didChangeValueForKey:@"count"];
     }
 }
 
@@ -150,7 +153,7 @@
     
     NSString *directory = [AWBookmarksPlugin pathToApplicationSupportForProjectName:self.projectName];
     
-    NSString *filePath = [directory  stringByAppendingPathComponent:@"bookmarks.dat"];
+    NSString *filePath = [directory stringByAppendingPathComponent:@"bookmarks.dat"];
     NSError *fileWritingError;
     
     NSString *value = [self serialize];
@@ -169,15 +172,26 @@
 {
     if([keyPath isEqualToString:@"toBeDeleted"])
     {
-        [self willChangeValueForKey:@"count"];
         [self deleteBookmarkEntry:object];
-        [self didChangeValueForKey:@"count"];
     }
     else if([keyPath isEqualToString:@"changed"])
     {
         [self willChangeValueForKey:@"count"];
         [self didChangeValueForKey:@"count"];
     }
+}
+
+- (NSArray *)lineNumbersForURL:(NSURL *)url
+{
+    NSMutableArray *toReturn = [@[] mutableCopy];
+    for(AWBookmarkEntry *entry in self.bookmarks)
+    {
+        if([entry.fileURL isEqual:url])
+        {
+            [toReturn addObject:entry.lineNumber];
+        }
+    }
+    return toReturn;
 }
 
 #pragma NSTableViewDataSource protocol methods

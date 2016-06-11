@@ -17,8 +17,8 @@
 
 @interface AWGutterViewHandler ()
 @property (nonatomic) AWBookmarkCollection *bookmarkCollection;
-@property NSMutableDictionary *lineNumbersForBookmarks;
 @property NSImage *markerImage;
+@property NSMutableSet *observedBookmarkEntries;
 @end
 
 @implementation AWGutterViewHandler
@@ -28,7 +28,12 @@
     if(self = [super init])
     {
         self.bookmarkCollection = bookmarkCollection;
-        self.lineNumbersForBookmarks = [[NSMutableDictionary alloc] init];
+        self.observedBookmarkEntries = [[NSMutableSet alloc] init];
+        
+        for(int i = 0; i < self.bookmarkCollection.count; i++)
+        {
+            [self addOrUpdateMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
+        }
         
         NSBundle *pluginBundle = [NSBundle bundleWithIdentifier:@"com.amandawixted.AWBookmarks"];
         NSImage *image = [pluginBundle imageForResource:@"marker"];
@@ -71,26 +76,27 @@
                     else
                     {
                         [view lockFocus];
-                        
-                        for (int i = 0; i < count; i++)
                         {
+                            NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
                             
-                            NSUInteger lineNumber = indexes[i];
-                            if([[self.lineNumbersForBookmarks allValues] containsObject:@(lineNumber)])
+                            NSArray *bookmarkedLineNumbers = [self.bookmarkCollection lineNumbersForURL:url];
+                            if(url && bookmarkedLineNumbers.count > 0)
                             {
-                                
-                                NSRect a0, a1;
-                                [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
-                                NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"❤️"];
-                                [str drawAtPoint:a0.origin];
+                                for (int i = 0; i < count; i++)
+                                {
+                                    NSUInteger lineNumber = indexes[i];
+                                    if([bookmarkedLineNumbers containsObject:@(lineNumber)])
+                                    {
+                                        NSRect a0, a1;
+                                        [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
+                                        NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"❤️"];
+                                        [str drawAtPoint:a0.origin];
+                                    }
+                                }
                             }
                         }
-                        
                         [view unlockFocus];
-                        
-                        // a recursive call for some reason here...
                     }
-                    
                 }
                      error:nil];
 }
@@ -105,24 +111,21 @@
 
 - (void)addOrUpdateMarkerForBookmarkEntry:(AWBookmarkEntry *)entry
 {
-    if(!self.lineNumbersForBookmarks[entry])
+    if(![self.observedBookmarkEntries containsObject:entry])
     {
+        [self.observedBookmarkEntries addObject:entry];
         [entry addObserver:self forKeyPath:@"toBeDeleted" options:NSKeyValueObservingOptionNew context:nil];
         [entry addObserver:self forKeyPath:@"changed" options:NSKeyValueObservingOptionNew context:nil];
     }
-    
-    self.lineNumbersForBookmarks[entry] = entry.lineNumber;
-    
-    DLOG(@"bp");
 }
 
 - (void)deleteMarkerForEntry:(AWBookmarkEntry *)entry
 {
-    if(self.lineNumbersForBookmarks[entry])
+    if([self.observedBookmarkEntries containsObject:entry])
     {
         [entry removeObserver:self forKeyPath:@"toBeDeleted"];
         [entry removeObserver:self forKeyPath:@"changed"];
-        [self.lineNumbersForBookmarks removeObjectForKey:entry];
+        [self.observedBookmarkEntries removeObject:entry];
     }
 }
 
@@ -135,7 +138,7 @@
             [self addOrUpdateMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
         }
     }
-    else if([[self.lineNumbersForBookmarks allKeys] containsObject:object])
+    else if([self.observedBookmarkEntries containsObject:object])
     {
         AWBookmarkEntry *entry = (AWBookmarkEntry *)object;
         if([keyPath isEqualToString:@"toBeDeleted"])
