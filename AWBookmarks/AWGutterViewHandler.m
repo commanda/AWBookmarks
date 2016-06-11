@@ -12,6 +12,7 @@
 #import "AWBookmarkCollection.h"
 #import "AWBookmarkEntry.h"
 #import "Aspects.h"
+#import "AWBookmarkAnnotation.h"
 #import <objc/runtime.h>
 
 
@@ -97,7 +98,12 @@
                withOptions:AspectPositionAfter
                 usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexes, DVTSourceTextView *textView, id paraRectBlock) {
                     
-                
+                    DVTTextSidebarView *view = info.instance;
+                    
+                    if([view isKindOfClass:NSClassFromString(className)])
+                    {
+                        
+                    }
                 }
                      error:nil];
 }
