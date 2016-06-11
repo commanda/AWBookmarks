@@ -78,15 +78,15 @@
     if (menuItem) {
         [[menuItem submenu] addItem:[NSMenuItem separatorItem]];
         NSMenuItem *actionMenuItem = [[NSMenuItem alloc] initWithTitle:@"Bookmarks"
-                                                                action:@selector(toggleBookmarksWindow)
+                                                                action:@selector(showBookmarksWindow)
                                                          keyEquivalent:@"b"];
-        [actionMenuItem setKeyEquivalentModifierMask:NSControlKeyMask];
+        [actionMenuItem setKeyEquivalentModifierMask:NSControlKeyMask|NSCommandKeyMask];
         [actionMenuItem setTarget:self];
         [[menuItem submenu] addItem:actionMenuItem];
     }
 }
 
-- (void)toggleBookmarksWindow
+- (void)showBookmarksWindow
 {
     if(self.windowController == nil)
     {
