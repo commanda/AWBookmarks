@@ -12,7 +12,6 @@
 #import "AWBookmarkCollection.h"
 #import "AWBookmarkEntry.h"
 #import "Aspects.h"
-#import "AWBookmarkAnnotation.h"
 #import <objc/runtime.h>
 
 
