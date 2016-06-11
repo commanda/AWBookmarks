@@ -12,7 +12,7 @@
 #import "AWBookmarkCollection.h"
 #import "AWBookmarkEntry.h"
 #import "Aspects.h"
-
+#import <objc/runtime.h>
 
 
 @interface AWGutterViewHandler ()
@@ -36,10 +36,11 @@
         }
         
         NSBundle *pluginBundle = [NSBundle bundleWithIdentifier:@"com.amandawixted.AWBookmarks"];
-        NSImage *image = [pluginBundle imageForResource:@"marker"];
+        NSImage *image = [pluginBundle imageForResource:@"marker-correct-size"];
         self.markerImage = image;
         
-        [self swizzleMethodForDrawLineNumbers];
+        //[self swizzleMethodForDrawLineNumbers];
+        [self swizzleMethodForDrawSidebarMarkers];
     }
     return self;
 }
@@ -51,20 +52,6 @@
     Class c = NSClassFromString(className);
     [c aspect_hookSelector:@selector(_drawLineNumbersInSidebarRect:foldedIndexes:count:linesToInvert:linesToReplace:getParaRectBlock:)
                withOptions:AspectPositionAfter
-     /*
-      - (void)_drawLineNumbersInSidebarRect:(struct CGRect)arg1 
-      foldedIndexes:(unsigned long long *)arg2 
-      count:(unsigned long long)arg3 
-      linesToInvert:(id)arg4 
-      linesToReplace:(id)arg5 
-      getParaRectBlock:(id)arg6;
-      
-      - (void)_drawSidebarMarkersForAnnotations:(id)arg1 
-      atIndexes:(id)arg2 
-      textView:(id)arg3 
-      getParaRectBlock:(id)arg4;
-
-      */
                 usingBlock:^(id<AspectInfo> info, CGRect rect, NSUInteger *indexes, NSUInteger count, id a3, id a4, id paraRectBlock) {
                     
                     
@@ -75,6 +62,7 @@
                     }
                     else
                     {
+                        
                         [view lockFocus];
                         {
                             NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
@@ -100,6 +88,21 @@
                 }
                      error:nil];
 }
+
+- (void)swizzleMethodForDrawSidebarMarkers
+{
+    NSString *className = @"DVTTextSidebarView";
+    Class c = NSClassFromString(className);
+    [c aspect_hookSelector:@selector(_drawSidebarMarkersForAnnotations:atIndexes:textView:getParaRectBlock:)
+               withOptions:AspectPositionAfter
+                usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexes, DVTSourceTextView *textView, id paraRectBlock) {
+                    
+                
+                }
+                     error:nil];
+}
+
+
 #pragma clang diagnostic pop
 
 - (void)setBookmarkCollection:(AWBookmarkCollection *)bookmarkCollection
