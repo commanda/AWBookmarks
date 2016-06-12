@@ -52,6 +52,11 @@
         {
             self.bookmarks = [@[] mutableCopy];
         }
+        
+        for(AWBookmarkEntry *entry in self.bookmarks)
+        {
+            [self observeBookmarkEntry:entry];
+        }
     }
     
     return self;
@@ -65,6 +70,19 @@
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)observeBookmarkEntry:(AWBookmarkEntry *)entry
+{
+    // Watch this entry for changes
+    [entry addObserver:self forKeyPath:@"changed" options:0 context:nil];
+    [entry addObserver:self forKeyPath:@"toBeDeleted" options:0 context:nil];
+}
+
+- (void)unobserveBookmarkEntry:(AWBookmarkEntry *)entry
+{
+    [entry removeObserver:self forKeyPath:@"changed"];
+    [entry removeObserver:self forKeyPath:@"toBeDeleted"];
 }
 
 - (NSUInteger)count
@@ -106,9 +124,7 @@
             [self.bookmarks addObject:newEntry];
             [self didChangeValueForKey:@"count"];
             
-            // Watch this entry for changes
-            [newEntry addObserver:self forKeyPath:@"changed" options:0 context:nil];
-            [newEntry addObserver:self forKeyPath:@"toBeDeleted" options:0 context:nil];
+            [self observeBookmarkEntry:newEntry];
         }
         
         [self saveBookmarks];
@@ -124,22 +140,17 @@
     return nil;
 }
 
-- (void)deleteBookmarkEntryAtIndex:(NSUInteger)index
-{
-    AWBookmarkEntry *entry = [self objectAtIndex:index];
-    [self deleteBookmarkEntry:entry];
-}
-
 - (void)deleteBookmarkEntry:(AWBookmarkEntry *)entry
 {
     if([self.bookmarks containsObject:entry])
     {
-        [entry removeObserver:self forKeyPath:@"toBeDeleted"];
-        [entry removeObserver:self forKeyPath:@"changed"];
+        [self unobserveBookmarkEntry:entry];
         
         [self willChangeValueForKey:@"count"];
         [self.bookmarks removeObject:entry];
         [self didChangeValueForKey:@"count"];
+        
+        [self saveBookmarks];
     }
 }
 

@@ -71,6 +71,22 @@
     return [NSString stringWithFormat:@"%@\nfilePath: %@\nlineNumber: %@\nlineText:%@", [super description], self.fileURL, self.lineNumber, self.lineText];
 }
 
+- (BOOL)isEqual:(id)object
+{
+    BOOL toReturn = NO;
+    if([object isKindOfClass:[AWBookmarkEntry class]])
+    {
+        AWBookmarkEntry *other = (AWBookmarkEntry *)object;
+        if([other.lineNumber isEqual:self.lineNumber]
+           && [other.lineText isEqual:self.lineText]
+           && [other.fileURL isEqual:self.fileURL])
+        {
+            toReturn = YES;
+        }
+    }
+    return toReturn;
+}
+
 - (NSString *)uuid
 {
     if(!_uuid)
