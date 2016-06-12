@@ -100,6 +100,8 @@
         [bookmarkThisLine setTarget:self];
         [[editorMenuItem submenu] addItem:bookmarkThisLine];
     }
+    
+    [self showBookmarksWindow];
 }
 
 - (void)showBookmarksWindow
