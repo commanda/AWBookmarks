@@ -44,6 +44,7 @@
         self.lineNumber = [decoder decodeObjectForKey:@"lineNumber"];
         self.lineText = [decoder decodeObjectForKey:@"lineText"];
         self.uuid = [decoder decodeObjectForKey:@"uuid"];
+        self.containingProjectURL = [decoder decodeObjectForKey:@"containingProjectURL"];
     }
     return self;
 }
@@ -54,21 +55,12 @@
     [encoder encodeObject:self.lineNumber forKey:@"lineNumber"];
     [encoder encodeObject:self.lineText forKey:@"lineText"];
     [encoder encodeObject:self.uuid forKey:@"uuid"];
-}
-
-- (id)copyWithZone:(NSZone *)zone
-{
-    AWBookmarkEntry *newEntry = [[self class] allocWithZone:zone];
-    newEntry->_fileURL = self.fileURL;
-    newEntry->_lineText = self.lineText;
-    newEntry->_lineNumber = self.lineNumber;
-    newEntry->_uuid = self.uuid;
-    return newEntry;
+    [encoder encodeObject:self.containingProjectURL forKey:@"containingProjectURL"];
 }
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"%@\nfilePath: %@\nlineNumber: %@\nlineText:%@", [super description], self.fileURL, self.lineNumber, self.lineText];
+    return [NSString stringWithFormat:@"%@\nfilePath: %@\nlineNumber: %@\nlineText:%@\ncontainingProjectURL: %@", [super description], self.fileURL, self.lineNumber, self.lineText, self.containingProjectURL];
 }
 
 - (BOOL)isEqual:(id)object

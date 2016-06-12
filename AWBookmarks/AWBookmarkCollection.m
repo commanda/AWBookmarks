@@ -113,10 +113,13 @@
     if(url)
     {
         
+        NSString* projectPath = [[IDEHelpers currentWorkspaceDocument].workspace.representingFilePath.fileURL path];
+        
         AWBookmarkEntry *newEntry = [[AWBookmarkEntry alloc] init];
         newEntry.lineText = lineText;
         newEntry.fileURL = url;
         newEntry.lineNumber = @(lineNumber);
+        newEntry.containingProjectURL = [NSURL fileURLWithPath:projectPath];
         
         if(![self.bookmarks containsObject:newEntry])
         {
