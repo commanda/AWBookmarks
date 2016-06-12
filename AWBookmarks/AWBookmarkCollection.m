@@ -112,14 +112,17 @@
     
     if(url)
     {
-        
-        NSString* projectPath = [[IDEHelpers currentWorkspaceDocument].workspace.representingFilePath.fileURL path];
-        
         AWBookmarkEntry *newEntry = [[AWBookmarkEntry alloc] init];
         newEntry.lineText = lineText;
         newEntry.fileURL = url;
         newEntry.lineNumber = @(lineNumber);
-        newEntry.containingProjectURL = [NSURL fileURLWithPath:projectPath];
+        
+        // Store the URL of the xcodeproj that contains this file, unless it's not in a project, in which case it'll be "Autosave Information"
+        NSString* projectPath = [[IDEHelpers currentWorkspaceDocument].workspace.representingFilePath.fileURL path];
+        if([projectPath rangeOfString:@"Autosave Information"].location == NSNotFound)
+        {
+            newEntry.containingProjectURL = [NSURL fileURLWithPath:projectPath];
+        }
         
         if(![self.bookmarks containsObject:newEntry])
         {
