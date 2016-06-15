@@ -100,78 +100,90 @@
     [[FileWatcher sharedInstance] watchFileAtURL:fileURL onChanged:^(NSURL *currentURL){
         DLOG(@"hey the file changed %@", currentURL);
         AWBookmarkEntry *strongSelf = weakSelf;
-        [strongSelf willChangeValueForKey:@"changed"];
-        strongSelf->_fileURL = currentURL;
-        [strongSelf didChangeValueForKey:@"changed"];
+        if(strongSelf)
+        {
+            [strongSelf willChangeValueForKey:@"changed"];
+            strongSelf->_fileURL = currentURL;
+            [strongSelf didChangeValueForKey:@"changed"];
+        }
     }];
 }
 
 - (void)resolve
 {
-    /*
-     search through the file fuzzy matching for that old line text
-     there will probably be several lines that are exactly the same, so then weight them by distance from the original line number
-     have some threshold, so if we don't get a good enough match, delete that bookmark entry
-     use edit distance algorithm, use fuzzy matching algorithm
-     */
-    NSError *error;
-    NSString *text = [NSString stringWithContentsOfURL:self.fileURL encoding:NSUTF8StringEncoding error:&error];
-    
-    if(!error)
-    {
-        // If our document is currently open, it might be different from the saved version on disk because the user is editing it and might not have saved
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+       
+        /*
+         search through the file fuzzy matching for that old line text
+         there will probably be several lines that are exactly the same, so then weight them by distance from the original line number
+         have some threshold, so if we don't get a good enough match, delete that bookmark entry
+         use edit distance algorithm, use fuzzy matching algorithm
+         */
         
+        
+        NSString *text;
+        
+        // If our document is currently open, it might be different from the saved version on disk because the user is editing it and might not have saved
         NSURL *openURL = [[IDEHelpers currentSourceCodeDocument] fileURL];
         if([openURL isEqual:self.fileURL])
         {
             // Use the text from the open document instead of the text on disk
             text = [IDEHelpers currentSourceTextView].string;
         }
-        
-        NSArray *lines = [text componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-        
-        NSMutableArray *lineEvaluations = [[NSMutableArray alloc] init];
-        
-        int myLineIndex = _lineNumber.intValue - 1;
-        
-        for(int lineIndex = 0; lineIndex < lines.count; lineIndex++)
-        {
-            NSString *line = lines[lineIndex];
-            NSInteger lineScore = [line levenshteinDistanceFromString:_lineText];
-            NSInteger lineDistance = abs(myLineIndex - lineIndex);
-            
-            AWMatch *match = [[AWMatch alloc] init];
-            match.text = line;
-            match.score = lineScore;
-            match.lineDistance = lineDistance;
-            match.lineIndex = lineIndex;
-            [lineEvaluations addObject:match];
-        }
-        
-        [lineEvaluations sortUsingComparator:^NSComparisonResult(AWMatch *obj1, AWMatch *obj2){
-            if(obj1.score == obj2.score)
-            {
-                return obj1.lineDistance > obj2.lineDistance;
-            }
-            else return obj1.score > obj2.score;
-        }];
-        
-        AWMatch *best = [lineEvaluations firstObject];
-        
-        if(best.score < THRESHOLD_SCORE && best.text.length > 0)
-        {
-            [self willChangeValueForKey:@"changed"];
-            self.lineNumber = @(best.lineIndex + 1);
-            self.lineText = best.text;
-            [self didChangeValueForKey:@"changed"];
-        }
         else
         {
-            [self willChangeValueForKey:@"toBeDeleted"];
-            _toBeDeleted = YES;
-            [self didChangeValueForKey:@"toBeDeleted"];
+            text = [NSString stringWithContentsOfURL:self.fileURL encoding:NSUTF8StringEncoding error:nil];
         }
-    }
+        
+        if(text)
+        {
+            text = [text mutableCopy];
+            NSArray *lines = [text componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            
+            NSMutableArray *lineEvaluations = [[NSMutableArray alloc] init];
+            
+            int myLineIndex = _lineNumber.intValue - 1;
+            
+            for(int lineIndex = 0; lineIndex < lines.count; lineIndex++)
+            {
+                NSString *line = lines[lineIndex];
+                NSInteger lineScore = [line levenshteinDistanceFromString:_lineText];
+                NSInteger lineDistance = abs(myLineIndex - lineIndex);
+                
+                AWMatch *match = [[AWMatch alloc] init];
+                match.text = line;
+                match.score = lineScore;
+                match.lineDistance = lineDistance;
+                match.lineIndex = lineIndex;
+                [lineEvaluations addObject:match];
+            }
+            
+            [lineEvaluations sortUsingComparator:^NSComparisonResult(AWMatch *obj1, AWMatch *obj2){
+                if(obj1.score == obj2.score)
+                {
+                    return obj1.lineDistance > obj2.lineDistance;
+                }
+                else return obj1.score > obj2.score;
+            }];
+            
+            AWMatch *best = [lineEvaluations firstObject];
+            
+            if(best.score < THRESHOLD_SCORE && best.text.length > 0)
+            {
+                [self willChangeValueForKey:@"changed"];
+                self.lineNumber = @(best.lineIndex + 1);
+                self.lineText = best.text;
+                [self didChangeValueForKey:@"changed"];
+            }
+            else
+            {
+                [self willChangeValueForKey:@"toBeDeleted"];
+                _toBeDeleted = YES;
+                [self didChangeValueForKey:@"toBeDeleted"];
+            }
+        }
+        
+    });
 }
 
 #pragma FileWatcherDelegate method

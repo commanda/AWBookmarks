@@ -22,6 +22,7 @@
 @interface AWBookmarksWindowController ()
 @property (strong) IBOutlet NSTableView *tableView;
 @property (getter=isObservingBookmarksCount) BOOL observingBookmarksCount;
+@property BOOL shouldReloadTableView;
 @end
 
 @implementation AWBookmarksWindowController
@@ -148,9 +149,26 @@
     
 }
 
+
+- (void)reloadData:(id)whatever
+{
+    if(self.shouldReloadTableView)
+    {
+        self.shouldReloadTableView = NO;
+        [self.tableView reloadData];
+    }
+}
+
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
 {
-    [self.tableView reloadData];
+    @synchronized (self)
+    {
+        if(!self.shouldReloadTableView)
+        {
+            self.shouldReloadTableView = YES;
+            [[NSRunLoop mainRunLoop] performSelector:@selector(reloadData:) target:self argument:nil order:1 modes:@[NSDefaultRunLoopMode]];
+        }
+    }
 }
 
 - (void)observeBookmarksCount
