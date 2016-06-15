@@ -223,7 +223,7 @@ static NSString *buttonIdentifier = @"AWBookmarksDeleteButtonCellIdentifier";
                   row:(NSInteger)row
 {
     NSView *toReturn;
-    if([tableColumn.identifier hasSuffix:@"3"])
+    if([tableColumn.identifier isEqualToString:@"Delete?"])
     {
         // The delete button
         AWDeleteButton *button = [tableView makeViewWithIdentifier:buttonIdentifier owner:self];

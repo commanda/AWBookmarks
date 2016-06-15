@@ -211,15 +211,15 @@
     
     AWBookmarkEntry *entry = [self.bookmarks objectAtIndex:rowIndex];
     
-    if([aTableColumn.identifier hasSuffix:@"0"])
+    if([aTableColumn.identifier isEqualToString:@"File"])
     {
         toReturn = entry.fileURL.absoluteString.lastPathComponent;
     }
-    else if([aTableColumn.identifier hasSuffix:@"1"])
+    else if([aTableColumn.identifier isEqualToString:@"Line #"])
     {
         toReturn = entry.lineNumber;
     }
-    else if([aTableColumn.identifier hasSuffix:@"2"])
+    else if([aTableColumn.identifier isEqualToString:@"Line Content"])
     {
         toReturn = [entry.lineText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     }
