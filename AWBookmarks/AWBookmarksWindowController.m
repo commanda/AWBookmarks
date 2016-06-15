@@ -89,7 +89,7 @@
             // If the file is open, we're done
             if(verifier(filename))
             {
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     afterward();
                 });
             }
@@ -97,7 +97,7 @@
             {
                 // Otherwise, wait a bit and try again
                 void(^strongWaitForFileOpen)() = weakWaitForFileOpen;
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     if(stopCounter < MAX_HIGHLIGHT_TRIES)
                     {
                         stopCounter++;
