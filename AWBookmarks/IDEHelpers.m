@@ -24,7 +24,7 @@
     return nil;
 }
 
-+ (IDESourceCodeEditor *)currentEditor
++ (id)currentEditor
 {
     NSWindowController* currentWindowController = [[NSApp mainWindow] windowController];
     if ([currentWindowController isKindOfClass:NSClassFromString(@"IDEWorkspaceWindowController")])
@@ -32,7 +32,7 @@
         IDEWorkspaceWindowController* workspaceController = (IDEWorkspaceWindowController*)currentWindowController;
         IDEEditorArea* editorArea = [workspaceController editorArea];
         IDEEditorContext* editorContext = [editorArea lastActiveEditorContext];
-        IDESourceCodeEditor *editor = [editorContext editor];
+        id editor = [editorContext editor];
         return editor;
     }
     return nil;
@@ -95,6 +95,10 @@
     if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
     {
         textView = (DVTSourceTextView *)editor.textView;
+    }
+    else if([editor isKindOfClass:NSClassFromString(@"IDESourceCodeComparisonEditor")])
+    {
+        textView = (DVTSourceTextView *)((IDESourceCodeComparisonEditor *)editor).keyTextView;
     }
     return textView;
 }

@@ -92,8 +92,7 @@
 
 - (void)performBookmarkThisLine
 {
-    IDESourceCodeEditor* editor = [IDEHelpers currentEditor];
-    NSTextView* textView = editor.textView;
+    DVTSourceTextView *textView = [IDEHelpers currentSourceTextView];
     NSString *wholeText = textView.string;
     NSRange selectedLettersRange = textView.selectedRange;
     NSRange selectedLineAllCharactersRange = [wholeText lineRangeForRange:selectedLettersRange];
