@@ -132,7 +132,7 @@
 - (IDEEditorArea*)editorArea;
 @end
 
-@interface IDEWorkspace : NSWorkspace
+@interface IDEWorkspace : NSObject
 @property (readonly) DVTFilePath* representingFilePath;
 @end
 
@@ -149,5 +149,6 @@
 + (IDESourceCodeDocument*)currentSourceCodeDocument;
 + (DVTSourceTextView *)currentSourceTextView;
 + (NSView *)gutterView;
++ (NSString *)currentOpenProjectPath;
 
 @end

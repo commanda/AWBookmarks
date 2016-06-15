@@ -9,6 +9,7 @@
 #import "AWBookmarksWindowController.h"
 #import "CommonDefines.h"
 #import "AWBookmarkEntry.h"
+#import "Aspects.h"
 
 @interface AWDeleteButton : NSButton
 @property AWBookmarkEntry *entry;
@@ -39,50 +40,95 @@
     }
 }
 
-#define MAX_HIGHLIGHT_TRIES 15
+#define MAX_HIGHLIGHT_TRIES 50
 
 + (void)openItem:(AWBookmarkEntry*)item
 {
     if(item)
     {
-        id<NSApplicationDelegate> appDelegate = (id<NSApplicationDelegate>)[NSApp delegate];
-        
+        NSString *containingProjectPath = item.containingProjectURL.path;
         NSString *path = item.fileURL.path;
         
-        if(path && [appDelegate application:NSApp openFile:path])
+        if(path)
         {
-            __block int stopCounter = 0;
-            void (^highlightItem)();
-            void (^ __block __weak weakHighlightItem) ();
-            weakHighlightItem = highlightItem = ^{
-                
-                if(stopCounter > MAX_HIGHLIGHT_TRIES)
-                {
-                    return;
-                }
-                
-                stopCounter++;
-                
-                void(^strongHighlightItem)() = weakHighlightItem;
-                
-                // Wait a bit while the file actually opens, otherwise what's in the editor before will still be there, not replaced with the file we want to open yet
-                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                    
-                    DVTSourceTextView *textView = [IDEHelpers currentSourceTextView];
-                    if (textView)
+            
+            // If this bookmark is in an xcode project, open that first
+            [self openFile:containingProjectPath
+              withVerifier:^BOOL (NSString *openedThing){
+                  return ([[IDEHelpers currentOpenProjectPath] isEqualToString:openedThing]);
+              }
+                   andThen:^{
+                       
+                       // Once that's open, (or if it doesn't exist) then open the file itself
+                       [self openFile:path
+                         withVerifier:^BOOL(NSString *openedThing){
+                             return [IDEHelpers currentSourceTextView] != nil;
+                         }
+                              andThen:^{
+                                  
+                                  // Wait for the file to be open and then highlighting the line
+                                  [self highlightItemInOpenedFile:item];
+                              }];
+                   }];
+        }
+    }
+}
+
++ (void)openFile:(NSString *)filename withVerifier:(BOOL (^) (NSString *))verifier andThen:(void (^) (void))afterward
+{
+    if(filename)
+    {
+        id<NSApplicationDelegate> appDelegate = (id<NSApplicationDelegate>)[NSApp delegate];
+        [appDelegate application:NSApp openFile:filename];
+        
+        __block int stopCounter = 0;
+        void (^waitForFileOpen)();
+        void (^ __block __weak weakWaitForFileOpen)();
+        weakWaitForFileOpen = waitForFileOpen = ^{
+            
+            // If the file is open, we're done
+            if(verifier(filename))
+            {
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    afterward();
+                });
+            }
+            else
+            {
+                // Otherwise, wait a bit and try again
+                void(^strongWaitForFileOpen)() = weakWaitForFileOpen;
+                dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                    if(stopCounter < MAX_HIGHLIGHT_TRIES)
                     {
-                        [self highlightItem:item inTextView:textView];
+                        stopCounter++;
+                        strongWaitForFileOpen();
                     }
                     else
                     {
-                        // The textView isn't ready, wait a bit and try again
-                        strongHighlightItem();
+                        // We couldn't verify that the file was opened, so just move on
+                        afterward();
                     }
                 });
-            };
-            highlightItem();
-        }
+            }
+        };
+        
+        waitForFileOpen();
     }
+    else
+    {
+        afterward();
+    }
+}
+
++ (void)highlightItemInOpenedFile:(AWBookmarkEntry *)item
+{
+    
+    DVTSourceTextView *textView = [IDEHelpers currentSourceTextView];
+    if (textView)
+    {
+        [self highlightItem:item inTextView:textView];
+    }
+    
 }
 
 - (void)dealloc
@@ -99,6 +145,7 @@
     self.tableView.dataSource = self.bookmarkCollection;
     
     [self observeBookmarksCount];
+    
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
