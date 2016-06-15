@@ -57,6 +57,8 @@
         {
             [self observeBookmarkEntry:entry];
         }
+        
+        [self resolveAllBookmarks];
     }
     
     return self;
