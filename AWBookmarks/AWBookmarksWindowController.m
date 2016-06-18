@@ -149,7 +149,6 @@
     
 }
 
-
 - (void)reloadData:(id)whatever
 {
     if(self.shouldReloadTableView)
@@ -208,8 +207,11 @@
     [self.tableView beginUpdates];
     [self.bookmarkCollection deleteBookmarkEntry:button.entry];
     NSInteger currentRow = [self.tableView rowForView:button];
-    NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:currentRow];
-    [self.tableView removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
+    if(currentRow >= 0 && currentRow < self.tableView.numberOfRows)
+    {
+        NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:currentRow];
+        [self.tableView removeRowsAtIndexes:indexSet withAnimation:NSTableViewAnimationEffectFade];
+    }
     [self.tableView endUpdates];
     [self observeBookmarksCount];
     
