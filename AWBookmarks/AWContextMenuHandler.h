@@ -6,9 +6,9 @@
 //  Copyright © 2016 Amanda Wixted. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
 #import "AWBookmarkCollection.h"
+#import <AppKit/AppKit.h>
+#import <Foundation/Foundation.h>
 
 @interface AWContextMenuHandler : NSObject
 - (id)initWithBookmarkCollection:(AWBookmarkCollection *)bookmarkCollection;

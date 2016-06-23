@@ -12,13 +12,13 @@
 
 @implementation IDEHelpers
 
-+ (IDEWorkspaceTabController*)tabController
++ (IDEWorkspaceTabController *)tabController
 {
-    NSWindowController* currentWindowController = [[NSApp keyWindow] windowController];
-    if ([currentWindowController isKindOfClass:NSClassFromString(@"IDEWorkspaceWindowController")])
+    NSWindowController *currentWindowController = [[NSApp keyWindow] windowController];
+    if([currentWindowController isKindOfClass:NSClassFromString(@"IDEWorkspaceWindowController")])
     {
-        IDEWorkspaceWindowController* workspaceController = (IDEWorkspaceWindowController*)currentWindowController;
-        
+        IDEWorkspaceWindowController *workspaceController = (IDEWorkspaceWindowController *)currentWindowController;
+
         return workspaceController.activeWorkspaceTabController;
     }
     return nil;
@@ -26,12 +26,12 @@
 
 + (id)currentEditor
 {
-    NSWindowController* currentWindowController = [[NSApp mainWindow] windowController];
-    if ([currentWindowController isKindOfClass:NSClassFromString(@"IDEWorkspaceWindowController")])
+    NSWindowController *currentWindowController = [[NSApp mainWindow] windowController];
+    if([currentWindowController isKindOfClass:NSClassFromString(@"IDEWorkspaceWindowController")])
     {
-        IDEWorkspaceWindowController* workspaceController = (IDEWorkspaceWindowController*)currentWindowController;
-        IDEEditorArea* editorArea = [workspaceController editorArea];
-        IDEEditorContext* editorContext = [editorArea lastActiveEditorContext];
+        IDEWorkspaceWindowController *workspaceController = (IDEWorkspaceWindowController *)currentWindowController;
+        IDEEditorArea *editorArea = [workspaceController editorArea];
+        IDEEditorContext *editorContext = [editorArea lastActiveEditorContext];
         id editor = [editorContext editor];
         return editor;
     }
@@ -44,9 +44,9 @@
     IDESourceCodeEditor *editor = [self currentEditor];
     if([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
     {
-        for (NSView *view in [editor.scrollView subviews])
+        for(NSView *view in [editor.scrollView subviews])
         {
-            if ([NSStringFromClass([view class]) isEqualToString:@"DVTTextSidebarView"])
+            if([NSStringFromClass([view class]) isEqualToString:@"DVTTextSidebarView"])
             {
                 gutterView = view;
                 break;
@@ -56,35 +56,35 @@
     return gutterView;
 }
 
-+ (IDEWorkspaceDocument*)currentWorkspaceDocument
++ (IDEWorkspaceDocument *)currentWorkspaceDocument
 {
-    NSWindowController* currentWindowController = [[NSApp mainWindow] windowController];
+    NSWindowController *currentWindowController = [[NSApp mainWindow] windowController];
     id document = [currentWindowController document];
-    if (currentWindowController && [document isKindOfClass:NSClassFromString(@"IDEWorkspaceDocument")])
+    if(currentWindowController && [document isKindOfClass:NSClassFromString(@"IDEWorkspaceDocument")])
     {
-        return (IDEWorkspaceDocument*)document;
+        return (IDEWorkspaceDocument *)document;
     }
     return nil;
 }
 
-+ (IDESourceCodeDocument*)currentSourceCodeDocument
++ (IDESourceCodeDocument *)currentSourceCodeDocument
 {
-    
-    IDESourceCodeEditor* editor = [self currentEditor];
-    
-    if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
+
+    IDESourceCodeEditor *editor = [self currentEditor];
+
+    if([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
     {
         return editor.sourceCodeDocument;
     }
-    
-    if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeComparisonEditor")])
+
+    if([editor isKindOfClass:NSClassFromString(@"IDESourceCodeComparisonEditor")])
     {
-        if ([[(IDESourceCodeComparisonEditor*)editor primaryDocument] isKindOfClass:NSClassFromString(@"IDESourceCodeDocument")])
+        if([[(IDESourceCodeComparisonEditor *)editor primaryDocument] isKindOfClass:NSClassFromString(@"IDESourceCodeDocument")])
         {
-            return (id)[(IDESourceCodeComparisonEditor*)editor primaryDocument];
+            return (id)[(IDESourceCodeComparisonEditor *)editor primaryDocument];
         }
     }
-    
+
     return nil;
 }
 
@@ -92,7 +92,7 @@
 {
     DVTSourceTextView *textView;
     IDESourceCodeEditor *editor = [IDEHelpers currentEditor];
-    if ([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
+    if([editor isKindOfClass:NSClassFromString(@"IDESourceCodeEditor")])
     {
         textView = (DVTSourceTextView *)editor.textView;
     }
@@ -106,15 +106,17 @@
 + (NSString *)currentOpenProjectPath
 {
     NSArray *workspaceWindowControllers = [NSClassFromString(@"IDEWorkspaceWindowController") valueForKey:@"workspaceWindowControllers"];
-    
+
     id workSpace;
-    
-    for (id controller in workspaceWindowControllers) {
-        if ([[controller valueForKey:@"window"] isEqual:[NSApp keyWindow]]) {
+
+    for(id controller in workspaceWindowControllers)
+    {
+        if([[controller valueForKey:@"window"] isEqual:[NSApp keyWindow]])
+        {
             workSpace = [controller valueForKey:@"_workspace"];
         }
     }
-    
+
     NSString *workspacePath = [[workSpace valueForKey:@"representingFilePath"] valueForKey:@"_pathString"];
     return workspacePath;
 }

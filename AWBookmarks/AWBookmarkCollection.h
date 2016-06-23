@@ -6,9 +6,9 @@
 //  Copyright © 2016 Amanda Wixted. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <AppKit/AppKit.h>
 #import "AWBookmarkEntry.h"
+#import <AppKit/AppKit.h>
+#import <Foundation/Foundation.h>
 
 @interface AWBookmarkCollection : NSObject <NSTableViewDataSource, NSCoding>
 

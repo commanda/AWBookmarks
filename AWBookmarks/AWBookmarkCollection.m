@@ -8,10 +8,10 @@
 
 #import "AWBookmarkCollection.h"
 #import "AWBookmarkEntry.h"
-#import "IDEHelpers.h"
-#import "CommonDefines.h"
-#import "Aspects.h"
 #import "AWBookmarksPlugin.h"
+#import "Aspects.h"
+#import "CommonDefines.h"
+#import "IDEHelpers.h"
 
 @interface AWBookmarkCollection ()
 
@@ -26,9 +26,9 @@
 + (NSString *)savedBookmarksFilePath
 {
     NSString *directory = [AWBookmarksPlugin pathToApplicationSupport];
-    
+
     NSString *filePath = [directory stringByAppendingPathComponent:@"bookmarks.dat"];
-    
+
     return filePath;
 }
 
@@ -47,20 +47,20 @@
     if(self = [self init])
     {
         self.bookmarks = [decoder decodeObjectForKey:@"bookmarkEntries"];
-        
+
         if(!self.bookmarks)
         {
             self.bookmarks = [@[] mutableCopy];
         }
-        
+
         for(AWBookmarkEntry *entry in self.bookmarks)
         {
             [self observeBookmarkEntry:entry];
         }
-        
+
         [self resolveAllBookmarks];
     }
-    
+
     return self;
 }
 
@@ -99,7 +99,7 @@
     NSRange selectedLettersRange = textView.selectedRange;
     NSRange selectedLineAllCharactersRange = [wholeText lineRangeForRange:selectedLettersRange];
     NSString *lineText = [wholeText substringWithRange:selectedLineAllCharactersRange];
-    
+
     NSUInteger lineNumber = 1;
     for(NSUInteger i = 0; i < selectedLettersRange.location; i++)
     {
@@ -108,32 +108,32 @@
             lineNumber++;
         }
     }
-    
+
     NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
-    
+
     if(url)
     {
         AWBookmarkEntry *newEntry = [[AWBookmarkEntry alloc] init];
         newEntry.lineText = lineText;
         newEntry.fileURL = url;
         newEntry.lineNumber = @(lineNumber);
-        
+
         // Store the URL of the xcodeproj that contains this file, unless it's not in a project, in which case it'll be "Autosave Information"
-        NSString* projectPath = [[IDEHelpers currentWorkspaceDocument].workspace.representingFilePath.fileURL path];
+        NSString *projectPath = [[IDEHelpers currentWorkspaceDocument].workspace.representingFilePath.fileURL path];
         if([projectPath rangeOfString:@"Autosave Information"].location == NSNotFound)
         {
             newEntry.containingProjectURL = [NSURL fileURLWithPath:projectPath];
         }
-        
+
         if(![self.bookmarks containsObject:newEntry])
         {
             [self willChangeValueForKey:@"count"];
             [self.bookmarks addObject:newEntry];
             [self didChangeValueForKey:@"count"];
-            
+
             [self observeBookmarkEntry:newEntry];
         }
-        
+
         [self saveBookmarks];
     }
 }
@@ -152,11 +152,11 @@
     if([self.bookmarks containsObject:entry])
     {
         [self unobserveBookmarkEntry:entry];
-        
+
         [self willChangeValueForKey:@"count"];
         [self.bookmarks removeObject:entry];
         [self didChangeValueForKey:@"count"];
-        
+
         [self saveBookmarks];
     }
 }
@@ -174,7 +174,7 @@
     });
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context
 {
     if([keyPath isEqualToString:@"toBeDeleted"])
     {
@@ -210,9 +210,9 @@
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(NSInteger)rowIndex
 {
     id toReturn;
-    
+
     AWBookmarkEntry *entry = [self.bookmarks objectAtIndex:rowIndex];
-    
+
     if([aTableColumn.identifier isEqualToString:@"File"])
     {
         toReturn = entry.fileURL.absoluteString.lastPathComponent;
@@ -225,16 +225,15 @@
     {
         toReturn = [entry.lineText stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     }
-    
+
     return toReturn;
 }
 
 - (void)tableView:(NSTableView *)aTableView
-   setObjectValue:(id)anObject
-   forTableColumn:(NSTableColumn *)aTableColumn
-              row:(NSInteger)rowIndex
+    setObjectValue:(id)anObject
+    forTableColumn:(NSTableColumn *)aTableColumn
+               row:(NSInteger)rowIndex
 {
-    
 }
 
 #pragma mark - Swizzling
@@ -248,12 +247,12 @@
     NSString *className = @"DVTSourceTextView";
     Class c = NSClassFromString(className);
     [c aspect_hookSelector:@selector(didChangeText)
-               withOptions:AspectPositionAfter
-                usingBlock:^(id<AspectInfo> info) {
-                    AWBookmarkCollection *strongSelf = weakSelf;
-                    [strongSelf resolveAllBookmarks];
-                }
-                     error:nil];
+                withOptions:AspectPositionAfter
+                 usingBlock:^(id<AspectInfo> info) {
+                     AWBookmarkCollection *strongSelf = weakSelf;
+                     [strongSelf resolveAllBookmarks];
+                 }
+                      error:nil];
 }
 
 #pragma clang diagnostic pop

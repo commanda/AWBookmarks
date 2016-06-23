@@ -7,13 +7,13 @@
 //
 
 #import "AWBookmarksPlugin.h"
-#import "CommonDefines.h"
+#import "AWBookmarkCollection.h"
 #import "AWBookmarksWindowController.h"
 #import "AWContextMenuHandler.h"
-#import "AWBookmarkCollection.h"
 #import "AWGutterViewHandler.h"
+#import "CommonDefines.h"
 
-@interface AWBookmarksPlugin()
+@interface AWBookmarksPlugin ()
 
 @property (nonatomic, strong, readwrite) NSBundle *bundle;
 @property (strong) AWBookmarksWindowController *windowController;
@@ -34,62 +34,63 @@
 {
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
     NSString *directory = [paths firstObject];
-    
+
     directory = [directory stringByAppendingPathComponent:@"Xcode-AWBookmarks"];
-    
+
     if(![[NSFileManager defaultManager] fileExistsAtPath:directory])
     {
         NSError *error;
         [[NSFileManager defaultManager] createDirectoryAtPath:directory withIntermediateDirectories:YES attributes:nil error:&error];
     }
-    
+
     return directory;
 }
 
 - (id)initWithBundle:(NSBundle *)plugin
 {
-    if(self = [super init]) {
+    if(self = [super init])
+    {
         // reference to plugin's bundle, for resource access
         self.bundle = plugin;
-        
-        
+
+
         self.bookmarkCollection = [NSKeyedUnarchiver unarchiveObjectWithFile:[AWBookmarkCollection savedBookmarksFilePath]];
         if(!self.bookmarkCollection)
         {
             self.bookmarkCollection = [[AWBookmarkCollection alloc] init];
         }
-        
+
         self.contextMenuHandler = [[AWContextMenuHandler alloc] initWithBookmarkCollection:self.bookmarkCollection];
-        
+
         self.gutterViewHandler = [[AWGutterViewHandler alloc] initWithBookmarkCollection:self.bookmarkCollection];
-        
+
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(didApplicationFinishLaunchingNotification:)
                                                      name:NSApplicationDidFinishLaunchingNotification
                                                    object:nil];
-        
     }
     return self;
 }
 
-- (void)didApplicationFinishLaunchingNotification:(NSNotification*)noti
+- (void)didApplicationFinishLaunchingNotification:(NSNotification *)noti
 {
     //removeObserver
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSApplicationDidFinishLaunchingNotification object:nil];
-    
+
     // Create menu items, initialize UI, etc.
     // Sample Menu Item:
     NSMenuItem *viewMenuItem = [[NSApp mainMenu] itemWithTitle:@"View"];
-    if (viewMenuItem) {
+    if(viewMenuItem)
+    {
         [[viewMenuItem submenu] addItem:[NSMenuItem separatorItem]];
         NSMenuItem *actionMenuItem = [[NSMenuItem alloc] initWithTitle:@"Show Bookmarked Items"
                                                                 action:@selector(showBookmarksWindow)
                                                          keyEquivalent:@"b"];
-        [actionMenuItem setKeyEquivalentModifierMask:NSControlKeyMask|NSCommandKeyMask];
+        [actionMenuItem setKeyEquivalentModifierMask:NSControlKeyMask | NSCommandKeyMask];
         [actionMenuItem setTarget:self];
         [[viewMenuItem submenu] addItem:actionMenuItem];
     }
-    
+
     NSMenuItem *editorMenuItem = [[NSApp mainMenu] itemWithTitle:@"Edit"];
     if(editorMenuItem)
     {
@@ -100,7 +101,7 @@
         [bookmarkThisLine setTarget:self];
         [[editorMenuItem submenu] addItem:bookmarkThisLine];
     }
-    
+
     [self showBookmarksWindow];
 }
 
@@ -111,7 +112,7 @@
         self.windowController = [[AWBookmarksWindowController alloc] initWithWindowNibName:@"AWBookmarksWindowController"];
         self.windowController.bookmarkCollection = self.bookmarkCollection;
     }
-    
+
     [self.windowController.window makeKeyAndOrderFront:self.windowController];
     //[self.windowController.window setOrderedIndex:0];
 }

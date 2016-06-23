@@ -10,9 +10,9 @@
 #define CommonDefines_h
 
 #if DEBUG
-    #define DLOG(fmt, ...) NSLog((@"%s " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__);
+#define DLOG(fmt, ...) NSLog((@"%s " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__);
 #else
-    #define #define DLOG(fmt, ...) ;
+#define #define DLOG(fmt, ...);
 #endif
 
 

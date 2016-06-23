@@ -14,7 +14,7 @@ typedef void (^OnFileChanged)(NSURL *currentURL);
 
 @interface FileWatcher : NSObject <NSCoding>
 
-+ (FileWatcher *) sharedInstance;
++ (FileWatcher *)sharedInstance;
 
 - (void)watchFileAtURL:(NSURL *)path onChanged:(OnFileChanged)onFileChanged;
 - (void)stopWatchingFileAtURL:(NSURL *)path;

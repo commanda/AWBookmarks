@@ -6,13 +6,12 @@
 //  Copyright © 2016 Amanda Wixted. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
 #import "AWBookmarkCollection.h"
+#import <Cocoa/Cocoa.h>
 
 @interface AWBookmarksWindowController : NSWindowController <NSTableViewDelegate>
 
 @property (strong) AWBookmarkCollection *bookmarkCollection;
-
 
 
 @end

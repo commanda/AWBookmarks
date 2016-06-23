@@ -16,7 +16,8 @@
 {
     static dispatch_once_t onceToken;
     NSString *currentApplicationName = [[NSBundle mainBundle] infoDictionary][@"CFBundleName"];
-    if ([currentApplicationName isEqual:@"Xcode"]) {
+    if([currentApplicationName isEqual:@"Xcode"])
+    {
         dispatch_once(&onceToken, ^{
             sharedPlugin = [[AWBookmarksPlugin alloc] initWithBundle:plugin];
         });

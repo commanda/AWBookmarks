@@ -7,9 +7,9 @@
 //
 
 #import "AWBookmarkEntry.h"
+#import "AWBookmarksPlugin.h"
 #import "CommonDefines.h"
 #import "NSString+LevenshteinDistance.h"
-#import "AWBookmarksPlugin.h"
 
 #define THRESHOLD_SCORE 50
 
@@ -91,67 +91,69 @@
 - (void)setFileURL:(NSURL *)fileURL
 {
     [[FileWatcher sharedInstance] stopWatchingFileAtURL:_fileURL];
-    
+
     [self willChangeValueForKey:@"changed"];
     _fileURL = fileURL;
     [self didChangeValueForKey:@"changed"];
-    
+
     __weak AWBookmarkEntry *weakSelf = self;
-    [[FileWatcher sharedInstance] watchFileAtURL:fileURL onChanged:^(NSURL *currentURL){
-        DLOG(@"hey the file changed %@", currentURL);
-        AWBookmarkEntry *strongSelf = weakSelf;
-        if(strongSelf)
-        {
-            [strongSelf willChangeValueForKey:@"changed"];
-            strongSelf->_fileURL = currentURL;
-            [strongSelf didChangeValueForKey:@"changed"];
-        }
-    }];
+    [[FileWatcher sharedInstance] watchFileAtURL:fileURL
+                                       onChanged:^(NSURL *currentURL) {
+                                           DLOG(@"hey the file changed %@", currentURL);
+                                           AWBookmarkEntry *strongSelf = weakSelf;
+                                           if(strongSelf)
+                                           {
+                                               [strongSelf willChangeValueForKey:@"changed"];
+                                               strongSelf->_fileURL = currentURL;
+                                               [strongSelf didChangeValueForKey:@"changed"];
+                                           }
+                                       }];
 }
 
 - (void)highlightInTextView:(DVTSourceTextView *)textView
 {
-    NSString* text = [textView string];
-    
-    [self resolveInText:text runInBackgroundThread:NO afterResolving:^{
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if(!_toBeDeleted)
-            {
-                
-                // Have: line number and line text
-                // Need: the range of these characters in the whole string
-                
-                __block NSRange rangeInText;
-                
-                int targetLineNumber = [self.lineNumber intValue];
-                __block int lineNumber = 0;
-                [text enumerateSubstringsInRange:NSMakeRange(0, text.length-1)
-                                         options:0
-                                      usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop){
-                                          lineNumber++;
-                                          
-                                          if(lineNumber == targetLineNumber)
-                                          {
-                                              rangeInText = substringRange;
-                                              *stop = YES;
-                                          }
-                                      }];
-                
-                if(rangeInText.location != NSNotFound)
-                {
-                    [textView scrollRangeToVisible:rangeInText];
-                    [textView setSelectedRange:rangeInText];
-                }
-            }
-        });
-    }];
-    
+    NSString *text = [textView string];
+
+    [self resolveInText:text
+        runInBackgroundThread:NO
+               afterResolving:^{
+                   dispatch_async(dispatch_get_main_queue(), ^{
+                       if(!_toBeDeleted)
+                       {
+
+                           // Have: line number and line text
+                           // Need: the range of these characters in the whole string
+
+                           __block NSRange rangeInText;
+
+                           int targetLineNumber = [self.lineNumber intValue];
+                           __block int lineNumber = 0;
+                           [text enumerateSubstringsInRange:NSMakeRange(0, text.length - 1)
+                                                    options:0
+                                                 usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop) {
+                                                     lineNumber++;
+
+                                                     if(lineNumber == targetLineNumber)
+                                                     {
+                                                         rangeInText = substringRange;
+                                                         *stop = YES;
+                                                     }
+                                                 }];
+
+                           if(rangeInText.location != NSNotFound)
+                           {
+                               [textView scrollRangeToVisible:rangeInText];
+                               [textView setSelectedRange:rangeInText];
+                           }
+                       }
+                   });
+               }];
 }
 
 - (void)resolve
 {
     NSString *text;
-    
+
     // If our document is currently open, it might be different from the saved version on disk because the user is editing it and might not have saved
     NSURL *openURL = [[IDEHelpers currentSourceCodeDocument] fileURL];
     if([openURL isEqual:self.fileURL])
@@ -163,37 +165,36 @@
     {
         text = [NSString stringWithContentsOfURL:self.fileURL encoding:NSUTF8StringEncoding error:nil];
     }
-    
+
     [self resolveInText:text runInBackgroundThread:YES afterResolving:nil];
 }
 
-- (void)resolveInText:(NSString *)text runInBackgroundThread:(BOOL)runInBackgroundThread afterResolving:(void (^)(void)) afterResolving
+- (void)resolveInText:(NSString *)text runInBackgroundThread:(BOOL)runInBackgroundThread afterResolving:(void (^)(void))afterResolving
 {
-    void (^performResolve)(void) = ^void (void)
-    {
-       
+    void (^performResolve)(void) = ^void(void) {
+
         /*
          search through the file fuzzy matching for that old line text
          there will probably be several lines that are exactly the same, so then weight them by distance from the original line number
          have some threshold, so if we don't get a good enough match, delete that bookmark entry
          use edit distance algorithm, use fuzzy matching algorithm
          */
-        
+
         if(text)
         {
             NSString *textCopy = [text mutableCopy];
             NSArray *lines = [textCopy componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
-            
+
             NSMutableArray *lineEvaluations = [[NSMutableArray alloc] init];
-            
+
             int myLineIndex = _lineNumber.intValue - 1;
-            
+
             for(int lineIndex = 0; lineIndex < lines.count; lineIndex++)
             {
                 NSString *line = lines[lineIndex];
                 NSInteger lineScore = [line levenshteinDistanceFromString:_lineText];
                 NSInteger lineDistance = abs(myLineIndex - lineIndex);
-                
+
                 AWMatch *match = [[AWMatch alloc] init];
                 match.text = line;
                 match.score = lineScore;
@@ -201,17 +202,18 @@
                 match.lineIndex = lineIndex;
                 [lineEvaluations addObject:match];
             }
-            
-            [lineEvaluations sortUsingComparator:^NSComparisonResult(AWMatch *obj1, AWMatch *obj2){
+
+            [lineEvaluations sortUsingComparator:^NSComparisonResult(AWMatch *obj1, AWMatch *obj2) {
                 if(obj1.score == obj2.score)
                 {
                     return obj1.lineDistance > obj2.lineDistance;
                 }
-                else return obj1.score > obj2.score;
+                else
+                    return obj1.score > obj2.score;
             }];
-            
+
             AWMatch *best = [lineEvaluations firstObject];
-            
+
             if(best.score < THRESHOLD_SCORE && best.text.length > 0)
             {
                 [self willChangeValueForKey:@"changed"];
@@ -225,16 +227,15 @@
                 _toBeDeleted = YES;
                 [self didChangeValueForKey:@"toBeDeleted"];
             }
-            
         }
-        
+
         if(afterResolving)
         {
             afterResolving();
         }
-        
+
     };
-    
+
     if(runInBackgroundThread)
     {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), performResolve);

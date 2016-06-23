@@ -7,11 +7,11 @@
 //
 
 #import "AWGutterViewHandler.h"
-#import "IDEHelpers.h"
-#import "CommonDefines.h"
 #import "AWBookmarkCollection.h"
 #import "AWBookmarkEntry.h"
 #import "Aspects.h"
+#import "CommonDefines.h"
+#import "IDEHelpers.h"
 #import <objc/runtime.h>
 
 
@@ -28,12 +28,12 @@
     {
         self.bookmarkCollection = bookmarkCollection;
         self.observedBookmarkEntries = [[NSMutableSet alloc] init];
-        
+
         for(int i = 0; i < self.bookmarkCollection.count; i++)
         {
             [self addOrUpdateMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
         }
-        
+
         [self swizzleMethodForDrawLineNumbers];
     }
     return self;
@@ -45,51 +45,51 @@
     NSString *className = @"DVTTextSidebarView";
     Class c = NSClassFromString(className);
     [c aspect_hookSelector:@selector(_drawLineNumbersInSidebarRect:foldedIndexes:count:linesToInvert:linesToReplace:getParaRectBlock:)
-               withOptions:AspectPositionAfter
-                usingBlock:^(id<AspectInfo> info, CGRect rect, NSUInteger *indexes, NSUInteger count, id a3, id a4, id paraRectBlock) {
-                    
-                    
-                    DVTTextSidebarView *view = info.instance;
-                    
-                    if(![view isKindOfClass:NSClassFromString(className)])
-                    {
-                        [info.originalInvocation invoke];
-                    }
-                    else
-                    {
-                        
-                        [view lockFocus];
-                        {
-                            NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
-                            
-                            NSArray *bookmarkedLineNumbers = [self.bookmarkCollection lineNumbersForURL:url];
-                            
-                            if(url && bookmarkedLineNumbers.count > 0)
-                            {
-                                for (int i = 0; i < count-1; i++)
-                                {
-                                    NSUInteger lineNumber = indexes[i];
-                                    NSUInteger nextLineNumber = indexes[i+1];
-                                    NSRange foldedRange = NSMakeRange(lineNumber, nextLineNumber - lineNumber);
-                                    
-                                    for(NSUInteger j = foldedRange.location; j < NSMaxRange(foldedRange); j++)
-                                    {
-                                        if([bookmarkedLineNumbers containsObject:@(j)])
-                                        {
-                                            NSRect a0, a1;
-                                            [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
-                                            
-                                            NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"⛺"];
-                                            [str drawAtPoint:a1.origin];
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        [view unlockFocus];
-                    }
-                }
-                     error:nil];
+                withOptions:AspectPositionAfter
+                 usingBlock:^(id<AspectInfo> info, CGRect rect, NSUInteger *indexes, NSUInteger count, id a3, id a4, id paraRectBlock) {
+
+
+                     DVTTextSidebarView *view = info.instance;
+
+                     if(![view isKindOfClass:NSClassFromString(className)])
+                     {
+                         [info.originalInvocation invoke];
+                     }
+                     else
+                     {
+
+                         [view lockFocus];
+                         {
+                             NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
+
+                             NSArray *bookmarkedLineNumbers = [self.bookmarkCollection lineNumbersForURL:url];
+
+                             if(url && bookmarkedLineNumbers.count > 0)
+                             {
+                                 for(int i = 0; i < count - 1; i++)
+                                 {
+                                     NSUInteger lineNumber = indexes[i];
+                                     NSUInteger nextLineNumber = indexes[i + 1];
+                                     NSRange foldedRange = NSMakeRange(lineNumber, nextLineNumber - lineNumber);
+
+                                     for(NSUInteger j = foldedRange.location; j < NSMaxRange(foldedRange); j++)
+                                     {
+                                         if([bookmarkedLineNumbers containsObject:@(j)])
+                                         {
+                                             NSRect a0, a1;
+                                             [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
+
+                                             NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"⛺"];
+                                             [str drawAtPoint:a1.origin];
+                                         }
+                                     }
+                                 }
+                             }
+                         }
+                         [view unlockFocus];
+                     }
+                 }
+                      error:nil];
 }
 
 #pragma clang diagnostic pop
@@ -121,7 +121,7 @@
     }
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context
 {
     if(object == self.bookmarkCollection)
     {

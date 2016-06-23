@@ -27,14 +27,14 @@
     if(self = [super init])
     {
         self.bookmarkCollection = bookmarkCollection;
-        
+
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.001 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             self.addBookmarkMenuItem = [[NSMenuItem alloc] initWithTitle:@"Bookmark This Line"
                                                                   action:@selector(contextMenuBookmarkOptionSelected)
                                                            keyEquivalent:@"b"];
             [self.addBookmarkMenuItem setKeyEquivalentModifierMask:NSControlKeyMask];
             self.addBookmarkMenuItem.target = self;
-            
+
             [self swizzleMenuForEventInTextView];
         });
     }
@@ -57,31 +57,32 @@
     NSString *className = @"DVTSourceTextView";
     Class c = NSClassFromString(className);
     [c aspect_hookSelector:@selector(menuForEvent:)
-               withOptions:AspectPositionInstead
-                usingBlock:^(id<AspectInfo> info, NSEvent *event) {
-                    NSObject *object = info.instance;
-                    
-                    if(![object isKindOfClass:NSClassFromString(className)]) {
-                        [info.originalInvocation invoke];
-                    }
-                    else {
-                        NSInvocation *invocation = info.originalInvocation;
-                        NSMenu *contextMenu;
-                        [invocation invoke];
-                        [invocation getReturnValue:&contextMenu];
-                        
-                        CFRetain((__bridge CFTypeRef)(contextMenu)); // need to retain return value so it isn't dealloced before being returned
-                        
-                        if(self.addBookmarkMenuItem.menu == nil)
-                        {
-                            [contextMenu addItem:self.addBookmarkMenuItem];
-                        }
-                        
-                        [invocation setReturnValue:&contextMenu];
-                        
-                    }
-                }
-                     error:nil];
+                withOptions:AspectPositionInstead
+                 usingBlock:^(id<AspectInfo> info, NSEvent *event) {
+                     NSObject *object = info.instance;
+
+                     if(![object isKindOfClass:NSClassFromString(className)])
+                     {
+                         [info.originalInvocation invoke];
+                     }
+                     else
+                     {
+                         NSInvocation *invocation = info.originalInvocation;
+                         NSMenu *contextMenu;
+                         [invocation invoke];
+                         [invocation getReturnValue:&contextMenu];
+
+                         CFRetain((__bridge CFTypeRef)(contextMenu)); // need to retain return value so it isn't dealloced before being returned
+
+                         if(self.addBookmarkMenuItem.menu == nil)
+                         {
+                             [contextMenu addItem:self.addBookmarkMenuItem];
+                         }
+
+                         [invocation setReturnValue:&contextMenu];
+                     }
+                 }
+                      error:nil];
 }
 
 

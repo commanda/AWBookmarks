@@ -7,9 +7,9 @@
 //
 
 #import "AWBookmarksWindowController.h"
-#import "CommonDefines.h"
 #import "AWBookmarkEntry.h"
 #import "Aspects.h"
+#import "CommonDefines.h"
 
 @interface AWDeleteButton : NSButton
 @property AWBookmarkEntry *entry;
@@ -30,50 +30,50 @@
 
 #define MAX_HIGHLIGHT_TRIES 100
 
-+ (void)openItem:(AWBookmarkEntry*)item
++ (void)openItem:(AWBookmarkEntry *)item
 {
     if(item)
     {
         NSString *containingProjectPath = item.containingProjectURL.path;
         NSString *path = item.fileURL.path;
-        
+
         if(path)
         {
-            
+
             // If this bookmark is in an xcode project, open that first
             [self openFile:containingProjectPath
-              withVerifier:^BOOL (NSString *openedThing){
-                  return ([[IDEHelpers currentOpenProjectPath] isEqualToString:openedThing]);
-              }
-                   andThen:^{
-                       
-                       // Once that's open, (or if it doesn't exist) then open the file itself
-                       [self openFile:path
-                         withVerifier:^BOOL(NSString *openedThing){
-                             return [IDEHelpers currentSourceTextView] != nil;
-                         }
-                              andThen:^{
-                                  
-                                  // Wait for the file to be open and then highlighting the line
-                                  [self highlightItemInOpenedFile:item];
-                              }];
-                   }];
+                withVerifier:^BOOL(NSString *openedThing) {
+                    return ([[IDEHelpers currentOpenProjectPath] isEqualToString:openedThing]);
+                }
+                andThen:^{
+
+                    // Once that's open, (or if it doesn't exist) then open the file itself
+                    [self openFile:path
+                        withVerifier:^BOOL(NSString *openedThing) {
+                            return [IDEHelpers currentSourceTextView] != nil;
+                        }
+                        andThen:^{
+
+                            // Wait for the file to be open and then highlighting the line
+                            [self highlightItemInOpenedFile:item];
+                        }];
+                }];
         }
     }
 }
 
-+ (void)openFile:(NSString *)filename withVerifier:(BOOL (^) (NSString *))verifier andThen:(void (^) (void))afterward
++ (void)openFile:(NSString *)filename withVerifier:(BOOL (^)(NSString *))verifier andThen:(void (^)(void))afterward
 {
     if(filename)
     {
         id<NSApplicationDelegate> appDelegate = (id<NSApplicationDelegate>)[NSApp delegate];
         [appDelegate application:NSApp openFile:filename];
-        
+
         __block int stopCounter = 0;
         void (^waitForFileOpen)();
-        void (^ __block __weak weakWaitForFileOpen)();
+        void (^__block __weak weakWaitForFileOpen)();
         weakWaitForFileOpen = waitForFileOpen = ^{
-            
+
             // If the file is open, we're done
             if(verifier(filename))
             {
@@ -84,7 +84,7 @@
             else
             {
                 // Otherwise, wait a bit and try again
-                void(^strongWaitForFileOpen)() = weakWaitForFileOpen;
+                void (^strongWaitForFileOpen)() = weakWaitForFileOpen;
                 dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                     if(stopCounter < MAX_HIGHLIGHT_TRIES)
                     {
@@ -99,7 +99,7 @@
                 });
             }
         };
-        
+
         waitForFileOpen();
     }
     else
@@ -111,11 +111,11 @@
 + (void)highlightItemInOpenedFile:(AWBookmarkEntry *)item
 {
     DVTSourceTextView *textView = [IDEHelpers currentSourceTextView];
-    if (textView)
+    if(textView)
     {
         // Unfold the source, in case it is currently folded
         [textView unfoldAll:nil];
-        
+
         [item highlightInTextView:textView];
     }
 }
@@ -128,11 +128,11 @@
 - (void)windowDidLoad
 {
     [super windowDidLoad];
-    
+
     self.window.title = @"Bookmarks";
-    
+
     self.tableView.dataSource = self.bookmarkCollection;
-    
+
     [self observeBookmarksCount];
 }
 
@@ -145,14 +145,14 @@
     }
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context
 {
-    @synchronized (self)
+    @synchronized(self)
     {
         if(!self.shouldReloadTableView)
         {
             self.shouldReloadTableView = YES;
-            [[NSRunLoop mainRunLoop] performSelector:@selector(reloadData:) target:self argument:nil order:1 modes:@[NSDefaultRunLoopMode]];
+            [[NSRunLoop mainRunLoop] performSelector:@selector(reloadData:) target:self argument:nil order:1 modes:@[ NSDefaultRunLoopMode ]];
         }
     }
 }
@@ -179,17 +179,17 @@
 {
     NSInteger selectedRow = self.tableView.selectedRow;
     AWBookmarkEntry *entry = [self.bookmarkCollection objectAtIndex:selectedRow];
-    
+
     // Open the file it references and scroll to that line
     [[self class] openItem:entry];
-    
+
     [self.tableView deselectRow:selectedRow];
 }
 
 - (void)deletePressed:(id)sender
 {
     AWDeleteButton *button = (AWDeleteButton *)sender;
-    
+
     [self unobserveBookmarksCount];
     [self.tableView beginUpdates];
     [self.bookmarkCollection deleteBookmarkEntry:button.entry];
@@ -201,15 +201,14 @@
     }
     [self.tableView endUpdates];
     [self observeBookmarksCount];
-    
 }
 
 static NSString *identifier = @"AWBookmarksTextCellIdentifier";
 static NSString *buttonIdentifier = @"AWBookmarksDeleteButtonCellIdentifier";
 
 - (NSView *)tableView:(NSTableView *)tableView
-   viewForTableColumn:(NSTableColumn *)tableColumn
-                  row:(NSInteger)row
+    viewForTableColumn:(NSTableColumn *)tableColumn
+                   row:(NSInteger)row
 {
     NSView *toReturn;
     if([tableColumn.identifier isEqualToString:@"Delete?"])

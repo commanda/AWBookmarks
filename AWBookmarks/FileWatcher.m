@@ -33,7 +33,7 @@
 @end
 
 
-@interface FileWatcher()
+@interface FileWatcher ()
 - (void)startWatching;
 - (void)checkForUpdates;
 - (NSDate *)modificationDateForURL:(NSURL *)url;
@@ -51,7 +51,7 @@
 
 static FileWatcher *instance;
 
-+ (FileWatcher *) sharedInstance
++ (FileWatcher *)sharedInstance
 {
     if(!instance)
     {
@@ -60,28 +60,32 @@ static FileWatcher *instance;
     return instance;
 }
 
-- (id)_init {
-    if ((self = [super init])) {
+- (id)_init
+{
+    if((self = [super init]))
+    {
         self.fm = [[NSFileManager alloc] init];
         self.fileModificationDates = [[NSMutableDictionary alloc] init];
         [self startWatching];
     }
-    
+
     return self;
 }
 
-- (void)watchFileAtURL:(NSURL *)url onChanged:(OnFileChanged)onFileChanged {
+- (void)watchFileAtURL:(NSURL *)url onChanged:(OnFileChanged)onFileChanged
+{
     NSData *bookmark = [self bookmarkFromURL:url];
     NSDate *modDate = [self modificationDateForURL:url];
     WatchedFile *wf = [[WatchedFile alloc] init];
     wf.watchedURL = url;
     wf.modDate = modDate;
     wf.onFileChanged = onFileChanged;
-    
+
     self.fileModificationDates[bookmark] = wf;
 }
 
-- (void)stopWatchingFileAtURL:(NSURL *)url {
+- (void)stopWatchingFileAtURL:(NSURL *)url
+{
     // TODO: make sure this works? i thought the keys were bookmark urls, are they the same as file urls?
     if(url)
     {
@@ -89,69 +93,76 @@ static FileWatcher *instance;
     }
 }
 
-- (NSDate *)modificationDateForURL:(NSURL *)URL {
+- (NSDate *)modificationDateForURL:(NSURL *)URL
+{
     NSDictionary *fileAttributes = [self.fm attributesOfItemAtPath:[URL path] error:NULL];
     NSDate *modDate = [fileAttributes fileModificationDate];
     return modDate;
 }
 
-- (void)startWatching {
+- (void)startWatching
+{
     if(!self.isWatching)
     {
         self.isWatching = YES;
         float latency = .5;
         NSTimer *timer = [NSTimer timerWithTimeInterval:latency
-                                                 target:self 
-                                               selector:@selector(checkForUpdates) 
-                                               userInfo:nil 
+                                                 target:self
+                                               selector:@selector(checkForUpdates)
+                                               userInfo:nil
                                                 repeats:YES];
         self.runLoop = [NSRunLoop currentRunLoop];
         [self.runLoop addTimer:timer forMode:NSDefaultRunLoopMode];
     }
 }
 
-- (void)checkForUpdates {
-    for (NSData *bookmark in [self.fileModificationDates allKeys]) {
+- (void)checkForUpdates
+{
+    for(NSData *bookmark in [self.fileModificationDates allKeys])
+    {
         NSURL *watchedURL = [self urlFromBookmark:bookmark];
         NSDate *modDate = [self modificationDateForURL:watchedURL];
         WatchedFile *temp = [[WatchedFile alloc] init];
         temp.watchedURL = watchedURL;
         temp.modDate = modDate;
-        
+
         WatchedFile *existing = self.fileModificationDates[bookmark];
-        
+
         // Fires YES the first time it's called after the program turns on.
         // Not sure why, don't really care right now. [Sorry !];
-        if (![existing isEqual:temp]) {
+        if(![existing isEqual:temp])
+        {
             self.fileModificationDates[bookmark] = temp;
             existing.onFileChanged(watchedURL);
             temp.onFileChanged = existing.onFileChanged;
         }
-        
+
         [self.fileModificationDates removeObjectForKey:bookmark];
         // Rewatch the file at the current URL in case the file is overwritten.
-        if (watchedURL)
+        if(watchedURL)
         {
             [self watchFileAtURL:watchedURL onChanged:existing.onFileChanged];
         }
     }
 }
 
-- (NSData *)bookmarkFromURL:(NSURL *)url {
+- (NSData *)bookmarkFromURL:(NSURL *)url
+{
     return [url bookmarkDataWithOptions:NSURLBookmarkCreationSuitableForBookmarkFile
-                     includingResourceValuesForKeys:NULL
-                                      relativeToURL:NULL
-                                              error:NULL];
+         includingResourceValuesForKeys:NULL
+                          relativeToURL:NULL
+                                  error:NULL];
 }
 
-- (NSURL *)urlFromBookmark:(NSData *)bookmark {
+- (NSURL *)urlFromBookmark:(NSData *)bookmark
+{
     NSError *error = noErr;
     NSURL *url = [NSURL URLByResolvingBookmarkData:bookmark
                                            options:NSURLBookmarkResolutionWithoutUI
                                      relativeToURL:NULL
                                bookmarkDataIsStale:NULL
                                              error:&error];
-    if (error != noErr)
+    if(error != noErr)
         NSLog(@"%@", [error description]);
     return url;
 }
@@ -159,15 +170,18 @@ static FileWatcher *instance;
 #pragma mark -
 #pragma mark NSCoding
 
-- (id)initWithCoder:(NSCoder *)decoder {
-    if ((self = [self init])) {
+- (id)initWithCoder:(NSCoder *)decoder
+{
+    if((self = [self init]))
+    {
         self.fileModificationDates = [decoder decodeObjectForKey:@"fileModificationDates"];
     }
-    
+
     return self;
 }
 
-- (void)encodeWithCoder:(NSCoder *)encoder {
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
     [encoder encodeObject:self.fileModificationDates forKey:@"fileModificationDates"];
 }
 
