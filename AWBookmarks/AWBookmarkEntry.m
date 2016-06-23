@@ -112,12 +112,40 @@
 - (void)highlightInTextView:(DVTSourceTextView *)textView
 {
     NSString* text = [textView string];
-    NSRange rangeInText = [text rangeOfString:self.lineText];
-    if(rangeInText.location != NSNotFound)
-    {
-        [textView scrollRangeToVisible:rangeInText];
-        [textView setSelectedRange:rangeInText];
-    }
+    
+    [self resolveInText:text afterResolving:^{
+        dispatch_async(dispatch_get_main_queue(), ^{
+            if(!_toBeDeleted)
+            {
+                
+                // Have: line number and line text
+                // Need: the range of these characters in the whole string
+                
+                __block NSRange rangeInText;
+                
+                int targetLineNumber = [self.lineNumber intValue];
+                __block int lineNumber = 0;
+                [text enumerateSubstringsInRange:NSMakeRange(0, text.length-1)
+                                         options:0
+                                      usingBlock:^(NSString *substring, NSRange substringRange, NSRange enclosingRange, BOOL *stop){
+                                          lineNumber++;
+                                          
+                                          if(lineNumber == targetLineNumber)
+                                          {
+                                              rangeInText = substringRange;
+                                              *stop = YES;
+                                          }
+                                      }];
+                
+                if(rangeInText.location != NSNotFound)
+                {
+                    [textView scrollRangeToVisible:rangeInText];
+                    [textView setSelectedRange:rangeInText];
+                }
+            }
+        });
+    }];
+    
 }
 
 - (void)resolve
@@ -136,10 +164,10 @@
         text = [NSString stringWithContentsOfURL:self.fileURL encoding:NSUTF8StringEncoding error:nil];
     }
     
-    [self resolveInText:text];
+    [self resolveInText:text afterResolving:nil];
 }
 
-- (void)resolveInText:(NSString *)text
+- (void)resolveInText:(NSString *)text afterResolving:(void (^)(void)) afterResolving
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
        
@@ -195,6 +223,11 @@
                 [self willChangeValueForKey:@"toBeDeleted"];
                 _toBeDeleted = YES;
                 [self didChangeValueForKey:@"toBeDeleted"];
+            }
+            
+            if(afterResolving)
+            {
+                afterResolving();
             }
         }
         
