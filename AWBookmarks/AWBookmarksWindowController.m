@@ -27,19 +27,6 @@
 
 @implementation AWBookmarksWindowController
 
-+ (void)highlightItem:(AWBookmarkEntry*)item inTextView:(DVTSourceTextView *)textView
-{
-    // Unfold the source, in case it is currently folded
-    [textView unfoldAll:nil];
-    
-    NSString* text = [textView string];
-    NSRange rangeInText = [text rangeOfString:item.lineText];
-    if(rangeInText.location != NSNotFound)
-    {
-        [textView scrollRangeToVisible:rangeInText];
-        [textView setSelectedRange:rangeInText];
-    }
-}
 
 #define MAX_HIGHLIGHT_TRIES 100
 
@@ -123,13 +110,14 @@
 
 + (void)highlightItemInOpenedFile:(AWBookmarkEntry *)item
 {
-    
     DVTSourceTextView *textView = [IDEHelpers currentSourceTextView];
     if (textView)
     {
-        [self highlightItem:item inTextView:textView];
+        // Unfold the source, in case it is currently folded
+        [textView unfoldAll:nil];
+        
+        [item highlightInTextView:textView];
     }
-    
 }
 
 - (void)dealloc
@@ -146,7 +134,6 @@
     self.tableView.dataSource = self.bookmarkCollection;
     
     [self observeBookmarksCount];
-    
 }
 
 - (void)reloadData:(id)whatever

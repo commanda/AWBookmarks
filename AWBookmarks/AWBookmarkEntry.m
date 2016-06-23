@@ -109,7 +109,37 @@
     }];
 }
 
+- (void)highlightInTextView:(DVTSourceTextView *)textView
+{
+    NSString* text = [textView string];
+    NSRange rangeInText = [text rangeOfString:self.lineText];
+    if(rangeInText.location != NSNotFound)
+    {
+        [textView scrollRangeToVisible:rangeInText];
+        [textView setSelectedRange:rangeInText];
+    }
+}
+
 - (void)resolve
+{
+    NSString *text;
+    
+    // If our document is currently open, it might be different from the saved version on disk because the user is editing it and might not have saved
+    NSURL *openURL = [[IDEHelpers currentSourceCodeDocument] fileURL];
+    if([openURL isEqual:self.fileURL])
+    {
+        // Use the text from the open document instead of the text on disk
+        text = [IDEHelpers currentSourceTextView].string;
+    }
+    else
+    {
+        text = [NSString stringWithContentsOfURL:self.fileURL encoding:NSUTF8StringEncoding error:nil];
+    }
+    
+    [self resolveInText:text];
+}
+
+- (void)resolveInText:(NSString *)text
 {
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
        
@@ -120,25 +150,10 @@
          use edit distance algorithm, use fuzzy matching algorithm
          */
         
-        
-        NSString *text;
-        
-        // If our document is currently open, it might be different from the saved version on disk because the user is editing it and might not have saved
-        NSURL *openURL = [[IDEHelpers currentSourceCodeDocument] fileURL];
-        if([openURL isEqual:self.fileURL])
-        {
-            // Use the text from the open document instead of the text on disk
-            text = [IDEHelpers currentSourceTextView].string;
-        }
-        else
-        {
-            text = [NSString stringWithContentsOfURL:self.fileURL encoding:NSUTF8StringEncoding error:nil];
-        }
-        
         if(text)
         {
-            text = [text mutableCopy];
-            NSArray *lines = [text componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+            NSString *textCopy = [text mutableCopy];
+            NSArray *lines = [textCopy componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
             
             NSMutableArray *lineEvaluations = [[NSMutableArray alloc] init];
             

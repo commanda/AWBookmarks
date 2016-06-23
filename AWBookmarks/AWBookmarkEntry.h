@@ -21,5 +21,6 @@
 @property (nonatomic) NSString *uuid;
 
 - (void)resolve;
+- (void)highlightInTextView:(DVTSourceTextView *)textView;
 
 @end
