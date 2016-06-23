@@ -41,7 +41,7 @@
     }
 }
 
-#define MAX_HIGHLIGHT_TRIES 50
+#define MAX_HIGHLIGHT_TRIES 100
 
 + (void)openItem:(AWBookmarkEntry*)item
 {
