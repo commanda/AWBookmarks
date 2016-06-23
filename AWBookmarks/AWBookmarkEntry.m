@@ -113,7 +113,7 @@
 {
     NSString* text = [textView string];
     
-    [self resolveInText:text afterResolving:^{
+    [self resolveInText:text runInBackgroundThread:NO afterResolving:^{
         dispatch_async(dispatch_get_main_queue(), ^{
             if(!_toBeDeleted)
             {
@@ -164,12 +164,13 @@
         text = [NSString stringWithContentsOfURL:self.fileURL encoding:NSUTF8StringEncoding error:nil];
     }
     
-    [self resolveInText:text afterResolving:nil];
+    [self resolveInText:text runInBackgroundThread:YES afterResolving:nil];
 }
 
-- (void)resolveInText:(NSString *)text afterResolving:(void (^)(void)) afterResolving
+- (void)resolveInText:(NSString *)text runInBackgroundThread:(BOOL)runInBackgroundThread afterResolving:(void (^)(void)) afterResolving
 {
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
+    void (^performResolve)(void) = ^void (void)
+    {
        
         /*
          search through the file fuzzy matching for that old line text
@@ -225,13 +226,23 @@
                 [self didChangeValueForKey:@"toBeDeleted"];
             }
             
-            if(afterResolving)
-            {
-                afterResolving();
-            }
         }
         
-    });
+        if(afterResolving)
+        {
+            afterResolving();
+        }
+        
+    };
+    
+    if(runInBackgroundThread)
+    {
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), performResolve);
+    }
+    else
+    {
+        performResolve();
+    }
 }
 
 #pragma FileWatcherDelegate method
