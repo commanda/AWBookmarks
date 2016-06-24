@@ -40,6 +40,12 @@
 
     d = malloc(sizeof(NSInteger) * lenComparison * lenOriginal);
 
+    unichar *originalChars = malloc(sizeof(unichar) * lenOriginal);
+    [originalString getCharacters:originalChars range:NSMakeRange(0, lenOriginal)];
+
+    unichar *comparisonChars = malloc(sizeof(unichar) * lenComparison);
+    [comparisonString getCharacters:comparisonChars range:NSMakeRange(0, lenComparison)];
+
     // Step 2
     for(k = 0; k < lenOriginal; k++)
         d[k] = k;
@@ -49,12 +55,17 @@
 
     // Step 3 and 4
     for(i = 1; i < lenOriginal; i++)
+    {
         for(j = 1; j < lenComparison; j++)
         {
 
             // Step 5
-            if([originalString characterAtIndex:i - 1] ==
-               [comparisonString characterAtIndex:j - 1])
+            unichar lastOrigChar = originalChars[i - 1];
+            unichar lastCompChar = comparisonChars[j - 1];
+            unichar secondToLastOrigChar = originalChars[i - 2];
+            unichar secondToLastCompChar = comparisonChars[j - 2];
+
+            if(lastOrigChar == lastCompChar)
                 cost = 0;
             else
                 cost = 1;
@@ -63,16 +74,21 @@
             d[j * lenOriginal + i] = MIN(MIN(d[(j - 1) * lenOriginal + i] + 1, d[j * lenOriginal + i - 1] + 1), d[(j - 1) * lenOriginal + i - 1] + cost);
 
             // This conditional adds Damerau transposition to Levenshtein distance
-            if(i > 1 && j > 1 && [originalString characterAtIndex:i - 1] == [comparisonString characterAtIndex:j - 2] &&
-               [originalString characterAtIndex:i - 2] == [comparisonString characterAtIndex:j - 1])
+            if(i > 1
+               && j > 1
+               && lastOrigChar == secondToLastCompChar
+               && secondToLastOrigChar == lastCompChar)
             {
                 d[j * lenOriginal + i] = MIN(d[j * lenOriginal + i], d[(j - 2) * lenOriginal + i - 2] + cost);
             }
         }
+    }
 
     distance = d[lenOriginal * lenComparison - 1];
 
     free(d);
+    free(originalChars);
+    free(comparisonChars);
 
     return distance;
 }
