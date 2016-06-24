@@ -38,7 +38,6 @@
 - (void)checkForUpdates;
 - (NSDate *)modificationDateForURL:(NSURL *)url;
 - (NSURL *)urlFromBookmark:(NSData *)bookmark;
-- (NSData *)bookmarkFromURL:(NSURL *)url;
 @property (nonatomic, strong) NSMutableDictionary *fileModificationDates;
 @property NSRunLoop *runLoop;
 @property NSFileManager *fm;
@@ -74,7 +73,10 @@ static FileWatcher *instance;
 
 - (void)watchFileAtURL:(NSURL *)url onChanged:(OnFileChanged)onFileChanged
 {
-    NSData *bookmark = [self bookmarkFromURL:url];
+    NSData *bookmark = [url bookmarkDataWithOptions:NSURLBookmarkCreationSuitableForBookmarkFile
+                     includingResourceValuesForKeys:NULL
+                                      relativeToURL:NULL
+                                              error:NULL];
     NSDate *modDate = [self modificationDateForURL:url];
     WatchedFile *wf = [[WatchedFile alloc] init];
     wf.watchedURL = url;
@@ -133,7 +135,7 @@ static FileWatcher *instance;
             self.fileModificationDates[bookmark] = temp;
             existing.onFileChanged(watchedURL);
             temp.onFileChanged = existing.onFileChanged;
-        
+
 
             [self.fileModificationDates removeObjectForKey:bookmark];
             // Rewatch the file at the current URL in case the file is overwritten.
@@ -143,14 +145,6 @@ static FileWatcher *instance;
             }
         }
     }
-}
-
-- (NSData *)bookmarkFromURL:(NSURL *)url
-{
-    return [url bookmarkDataWithOptions:NSURLBookmarkCreationSuitableForBookmarkFile
-         includingResourceValuesForKeys:NULL
-                          relativeToURL:NULL
-                                  error:NULL];
 }
 
 - (NSURL *)urlFromBookmark:(NSData *)bookmark
