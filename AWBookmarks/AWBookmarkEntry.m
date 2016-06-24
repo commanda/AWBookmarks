@@ -214,18 +214,22 @@
 
             AWMatch *best = [lineEvaluations firstObject];
 
-            if(best.score < THRESHOLD_SCORE && best.text.length > 0)
+            if(best.lineIndex + 1 != self.lineNumber.intValue
+               || ![self.lineText isEqualToString:best.text])
             {
-                [self willChangeValueForKey:@"changed"];
-                self.lineNumber = @(best.lineIndex + 1);
-                self.lineText = best.text;
-                [self didChangeValueForKey:@"changed"];
-            }
-            else
-            {
-                [self willChangeValueForKey:@"toBeDeleted"];
-                _toBeDeleted = YES;
-                [self didChangeValueForKey:@"toBeDeleted"];
+                if(best.score < THRESHOLD_SCORE && best.text.length > 0)
+                {
+                    [self willChangeValueForKey:@"changed"];
+                    self.lineNumber = @(best.lineIndex + 1);
+                    self.lineText = best.text;
+                    [self didChangeValueForKey:@"changed"];
+                }
+                else
+                {
+                    [self willChangeValueForKey:@"toBeDeleted"];
+                    _toBeDeleted = YES;
+                    [self didChangeValueForKey:@"toBeDeleted"];
+                }
             }
         }
 
