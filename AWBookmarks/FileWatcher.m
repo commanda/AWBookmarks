@@ -128,20 +128,19 @@ static FileWatcher *instance;
 
         WatchedFile *existing = self.fileModificationDates[bookmark];
 
-        // Fires YES the first time it's called after the program turns on.
-        // Not sure why, don't really care right now. [Sorry !];
         if(![existing isEqual:temp])
         {
             self.fileModificationDates[bookmark] = temp;
             existing.onFileChanged(watchedURL);
             temp.onFileChanged = existing.onFileChanged;
-        }
+        
 
-        [self.fileModificationDates removeObjectForKey:bookmark];
-        // Rewatch the file at the current URL in case the file is overwritten.
-        if(watchedURL)
-        {
-            [self watchFileAtURL:watchedURL onChanged:existing.onFileChanged];
+            [self.fileModificationDates removeObjectForKey:bookmark];
+            // Rewatch the file at the current URL in case the file is overwritten.
+            if(watchedURL)
+            {
+                [self watchFileAtURL:watchedURL onChanged:existing.onFileChanged];
+            }
         }
     }
 }
