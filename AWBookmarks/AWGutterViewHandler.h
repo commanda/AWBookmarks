@@ -14,6 +14,5 @@
 @interface AWGutterViewHandler : NSObject
 
 - (AWGutterViewHandler *)initWithBookmarkCollection:(AWBookmarkCollection *)bookmarkCollection;
-- (void)addOrUpdateMarkerForBookmarkEntry:(AWBookmarkEntry *)entry;
 
 @end
