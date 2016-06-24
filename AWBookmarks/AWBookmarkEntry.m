@@ -40,11 +40,19 @@
 {
     if(self = [super init])
     {
-        self.fileURL = [decoder decodeObjectForKey:@"fileURL"];
-        self.lineNumber = [decoder decodeObjectForKey:@"lineNumber"];
-        self.lineText = [decoder decodeObjectForKey:@"lineText"];
-        self.uuid = [decoder decodeObjectForKey:@"uuid"];
-        self.containingProjectURL = [decoder decodeObjectForKey:@"containingProjectURL"];
+        @try
+        {
+            self.fileURL = [decoder decodeObjectForKey:@"fileURL"];
+            self.lineNumber = [decoder decodeObjectForKey:@"lineNumber"];
+            self.lineText = [decoder decodeObjectForKey:@"lineText"];
+            self.uuid = [decoder decodeObjectForKey:@"uuid"];
+            self.containingProjectURL = [decoder decodeObjectForKey:@"containingProjectURL"];
+        }
+        @catch(NSException *exception)
+        {
+            // Too legit to init
+            self = nil;
+        }
     }
     return self;
 }

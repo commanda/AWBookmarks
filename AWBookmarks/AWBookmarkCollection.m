@@ -46,11 +46,14 @@
 {
     if(self = [self init])
     {
-        self.bookmarks = [decoder decodeObjectForKey:@"bookmarkEntries"];
-
-        if(!self.bookmarks)
+        @try
         {
-            self.bookmarks = [@[] mutableCopy];
+            self.bookmarks = [[decoder decodeObjectForKey:@"bookmarkEntries"] mutableCopy];
+        }
+        @catch(NSException *exception)
+        {
+            // An exception can be thrown if the .dat is corrupted and we try to decode it
+            DLOG(@"bp");
         }
 
         for(AWBookmarkEntry *entry in self.bookmarks)
@@ -145,6 +148,11 @@
         return self.bookmarks[index];
     }
     return nil;
+}
+
+- (NSUInteger)indexOfObject:(AWBookmarkEntry *)anObject
+{
+    return [self.bookmarks indexOfObject:anObject];
 }
 
 - (void)deleteBookmarkEntry:(AWBookmarkEntry *)entry
