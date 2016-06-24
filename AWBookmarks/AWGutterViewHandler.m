@@ -7,6 +7,7 @@
 //
 
 #import "AWGutterViewHandler.h"
+#import "AWBookmarkAnnotation.h"
 #import "AWBookmarkCollection.h"
 #import "AWBookmarkEntry.h"
 #import "Aspects.h"
@@ -35,11 +36,28 @@
         }
 
         [self swizzleMethodForDrawLineNumbers];
+        [self swizzleMethodForDrawAnnotations];
     }
     return self;
 }
 
 #pragma GCC diagnostic ignored "-Wundeclared-selector"
+- (void)swizzleMethodForDrawAnnotations
+{
+    //- (void)_drawSidebarMarkersForAnnotations:(id)arg1 atIndexes:(id)arg2 textView:(id)arg3 getParaRectBlock:(id)arg4;
+    NSString *className = @"DVTTextSidebarView";
+    Class c = NSClassFromString(className);
+    NSError *aspectHookError;
+    [c aspect_hookSelector:@selector(_drawSidebarMarkersForAnnotations:atIndexes:textView:getParaRectBlock:)
+                withOptions:AspectPositionBefore
+                 usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, NSTextView *textView, id paraRectBlock) {
+                     DLOG(@"hey i'm in yr drawSidebar");
+                 }
+                      error:&aspectHookError];
+
+    DLOG(@"bp");
+}
+
 - (void)swizzleMethodForDrawLineNumbers
 {
     NSString *className = @"DVTTextSidebarView";
@@ -130,7 +148,7 @@
         {
             [self addMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
         }
-        
+
         // See if there are any bookmarks that have been deleted
         for(AWBookmarkEntry *entry in self.observedBookmarkEntries)
         {

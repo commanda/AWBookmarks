@@ -18,6 +18,7 @@
 		374A482F1CEC0A7500D68C7A /* AWBookmarksPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 374A482E1CEC0A7500D68C7A /* AWBookmarksPlugin.m */; };
 		374A48321CEC0A7500D68C7A /* NSObject_Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 374A48311CEC0A7500D68C7A /* NSObject_Extension.m */; };
 		3753E3681CF00E0600890887 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = 3753E3671CF00E0600890887 /* Aspects.m */; };
+		3770782C1D1DB4F600EB4A05 /* AWBookmarkAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3770782B1D1DB4F600EB4A05 /* AWBookmarkAnnotation.m */; };
 		378107C41D00A67400776523 /* NSString+LevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 378107C31D00A67400776523 /* NSString+LevenshteinDistance.m */; };
 		37A454C51CF0E60F00F3D1D8 /* AWBookmarkCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A454C41CF0E60F00F3D1D8 /* AWBookmarkCollection.m */; };
 		37C65F071CF017CC00A2F5D7 /* AWContextMenuHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 37C65F061CF017CC00A2F5D7 /* AWContextMenuHandler.m */; };
@@ -46,6 +47,8 @@
 		3753E3661CF00E0600890887 /* Aspects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Aspects.h; sourceTree = "<group>"; };
 		3753E3671CF00E0600890887 /* Aspects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Aspects.m; sourceTree = "<group>"; };
 		375560441CEE6EB600EECB49 /* CommonDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonDefines.h; sourceTree = "<group>"; };
+		3770782A1D1DB4F600EB4A05 /* AWBookmarkAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarkAnnotation.h; sourceTree = "<group>"; };
+		3770782B1D1DB4F600EB4A05 /* AWBookmarkAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWBookmarkAnnotation.m; sourceTree = "<group>"; };
 		378107C21D00A67400776523 /* NSString+LevenshteinDistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+LevenshteinDistance.h"; sourceTree = "<group>"; };
 		378107C31D00A67400776523 /* NSString+LevenshteinDistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+LevenshteinDistance.m"; sourceTree = "<group>"; };
 		37A454C31CF0E60F00F3D1D8 /* AWBookmarkCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarkCollection.h; sourceTree = "<group>"; };
@@ -171,6 +174,8 @@
 				374572381CEFF8AF00D20378 /* AWBookmarksWindowController.xib */,
 				37DE16711D035004008AF731 /* AWGutterViewHandler.h */,
 				37DE16721D035004008AF731 /* AWGutterViewHandler.m */,
+				3770782A1D1DB4F600EB4A05 /* AWBookmarkAnnotation.h */,
+				3770782B1D1DB4F600EB4A05 /* AWBookmarkAnnotation.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -262,6 +267,7 @@
 				374A48321CEC0A7500D68C7A /* NSObject_Extension.m in Sources */,
 				3723D74F1D024DBF00C1A5A7 /* FileWatcher.m in Sources */,
 				3753E3681CF00E0600890887 /* Aspects.m in Sources */,
+				3770782C1D1DB4F600EB4A05 /* AWBookmarkAnnotation.m in Sources */,
 				37DE16731D035004008AF731 /* AWGutterViewHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
