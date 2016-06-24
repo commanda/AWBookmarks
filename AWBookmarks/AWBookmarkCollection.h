@@ -22,5 +22,6 @@
 - (NSArray *)lineNumbersForURL:(NSURL *)url;
 - (void)performBookmarkThisLine;
 - (NSUInteger)indexOfObject:(AWBookmarkEntry *)anObject;
+- (BOOL)containsObject:(AWBookmarkEntry *)anObject;
 
 @end

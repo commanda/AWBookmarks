@@ -155,6 +155,11 @@
     return [self.bookmarks indexOfObject:anObject];
 }
 
+- (BOOL)containsObject:(AWBookmarkEntry *)anObject
+{
+    return [self.bookmarks containsObject:anObject];
+}
+
 - (void)deleteBookmarkEntry:(AWBookmarkEntry *)entry
 {
     if([self.bookmarks containsObject:entry])

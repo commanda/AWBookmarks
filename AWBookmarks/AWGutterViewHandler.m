@@ -31,7 +31,7 @@
 
         for(int i = 0; i < self.bookmarkCollection.count; i++)
         {
-            [self addOrUpdateMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
+            [self addMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
         }
 
         [self swizzleMethodForDrawLineNumbers];
@@ -101,7 +101,7 @@
     [self.bookmarkCollection addObserver:self forKeyPath:@"count" options:NSKeyValueObservingOptionNew context:nil];
 }
 
-- (void)addOrUpdateMarkerForBookmarkEntry:(AWBookmarkEntry *)entry
+- (void)addMarkerForBookmarkEntry:(AWBookmarkEntry *)entry
 {
     if(![self.observedBookmarkEntries containsObject:entry])
     {
@@ -125,9 +125,19 @@
 {
     if(object == self.bookmarkCollection)
     {
+        // See if there are any new bookmarks
         for(int i = 0; i < self.bookmarkCollection.count; i++)
         {
-            [self addOrUpdateMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
+            [self addMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
+        }
+        
+        // See if there are any bookmarks that have been deleted
+        for(AWBookmarkEntry *entry in self.observedBookmarkEntries)
+        {
+            if(![self.bookmarkCollection containsObject:entry])
+            {
+                [self deleteMarkerForEntry:entry];
+            }
         }
     }
     else if([self.observedBookmarkEntries containsObject:object])
@@ -139,7 +149,7 @@
         }
         else if([keyPath isEqualToString:@"changed"])
         {
-            [self addOrUpdateMarkerForBookmarkEntry:entry];
+            [self addMarkerForBookmarkEntry:entry];
         }
     }
 }
