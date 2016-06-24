@@ -88,7 +88,6 @@ static FileWatcher *instance;
 
 - (void)stopWatchingFileAtURL:(NSURL *)url
 {
-    // TODO: make sure this works? i thought the keys were bookmark urls, are they the same as file urls?
     if(url)
     {
         [self.fileModificationDates removeObjectForKey:url];
@@ -107,7 +106,7 @@ static FileWatcher *instance;
     if(!self.isWatching)
     {
         self.isWatching = YES;
-        float latency = .5;
+        float latency = 1.0;
         NSTimer *timer = [NSTimer timerWithTimeInterval:latency
                                                  target:self
                                                selector:@selector(checkForUpdates)

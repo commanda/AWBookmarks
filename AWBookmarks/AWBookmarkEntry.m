@@ -66,6 +66,11 @@
     [encoder encodeObject:self.containingProjectURL forKey:@"containingProjectURL"];
 }
 
+- (void)dealloc
+{
+    [[FileWatcher sharedInstance] stopWatchingFileAtURL:_fileURL];
+}
+
 - (NSString *)description
 {
     return [NSString stringWithFormat:@"%@\nfilePath: %@\nlineNumber: %@\nlineText:%@\ncontainingProjectURL: %@", [super description], self.fileURL, self.lineNumber, self.lineText, self.containingProjectURL];

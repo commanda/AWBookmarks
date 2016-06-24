@@ -12,7 +12,7 @@
 #import "CommonDefines.h"
 
 @interface AWDeleteButton : NSButton
-@property AWBookmarkEntry *entry;
+@property (weak) AWBookmarkEntry *entry;
 @end
 
 @implementation AWDeleteButton
@@ -193,6 +193,7 @@
     [self unobserveBookmarksCount];
     [self.tableView beginUpdates];
     [self.bookmarkCollection deleteBookmarkEntry:button.entry];
+    button.entry = nil;
     NSInteger currentRow = [self.tableView rowForView:button];
     if(currentRow >= 0 && currentRow < self.tableView.numberOfRows)
     {
