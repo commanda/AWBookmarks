@@ -52,7 +52,7 @@
     [c aspect_hookSelector:@selector(_drawSidebarMarkersForAnnotations:atIndexes:textView:getParaRectBlock:)
                 withOptions:AspectPositionBefore
                  usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, DVTSourceTextView *textView, id paraRectBlock) {
-                     DLOG(@"hey i'm in yr drawSidebar");
+                     
 
                      NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
                      NSArray<AWBookmarkEntry *> *entries = [self.bookmarkCollection bookmarksForURL:url];
@@ -66,6 +66,7 @@
                              [indexSet addIndex:annotations.count - 1];
                          }
                      }
+                     DLOG(@"hey i'm in yr drawSidebar");
                  }
                       error:&aspectHookError];
 
@@ -186,9 +187,9 @@
 
         // See if there are any bookmarks that have been deleted
         NSMutableArray *toDelete = [@[] mutableCopy];
-        for(AWBookmarkEntry *entry in self.observedBookmarkEntries)
+        for(UUID *entry in self.observedBookmarkEntries)
         {
-            if(![self.bookmarkCollection containsObject:entry])
+            if(![self.bookmarkCollection containsObjectWithUUID:entry])
             {
                 [toDelete addObject:entry];
             }

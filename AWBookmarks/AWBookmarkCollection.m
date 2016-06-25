@@ -84,8 +84,9 @@
     [desc appendString:@"\n"];
     for(int i = 0; i < self.bookmarks.count; i++)
     {
+        [desc appendString:[NSString stringWithFormat:@"[%d]", i]];
         [desc appendString:[self.bookmarks[0] description]];
-        [desc appendString:@"\n"];
+        [desc appendString:@"\n\n"];
     }
     return desc;
 }
@@ -171,6 +172,18 @@
 - (BOOL)containsObject:(AWBookmarkEntry *)anObject
 {
     return [self.bookmarks containsObject:anObject];
+}
+
+- (BOOL)containsObjectWithUUID:(UUID *)uuid
+{
+    for(AWBookmarkEntry *entry in self.bookmarks)
+    {
+        if([entry.uuid isEqualToString:uuid])
+        {
+            return YES;
+        }
+    }
+    return NO;
 }
 
 - (void)deleteBookmarkEntry:(AWBookmarkEntry *)entry
