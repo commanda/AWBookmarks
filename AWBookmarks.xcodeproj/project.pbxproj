@@ -24,6 +24,7 @@
 		37A454C51CF0E60F00F3D1D8 /* AWBookmarkCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A454C41CF0E60F00F3D1D8 /* AWBookmarkCollection.m */; };
 		37C65F071CF017CC00A2F5D7 /* AWContextMenuHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 37C65F061CF017CC00A2F5D7 /* AWContextMenuHandler.m */; };
 		37DE16731D035004008AF731 /* AWGutterViewHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 37DE16721D035004008AF731 /* AWGutterViewHandler.m */; };
+		37E237471D1E2D010063CF3D /* XcodeDigits-regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 37E237461D1E2D010063CF3D /* XcodeDigits-regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -62,6 +63,7 @@
 		37C92F321D1E09B900FB1992 /* DVTSimpleSerialization-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DVTSimpleSerialization-Protocol.h"; sourceTree = "<group>"; };
 		37DE16711D035004008AF731 /* AWGutterViewHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWGutterViewHandler.h; sourceTree = "<group>"; };
 		37DE16721D035004008AF731 /* AWGutterViewHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWGutterViewHandler.m; sourceTree = "<group>"; };
+		37E237461D1E2D010063CF3D /* XcodeDigits-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "XcodeDigits-regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +126,7 @@
 		374A48291CEC0A7500D68C7A /* AWBookmarks */ = {
 			isa = PBXGroup;
 			children = (
+				37E237461D1E2D010063CF3D /* XcodeDigits-regular.ttf */,
 				3753E3621CF00B2200890887 /* Adaptor */,
 				3753E3631CF00B3100890887 /* Models */,
 				3753E3641CF00B3C00890887 /* Views */,
@@ -255,6 +258,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				374A482C1CEC0A7500D68C7A /* AWBookmarks.xcscheme in Resources */,
+				37E237471D1E2D010063CF3D /* XcodeDigits-regular.ttf in Resources */,
 				377078301D1DB6E600EB4A05 /* Media.xcassets in Resources */,
 				3745723A1CEFF8AF00D20378 /* AWBookmarksWindowController.xib in Resources */,
 			);

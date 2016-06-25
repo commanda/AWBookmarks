@@ -58,10 +58,10 @@
 
                          AWBookmarkAnnotation *annotation = [[AWBookmarkAnnotation alloc] init];
                          annotation.location = [[NSClassFromString(@"DVTTextDocumentLocation") alloc] initWithDocumentURL:entry.fileURL timestamp:@([NSDate timeIntervalSinceReferenceDate]) lineRange:NSMakeRange(entry.lineNumber.intValue - 1, 1)];
-                         
+
 
                          [annotations addObject:annotation];
-                         [indexSet addIndex:annotations.count-1];
+                         [indexSet addIndex:annotations.count - 1];
                      }
                  }
                       error:&aspectHookError];
@@ -78,6 +78,11 @@
 
 - (void)swizzleMethodForDrawLineNumbers
 {
+    NSDictionary *attributes = @{
+                                 NSForegroundColorAttributeName : [NSColor whiteColor],
+                                 NSFontAttributeName : [NSFont fontWithName:@"Xcode Digits" size:10],
+                                 };
+    
     NSString *className = @"DVTTextSidebarView";
     Class c = NSClassFromString(className);
     [c aspect_hookSelector:@selector(_drawLineNumbersInSidebarRect:foldedIndexes:count:linesToInvert:linesToReplace:getParaRectBlock:)
@@ -115,8 +120,11 @@
                                              NSRect a0, a1;
                                              [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
 
-                                             NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"⛺"];
-                                             [str drawAtPoint:a1.origin];
+                                             NSAttributedString *str = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu", (unsigned long)lineNumber]
+                                                                                                       attributes:attributes];
+                                             
+                                             
+                                             [str drawInRect:a1];
                                          }
                                      }
                                  }
