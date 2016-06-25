@@ -79,10 +79,10 @@
 - (void)swizzleMethodForDrawLineNumbers
 {
     NSDictionary *attributes = @{
-                                 NSForegroundColorAttributeName : [NSColor whiteColor],
-                                 NSFontAttributeName : [NSFont fontWithName:@"Xcode Digits" size:10],
-                                 };
-    
+        NSForegroundColorAttributeName : [NSColor whiteColor],
+        NSFontAttributeName : [NSFont fontWithName:@"Xcode Digits" size:10],
+    };
+
     NSString *className = @"DVTTextSidebarView";
     Class c = NSClassFromString(className);
     [c aspect_hookSelector:@selector(_drawLineNumbersInSidebarRect:foldedIndexes:count:linesToInvert:linesToReplace:getParaRectBlock:)
@@ -122,8 +122,8 @@
 
                                              NSAttributedString *str = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu", (unsigned long)lineNumber]
                                                                                                        attributes:attributes];
-                                             
-                                             
+
+
                                              [str drawInRect:a1];
                                          }
                                      }
