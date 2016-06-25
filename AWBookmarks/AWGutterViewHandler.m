@@ -52,7 +52,7 @@
     [c aspect_hookSelector:@selector(_drawSidebarMarkersForAnnotations:atIndexes:textView:getParaRectBlock:)
                 withOptions:AspectPositionBefore
                  usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, DVTSourceTextView *textView, id paraRectBlock) {
-                     
+
 
                      NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
                      NSArray<AWBookmarkEntry *> *entries = [self.bookmarkCollection bookmarksForURL:url];
@@ -82,10 +82,6 @@
 
 - (void)swizzleMethodForDrawLineNumbers
 {
-    NSDictionary *attributes = @{
-        NSForegroundColorAttributeName : [NSColor whiteColor],
-        NSFontAttributeName : [NSFont fontWithName:@"Xcode Digits" size:10],
-    };
 
     NSString *className = @"DVTTextSidebarView";
     Class c = NSClassFromString(className);
@@ -124,11 +120,11 @@
                                              NSRect a0, a1;
                                              [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
 
-                                             NSAttributedString *str = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%lu", (unsigned long)lineNumber]
-                                                                                                       attributes:attributes];
-
-
-                                             [str drawInRect:a1];
+                                             NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"⛺"];
+                                             NSSize size = [str size];
+                                             CGPoint point = CGPointMake(a1.origin.x + a1.size.width - size.width,
+                                                                         a1.origin.y - 1);
+                                             [str drawAtPoint:point];
                                          }
                                      }
                                  }
