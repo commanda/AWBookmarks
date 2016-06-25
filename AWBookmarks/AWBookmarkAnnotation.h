@@ -7,7 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "IDEHelpers.h"
 
 @interface AWBookmarkAnnotation : NSObject
+
+@property(retain, nonatomic) NSImage *sidebarMarkerImage;
+
+@property(retain, nonatomic) DVTTextDocumentLocation *location;
 
 @end

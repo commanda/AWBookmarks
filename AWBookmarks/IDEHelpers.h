@@ -9,6 +9,8 @@
 #import <AppKit/AppKit.h>
 #import <Foundation/Foundation.h>
 
+#import "DVTTextDocumentLocation.h"
+
 @interface DVTTextSidebarView : NSRulerView
 
 - (void)getParagraphRect:(struct CGRect *)arg1 firstLineRect:(struct CGRect *)arg2 forLineNumber:(unsigned long long)arg3;
@@ -20,11 +22,6 @@
 
 @interface DVTChoice : NSObject
 - (id)initWithTitle:(id)arg1 toolTip:(id)arg2 image:(id)arg3 representedObject:(id)arg4;
-@end
-
-@interface DVTTextDocumentLocation : NSObject
-@property (readonly) NSRange characterRange;
-@property (readonly) NSRange lineRange;
 @end
 
 @interface DVTTextPreferences : NSObject

@@ -7,7 +7,19 @@
 //
 
 #import "AWBookmarkAnnotation.h"
+#import "CommonDefines.h"
 
 @implementation AWBookmarkAnnotation
+
+- (id)init
+{
+    if(self = [super init])
+    {
+        NSBundle *pluginBundle = [NSBundle bundleWithIdentifier:@"com.amandawixted.AWBookmarks"];
+        NSImage *image = [pluginBundle imageForResource:@"marker-correct-size"];
+        self.sidebarMarkerImage = image;
+    }
+    return self;
+}
 
 @end

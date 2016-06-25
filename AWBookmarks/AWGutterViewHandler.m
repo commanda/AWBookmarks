@@ -52,10 +52,24 @@
                 withOptions:AspectPositionBefore
                  usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, NSTextView *textView, id paraRectBlock) {
                      DLOG(@"hey i'm in yr drawSidebar");
+                     
+                     [annotations addObject:[[AWBookmarkAnnotation alloc] init]];
                  }
                       error:&aspectHookError];
+    
+    
+    
 
     DLOG(@"bp");
+    
+    
+    [c aspect_hookSelector:@selector(_drawSidebarMarkersForAnnotations:atIndexes:textView:getParaRectBlock:)
+               withOptions:AspectPositionAfter
+                usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, NSTextView *textView, id paraRectBlock) {
+                    DLOG(@"hey i'm in yr drawSidebar");
+                    
+                }
+                     error:&aspectHookError];
 }
 
 - (void)swizzleMethodForDrawLineNumbers

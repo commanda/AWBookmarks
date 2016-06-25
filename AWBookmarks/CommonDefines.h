@@ -9,6 +9,9 @@
 #ifndef CommonDefines_h
 #define CommonDefines_h
 
+
+#import <AppKit/AppKit.h>
+
 #if DEBUG
 #define DLOG(fmt, ...) NSLog((@"%s " fmt), __PRETTY_FUNCTION__, ##__VA_ARGS__);
 #else

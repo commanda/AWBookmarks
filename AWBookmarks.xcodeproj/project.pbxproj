@@ -19,6 +19,7 @@
 		374A48321CEC0A7500D68C7A /* NSObject_Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = 374A48311CEC0A7500D68C7A /* NSObject_Extension.m */; };
 		3753E3681CF00E0600890887 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = 3753E3671CF00E0600890887 /* Aspects.m */; };
 		3770782C1D1DB4F600EB4A05 /* AWBookmarkAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 3770782B1D1DB4F600EB4A05 /* AWBookmarkAnnotation.m */; };
+		377078301D1DB6E600EB4A05 /* Media.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3770782F1D1DB6E600EB4A05 /* Media.xcassets */; };
 		378107C41D00A67400776523 /* NSString+LevenshteinDistance.m in Sources */ = {isa = PBXBuildFile; fileRef = 378107C31D00A67400776523 /* NSString+LevenshteinDistance.m */; };
 		37A454C51CF0E60F00F3D1D8 /* AWBookmarkCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = 37A454C41CF0E60F00F3D1D8 /* AWBookmarkCollection.m */; };
 		37C65F071CF017CC00A2F5D7 /* AWContextMenuHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 37C65F061CF017CC00A2F5D7 /* AWContextMenuHandler.m */; };
@@ -49,12 +50,16 @@
 		375560441CEE6EB600EECB49 /* CommonDefines.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CommonDefines.h; sourceTree = "<group>"; };
 		3770782A1D1DB4F600EB4A05 /* AWBookmarkAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarkAnnotation.h; sourceTree = "<group>"; };
 		3770782B1D1DB4F600EB4A05 /* AWBookmarkAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWBookmarkAnnotation.m; sourceTree = "<group>"; };
+		3770782F1D1DB6E600EB4A05 /* Media.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Media.xcassets; sourceTree = "<group>"; };
+		377078351D1DBC8D00EB4A05 /* DVTTextDocumentLocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DVTTextDocumentLocation.h; sourceTree = "<group>"; };
 		378107C21D00A67400776523 /* NSString+LevenshteinDistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+LevenshteinDistance.h"; sourceTree = "<group>"; };
 		378107C31D00A67400776523 /* NSString+LevenshteinDistance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+LevenshteinDistance.m"; sourceTree = "<group>"; };
 		37A454C31CF0E60F00F3D1D8 /* AWBookmarkCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWBookmarkCollection.h; sourceTree = "<group>"; };
 		37A454C41CF0E60F00F3D1D8 /* AWBookmarkCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWBookmarkCollection.m; sourceTree = "<group>"; };
 		37C65F051CF017CC00A2F5D7 /* AWContextMenuHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWContextMenuHandler.h; sourceTree = "<group>"; };
 		37C65F061CF017CC00A2F5D7 /* AWContextMenuHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWContextMenuHandler.m; sourceTree = "<group>"; };
+		37C92F311D1E097800FB1992 /* DVTDocumentLocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVTDocumentLocation.h; sourceTree = "<group>"; };
+		37C92F321D1E09B900FB1992 /* DVTSimpleSerialization-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DVTSimpleSerialization-Protocol.h"; sourceTree = "<group>"; };
 		37DE16711D035004008AF731 /* AWGutterViewHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWGutterViewHandler.h; sourceTree = "<group>"; };
 		37DE16721D035004008AF731 /* AWGutterViewHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWGutterViewHandler.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,6 +131,7 @@
 				374360B61CFE798500D048EF /* Fuzzy Matching */,
 				3753E3651CF00B6200890887 /* Misc */,
 				374A482A1CEC0A7500D68C7A /* Supporting Files */,
+				3770782F1D1DB6E600EB4A05 /* Media.xcassets */,
 			);
 			path = AWBookmarks;
 			sourceTree = "<group>";
@@ -145,6 +151,9 @@
 				3753E3671CF00E0600890887 /* Aspects.m */,
 				374A482D1CEC0A7500D68C7A /* AWBookmarksPlugin.h */,
 				374A482E1CEC0A7500D68C7A /* AWBookmarksPlugin.m */,
+				37C92F321D1E09B900FB1992 /* DVTSimpleSerialization-Protocol.h */,
+				377078351D1DBC8D00EB4A05 /* DVTTextDocumentLocation.h */,
+				37C92F311D1E097800FB1992 /* DVTDocumentLocation.h */,
 				373A07201CF0034700ED350C /* IDEHelpers.h */,
 				373A07211CF0034700ED350C /* IDEHelpers.m */,
 				374A48301CEC0A7500D68C7A /* NSObject_Extension.h */,
@@ -246,6 +255,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				374A482C1CEC0A7500D68C7A /* AWBookmarks.xcscheme in Resources */,
+				377078301D1DB6E600EB4A05 /* Media.xcassets in Resources */,
 				3745723A1CEFF8AF00D20378 /* AWBookmarksWindowController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
