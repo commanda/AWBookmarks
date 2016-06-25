@@ -10,6 +10,7 @@
 #import <Foundation/Foundation.h>
 
 #import "DVTTextDocumentLocation.h"
+#import "DVTTextAnnotationDelegate-Protocol.h"
 
 @interface DVTTextSidebarView : NSRulerView
 
@@ -18,6 +19,7 @@
 
 @interface DVTSourceTextView : NSTextView
 - (void)unfoldAll:(id)arg1;
+- (id)visibleAnnotationsForLineNumberRange:(struct _NSRange)arg1;
 @end
 
 @interface DVTChoice : NSObject

@@ -61,6 +61,7 @@
 		37C65F061CF017CC00A2F5D7 /* AWContextMenuHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWContextMenuHandler.m; sourceTree = "<group>"; };
 		37C92F311D1E097800FB1992 /* DVTDocumentLocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DVTDocumentLocation.h; sourceTree = "<group>"; };
 		37C92F321D1E09B900FB1992 /* DVTSimpleSerialization-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DVTSimpleSerialization-Protocol.h"; sourceTree = "<group>"; };
+		37CDEEF31D1F41D8009EDCF6 /* DVTTextAnnotationDelegate-Protocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DVTTextAnnotationDelegate-Protocol.h"; sourceTree = "<group>"; };
 		37DE16711D035004008AF731 /* AWGutterViewHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWGutterViewHandler.h; sourceTree = "<group>"; };
 		37DE16721D035004008AF731 /* AWGutterViewHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AWGutterViewHandler.m; sourceTree = "<group>"; };
 		37E237461D1E2D010063CF3D /* XcodeDigits-regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "XcodeDigits-regular.ttf"; sourceTree = "<group>"; };
@@ -154,6 +155,7 @@
 				3753E3671CF00E0600890887 /* Aspects.m */,
 				374A482D1CEC0A7500D68C7A /* AWBookmarksPlugin.h */,
 				374A482E1CEC0A7500D68C7A /* AWBookmarksPlugin.m */,
+				37CDEEF31D1F41D8009EDCF6 /* DVTTextAnnotationDelegate-Protocol.h */,
 				37C92F311D1E097800FB1992 /* DVTDocumentLocation.h */,
 				37C92F321D1E09B900FB1992 /* DVTSimpleSerialization-Protocol.h */,
 				377078351D1DBC8D00EB4A05 /* DVTTextDocumentLocation.h */,

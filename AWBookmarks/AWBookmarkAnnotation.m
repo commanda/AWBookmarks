@@ -18,6 +18,12 @@
         NSBundle *pluginBundle = [NSBundle bundleWithIdentifier:@"com.amandawixted.AWBookmarks"];
         NSImage *image = [pluginBundle imageForResource:@"marker-correct-size"];
         self.sidebarMarkerImage = image;
+        self.wantsInvertedLineNumber = YES;
+        self.userDraggable = YES;
+        self.userRemovable = YES;
+        self.visible = YES;
+        self.wantsDisplayOverLineNumber = NO;
+        self.wantsReplaceLineNumber = NO;
     }
     return self;
 }
@@ -40,6 +46,17 @@
 - (void)drawSidebarMarkerIconInRect:(struct CGRect)arg1 textView:(id)arg2
 {
     [self.sidebarMarkerImage drawInRect:arg1];
+}
+
+- (BOOL)drawsLineHighlight;
+{
+    // TODO: maybe we do want to draw line highlight?
+    return NO;
+}
+
+- (BOOL)drawsHighlightedRanges
+{
+    return NO;
 }
 
 @end

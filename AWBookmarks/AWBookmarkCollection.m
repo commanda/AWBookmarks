@@ -226,7 +226,7 @@
     }
 }
 
-- (NSArray <NSNumber *> *)lineNumbersForURL:(NSURL *)url;
+- (NSArray<NSNumber *> *)lineNumbersForURL:(NSURL *)url;
 {
     NSMutableArray *toReturn = [@[] mutableCopy];
     for(AWBookmarkEntry *entry in self.bookmarks)
@@ -239,7 +239,7 @@
     return toReturn;
 }
 
-- (NSArray <AWBookmarkEntry *>*)bookmarksForURL:(NSURL *)url;
+- (NSArray<AWBookmarkEntry *> *)bookmarksForURL:(NSURL *)url;
 {
     NSMutableArray *toReturn = [@[] mutableCopy];
     for(AWBookmarkEntry *entry in self.bookmarks)
@@ -250,6 +250,25 @@
         }
     }
     return toReturn;
+}
+
+- (NSArray *)bookmarksInDocumentWithText:(NSString *)textOfDocument
+{
+    NSMutableSet *urls = [[NSMutableSet alloc] init];
+    [self.bookmarks enumerateObjectsUsingBlock:^(AWBookmarkEntry *obj, NSUInteger idx, BOOL *_Nonnull stop){
+        [urls addObject:obj.fileURL];
+    }];
+    
+    NSMutableArray *entriesForTextDocument = [@[] mutableCopy];
+    for(NSURL *url in urls)
+    {
+        NSString *textAtURL = [NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
+        if([textAtURL isEqualToString:textOfDocument])
+        {
+            [entriesForTextDocument addObjectsFromArray:[self bookmarksForURL:url]];
+        }
+    }
+    return entriesForTextDocument;
 }
 
 #pragma NSTableViewDataSource protocol methods

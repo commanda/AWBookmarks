@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "IDEHelpers.h"
 
 @class AWBookmarkEntry;
 @class AWBookmarkCollection;
 
-@interface AWGutterViewHandler : NSObject
+@interface AWGutterViewHandler : NSObject <DVTTextAnnotationDelegate>
 
 - (AWGutterViewHandler *)initWithBookmarkCollection:(AWBookmarkCollection *)bookmarkCollection;
 

@@ -36,13 +36,68 @@
             [self addMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
         }
 
-        [self swizzleMethodForDrawLineNumbers];
-        [self swizzleMethodForDrawAnnotations];
+        //[self swizzleMethodForDrawLineNumbers];
+        [self swizzleMethodForVisibleAnnotations];
+        //[self swizzleMethodForDrawAnnotations];
     }
     return self;
 }
 
 #pragma GCC diagnostic ignored "-Wundeclared-selector"
+
+
+- (void)swizzleMethodForVisibleAnnotations
+{
+    // - (id)visibleAnnotationsForLineNumberRange:(struct _NSRange)arg1;
+    NSString *className = @"DVTSourceTextView";
+    Class c = NSClassFromString(className);
+    NSError *aspectHookError;
+    [c aspect_hookSelector:@selector(visibleAnnotationsForLineNumberRange:)
+                withOptions:AspectPositionInstead
+                 usingBlock:^(id<AspectInfo> info, NSRange range) {
+
+                     NSInvocation *invocation = info.originalInvocation;
+                     [invocation invoke];
+                     NSMutableArray *annotations;
+                     [invocation getReturnValue:&annotations];
+                     
+                     annotations = [annotations mutableCopy];
+
+                     // Need to retain the annotations so they aren't deallocated before we return
+                     CFRetain((__bridge CFTypeRef)(annotations));
+
+                     
+                     // Find out which of our annotations belongs in this text view (TODO: there's probably a better way of doing this than checking the actual text, ugh)
+                     NSTextView *textView = info.instance;
+                     
+                     NSArray *entries = [self.bookmarkCollection bookmarksInDocumentWithText:textView.string];
+                     for(AWBookmarkEntry *entry in entries)
+                     {
+                         AWBookmarkAnnotation *annotation = self.observedBookmarkEntries[entry.uuid];
+                         if(annotation)
+                         {
+                             [annotations addObject:annotation];
+                         }
+                     }
+                     
+                     [invocation setReturnValue:&annotations];
+
+                     DLOG(@"hey i'm in yr visibleAnnotations");
+                 }
+                      error:&aspectHookError];
+
+
+    [c aspect_hookSelector:@selector(visibleAnnotationsForLineNumberRange:)
+                withOptions:AspectPositionAfter
+                 usingBlock:^(id<AspectInfo> info, NSRange range) {
+                     DLOG(@"hey i'm after yr visibleAnnotations");
+
+                 }
+                      error:&aspectHookError];
+
+    DLOG(@"bp");
+}
+
 - (void)swizzleMethodForDrawAnnotations
 {
     //- (void)_drawSidebarMarkersForAnnotations:(id)arg1 atIndexes:(id)arg2 textView:(id)arg3 getParaRectBlock:(id)arg4;

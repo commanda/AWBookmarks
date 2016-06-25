@@ -19,8 +19,9 @@
 - (AWBookmarkEntry *)objectAtIndex:(NSUInteger)index;
 - (void)resolveAllBookmarks;
 - (void)deleteBookmarkEntry:(AWBookmarkEntry *)entry;
-- (NSArray <NSNumber *> *)lineNumbersForURL:(NSURL *)url;
-- (NSArray <AWBookmarkEntry *>*)bookmarksForURL:(NSURL *)url;
+- (NSArray<NSNumber *> *)lineNumbersForURL:(NSURL *)url;
+- (NSArray<AWBookmarkEntry *> *)bookmarksForURL:(NSURL *)url;
+- (NSArray *)bookmarksInDocumentWithText:(NSString *)textOfDocument;
 - (void)performBookmarkThisLine;
 - (NSUInteger)indexOfObject:(AWBookmarkEntry *)anObject;
 - (BOOL)containsObject:(AWBookmarkEntry *)anObject;

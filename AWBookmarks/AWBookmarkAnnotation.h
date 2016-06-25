@@ -14,8 +14,17 @@
 @property (retain, nonatomic) NSImage *sidebarMarkerImage;
 @property (retain, nonatomic) DVTTextDocumentLocation *location;
 @property (readonly) struct _NSRange paragraphRange; // @synthesize paragraphRange=_paragraphRange;
+@property (getter=isUserRemovable) BOOL userRemovable;
+@property (getter=isUserDraggable) BOOL userDraggable;
+@property BOOL wantsInvertedLineNumber;
+@property(getter=isVisible) BOOL visible; // @synthesize visible=_visible;
+@property (weak) id <DVTTextAnnotationDelegate> delegate; // @synthesize delegate=_delegate;
+@property BOOL wantsDisplayOverLineNumber;
+@property BOOL wantsReplaceLineNumber;
+
 
 - (struct CGRect)sidebarMarkerRectForFirstLineRect:(struct CGRect)arg1;
 - (void)drawSidebarMarkerIconInRect:(struct CGRect)arg1 textView:(id)arg2;
+- (BOOL)drawsLineHighlight;
 
 @end
