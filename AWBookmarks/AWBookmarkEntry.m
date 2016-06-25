@@ -84,7 +84,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"%@\nfilePath: %@\nlineNumber: %@\nlineText:%@\ncontainingProjectURL: %@", [super description], self.fileURL, self.lineNumber, self.lineText, self.containingProjectURL];
+    return [NSString stringWithFormat:@"%@\n%@\nfilePath: %@\nlineNumber: %@\nlineText:%@\ncontainingProjectURL: %@", [super description], self.uuid, self.fileURL, self.lineNumber, self.lineText, self.containingProjectURL];
 }
 
 - (BOOL)isEqual:(id)object
@@ -103,7 +103,7 @@
     return toReturn;
 }
 
-- (NSString *)uuid
+- (UUID *)uuid
 {
     if(!_uuid)
     {

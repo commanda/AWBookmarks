@@ -10,6 +10,8 @@
 #import "IDEHelpers.h"
 #import <Foundation/Foundation.h>
 
+typedef NSString UUID;
+
 @interface AWBookmarkEntry : NSObject <NSCoding, NSCopying>
 
 @property (nonatomic) NSURL *fileURL;
@@ -18,7 +20,7 @@
 @property (nonatomic, copy) NSString *lineText;
 @property BOOL toBeDeleted;
 @property (readonly) BOOL changed;
-@property (nonatomic) NSString *uuid;
+@property (nonatomic) UUID *uuid;
 
 - (void)resolve;
 - (void)highlightInTextView:(DVTSourceTextView *)textView;
