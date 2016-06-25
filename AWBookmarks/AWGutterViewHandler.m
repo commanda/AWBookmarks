@@ -50,10 +50,19 @@
     NSError *aspectHookError;
     [c aspect_hookSelector:@selector(_drawSidebarMarkersForAnnotations:atIndexes:textView:getParaRectBlock:)
                 withOptions:AspectPositionBefore
-                 usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, NSTextView *textView, id paraRectBlock) {
+                 usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, DVTSourceTextView *textView, id paraRectBlock) {
                      DLOG(@"hey i'm in yr drawSidebar");
 
-                     [annotations addObject:[[AWBookmarkAnnotation alloc] init]];
+                     for(AWBookmarkEntry *entry in self.observedBookmarkEntries)
+                     {
+
+                         AWBookmarkAnnotation *annotation = [[AWBookmarkAnnotation alloc] init];
+                         annotation.location = [[NSClassFromString(@"DVTTextDocumentLocation") alloc] initWithDocumentURL:entry.fileURL timestamp:@([NSDate timeIntervalSinceReferenceDate]) lineRange:NSMakeRange(entry.lineNumber.intValue - 1, 1)];
+                         
+
+                         [annotations addObject:annotation];
+                         [indexSet addIndex:annotations.count-1];
+                     }
                  }
                       error:&aspectHookError];
 

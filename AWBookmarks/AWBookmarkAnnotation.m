@@ -22,4 +22,19 @@
     return self;
 }
 
+- (NSRange)paragraphRange
+{
+    return NSMakeRange(self.location.startingLineNumber, 1);
+}
+
+- (struct CGRect)sidebarMarkerRectForFirstLineRect:(struct CGRect)arg1
+{
+    return arg1;
+}
+
+- (void)drawSidebarMarkerIconInRect:(struct CGRect)arg1 textView:(id)arg2
+{
+    [self.sidebarMarkerImage drawInRect:arg1];
+}
+
 @end
