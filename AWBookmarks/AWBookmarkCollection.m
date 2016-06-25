@@ -77,6 +77,19 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
+- (NSString *)description
+{
+    NSMutableString *desc = [@"" mutableCopy];
+    [desc appendString:[super description]];
+    [desc appendString:@"\n"];
+    for(int i = 0; i < self.bookmarks.count; i++)
+    {
+        [desc appendString:[self.bookmarks[0] description]];
+        [desc appendString:@"\n"];
+    }
+    return desc;
+}
+
 - (void)observeBookmarkEntry:(AWBookmarkEntry *)entry
 {
     // Watch this entry for changes
