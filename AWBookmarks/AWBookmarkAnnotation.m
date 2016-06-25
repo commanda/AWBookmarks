@@ -34,7 +34,7 @@
 
 - (struct CGRect)sidebarMarkerRectForFirstLineRect:(struct CGRect)arg1
 {
-    return arg1;
+    return CGRectMake(arg1.origin.x, arg1.origin.y, self.sidebarMarkerImage.size.width, self.sidebarMarkerImage.size.height);
 }
 
 - (void)drawSidebarMarkerIconInRect:(struct CGRect)arg1 textView:(id)arg2
