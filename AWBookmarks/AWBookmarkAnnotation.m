@@ -22,6 +22,11 @@
     return self;
 }
 
+- (NSString *)description
+{
+    return [NSString stringWithFormat:@"%@: line: %lld", [super description], self.location.startingLineNumber];
+}
+
 - (NSRange)paragraphRange
 {
     return NSMakeRange(self.location.startingLineNumber, 1);
