@@ -200,7 +200,7 @@
     }
 }
 
-- (NSArray *)lineNumbersForURL:(NSURL *)url
+- (NSArray <NSNumber *> *)lineNumbersForURL:(NSURL *)url;
 {
     NSMutableArray *toReturn = [@[] mutableCopy];
     for(AWBookmarkEntry *entry in self.bookmarks)
@@ -208,6 +208,19 @@
         if([entry.fileURL isEqual:url])
         {
             [toReturn addObject:entry.lineNumber];
+        }
+    }
+    return toReturn;
+}
+
+- (NSArray <AWBookmarkEntry *>*)bookmarksForURL:(NSURL *)url;
+{
+    NSMutableArray *toReturn = [@[] mutableCopy];
+    for(AWBookmarkEntry *entry in self.bookmarks)
+    {
+        if([entry.fileURL isEqual:url])
+        {
+            [toReturn addObject:entry];
         }
     }
     return toReturn;

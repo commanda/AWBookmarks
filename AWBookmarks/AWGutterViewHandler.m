@@ -18,7 +18,8 @@
 
 @interface AWGutterViewHandler ()
 @property (nonatomic) AWBookmarkCollection *bookmarkCollection;
-@property NSMutableSet *observedBookmarkEntries;
+@property NSMutableDictionary<AWBookmarkEntry *, AWBookmarkAnnotation *> *observedBookmarkEntries;
+
 @end
 
 @implementation AWGutterViewHandler
@@ -28,7 +29,7 @@
     if(self = [super init])
     {
         self.bookmarkCollection = bookmarkCollection;
-        self.observedBookmarkEntries = [[NSMutableSet alloc] init];
+        self.observedBookmarkEntries = [@{} mutableCopy];
 
         for(int i = 0; i < self.bookmarkCollection.count; i++)
         {
@@ -52,13 +53,14 @@
                 withOptions:AspectPositionBefore
                  usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, DVTSourceTextView *textView, id paraRectBlock) {
                      DLOG(@"hey i'm in yr drawSidebar");
+                     
+                     NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
+                     NSArray <AWBookmarkEntry *> *entries = [self.bookmarkCollection bookmarksForURL:url];
 
-                     for(AWBookmarkEntry *entry in self.observedBookmarkEntries)
+                     for(AWBookmarkEntry *entry in entries)
                      {
 
-                         AWBookmarkAnnotation *annotation = [[AWBookmarkAnnotation alloc] init];
-                         annotation.location = [[NSClassFromString(@"DVTTextDocumentLocation") alloc] initWithDocumentURL:entry.fileURL timestamp:@([NSDate timeIntervalSinceReferenceDate]) lineRange:NSMakeRange(entry.lineNumber.intValue - 1, 1)];
-
+                         AWBookmarkAnnotation *annotation = self.observedBookmarkEntries[entry];
 
                          [annotations addObject:annotation];
                          [indexSet addIndex:annotations.count - 1];
@@ -147,9 +149,11 @@
 
 - (void)addMarkerForBookmarkEntry:(AWBookmarkEntry *)entry
 {
-    if(![self.observedBookmarkEntries containsObject:entry])
+    if(![self.observedBookmarkEntries.allKeys containsObject:entry])
     {
-        [self.observedBookmarkEntries addObject:entry];
+        AWBookmarkAnnotation *annotation = [[AWBookmarkAnnotation alloc] init];
+        annotation.location = [[NSClassFromString(@"DVTTextDocumentLocation") alloc] initWithDocumentURL:entry.fileURL timestamp:@([NSDate timeIntervalSinceReferenceDate]) lineRange:NSMakeRange(entry.lineNumber.intValue - 1, 1)];
+        self.observedBookmarkEntries[entry] = annotation;
         [entry addObserver:self forKeyPath:@"toBeDeleted" options:NSKeyValueObservingOptionNew context:nil];
         [entry addObserver:self forKeyPath:@"changed" options:NSKeyValueObservingOptionNew context:nil];
     }
@@ -157,11 +161,11 @@
 
 - (void)deleteMarkerForEntry:(AWBookmarkEntry *)entry
 {
-    if([self.observedBookmarkEntries containsObject:entry])
+    if([self.observedBookmarkEntries.allKeys containsObject:entry])
     {
         [entry removeObserver:self forKeyPath:@"toBeDeleted"];
         [entry removeObserver:self forKeyPath:@"changed"];
-        [self.observedBookmarkEntries removeObject:entry];
+        [self.observedBookmarkEntries removeObjectForKey:entry];
     }
 }
 
@@ -190,7 +194,7 @@
             [self deleteMarkerForEntry:entry];
         }
     }
-    else if([self.observedBookmarkEntries containsObject:object])
+    else if([self.observedBookmarkEntries.allKeys containsObject:object])
     {
         AWBookmarkEntry *entry = (AWBookmarkEntry *)object;
         if([keyPath isEqualToString:@"toBeDeleted"])

@@ -10,12 +10,12 @@
 #import "IDEHelpers.h"
 #import <Foundation/Foundation.h>
 
-@interface AWBookmarkEntry : NSObject <NSCoding>
+@interface AWBookmarkEntry : NSObject <NSCoding, NSCopying>
 
 @property (nonatomic) NSURL *fileURL;
 @property NSURL *containingProjectURL;
 @property (nonatomic, assign) NSNumber *lineNumber;
-@property (copy) NSString *lineText;
+@property (nonatomic, copy) NSString *lineText;
 @property BOOL toBeDeleted;
 @property (readonly) BOOL changed;
 @property (nonatomic) NSString *uuid;
