@@ -52,24 +52,19 @@
                 withOptions:AspectPositionBefore
                  usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, NSTextView *textView, id paraRectBlock) {
                      DLOG(@"hey i'm in yr drawSidebar");
-                     
+
                      [annotations addObject:[[AWBookmarkAnnotation alloc] init]];
                  }
                       error:&aspectHookError];
-    
-    
-    
 
-    DLOG(@"bp");
-    
-    
+
     [c aspect_hookSelector:@selector(_drawSidebarMarkersForAnnotations:atIndexes:textView:getParaRectBlock:)
-               withOptions:AspectPositionAfter
-                usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, NSTextView *textView, id paraRectBlock) {
-                    DLOG(@"hey i'm in yr drawSidebar");
-                    
-                }
-                     error:&aspectHookError];
+                withOptions:AspectPositionAfter
+                 usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, NSTextView *textView, id paraRectBlock) {
+                     DLOG(@"hey i'm in yr drawSidebar");
+
+                 }
+                      error:&aspectHookError];
 }
 
 - (void)swizzleMethodForDrawLineNumbers
@@ -164,12 +159,18 @@
         }
 
         // See if there are any bookmarks that have been deleted
+        NSMutableArray *toDelete = [@[] mutableCopy];
         for(AWBookmarkEntry *entry in self.observedBookmarkEntries)
         {
             if(![self.bookmarkCollection containsObject:entry])
             {
-                [self deleteMarkerForEntry:entry];
+                [toDelete addObject:entry];
             }
+        }
+
+        for(AWBookmarkEntry *entry in toDelete)
+        {
+            [self deleteMarkerForEntry:entry];
         }
     }
     else if([self.observedBookmarkEntries containsObject:object])
