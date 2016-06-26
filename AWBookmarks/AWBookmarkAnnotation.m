@@ -24,6 +24,7 @@
         self.visible = YES;
         self.wantsDisplayOverLineNumber = NO;
         self.wantsReplaceLineNumber = NO;
+        self.precedence = 10.0;
     }
     return self;
 }
@@ -62,6 +63,11 @@
 - (BOOL)hideCarets
 {
     return YES;
+}
+
+- (long long)comparePrecedenceAndLayering:(id)arg1;
+{
+    return 0;
 }
 
 @end

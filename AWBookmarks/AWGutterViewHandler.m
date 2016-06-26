@@ -70,16 +70,16 @@
                      CFRetain((__bridge CFTypeRef)(annotationsM));
 
                      // Find out which of our annotations belongs in this text view (TODO: there's probably a better way of doing this than checking the actual text, ugh)
-                     //                     NSTextView *textView = info.instance;
-                     //                     NSArray *entries = [self.bookmarkCollection bookmarksInDocumentWithText:textView.string];
-                     //                     for(AWBookmarkEntry *entry in entries)
-                     //                     {
-                     //                         AWBookmarkAnnotation *annotation = self.annotationsForEntries[entry.uuid];
-                     //                         if(annotation)
-                     //                         {
-                     //                             [annotations addObject:annotation];
-                     //                         }
-                     //                     }
+                     NSTextView *textView = info.instance;
+                     NSArray *entries = [self.bookmarkCollection bookmarksInDocumentWithText:textView.string];
+                     for(AWBookmarkEntry *entry in entries)
+                     {
+                         AWBookmarkAnnotation *annotation = self.annotationsForEntries[entry];
+                         if(annotation)
+                         {
+                             [annotationsM addObject:annotation];
+                         }
+                     }
                      [invocation setReturnValue:&annotationsM];
                      DLOG(@"hey i'm in yr visibleAnnotations");
                  }
