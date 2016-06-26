@@ -19,7 +19,7 @@
 @interface AWGutterViewHandler ()
 @property (nonatomic) AWBookmarkCollection *bookmarkCollection;
 @property NSMutableDictionary<AWBookmarkEntry *, AWBookmarkAnnotation *> *annotationsForEntries;
-@property NSMutableSet<AWBookmarkEntry *> *observedEntries;
+@property NSMutableArray<AWBookmarkEntry *> *observedEntries;
 
 @end
 
@@ -44,7 +44,6 @@
 }
 
 #pragma GCC diagnostic ignored "-Wundeclared-selector"
-
 
 - (void)swizzleMethodForVisibleAnnotations
 {
@@ -100,6 +99,7 @@
         AWBookmarkAnnotation *annotation = [[AWBookmarkAnnotation alloc] init];
         annotation.location = [[NSClassFromString(@"DVTTextDocumentLocation") alloc] initWithDocumentURL:entry.fileURL timestamp:@([NSDate timeIntervalSinceReferenceDate]) lineRange:NSMakeRange(entry.lineNumber.intValue - 1, 1)];
         self.annotationsForEntries[entry] = annotation;
+        annotation.delegate = self;
 
         [entry addObserver:self forKeyPath:@"toBeDeleted" options:NSKeyValueObservingOptionNew context:nil];
         [entry addObserver:self forKeyPath:@"changed" options:NSKeyValueObservingOptionNew context:nil];
@@ -113,9 +113,12 @@
 {
     if([self.observedEntries containsObject:entry])
     {
-        [entry removeObserver:self forKeyPath:@"toBeDeleted"];
-        [entry removeObserver:self forKeyPath:@"changed"];
-        [self.observedEntries removeObject:entry];
+        // The argument entry is a copy of the entry we are actually observing, so let's get the original from our observedEntries array and unobserve it
+        AWBookmarkEntry *observedEntry = [self observedBookmarkEntryForBookmarkEntry:entry];
+
+        [observedEntry removeObserver:self forKeyPath:@"toBeDeleted"];
+        [observedEntry removeObserver:self forKeyPath:@"changed"];
+        [self.observedEntries removeObject:observedEntry];
     }
 }
 
@@ -127,6 +130,13 @@
         [self.annotationsForEntries removeObjectForKey:entry];
         [[IDEHelpers gutterView] setNeedsDisplay:YES];
     }
+}
+
+- (AWBookmarkEntry *)observedBookmarkEntryForBookmarkEntry:(AWBookmarkEntry *)entry
+{
+    // The argument entry is a copy of the entry we are actually observing, so let's get the original from our observedEntries array
+    // (It is equal to, but not the same as, the original)
+    return [self.observedEntries objectAtIndex:[self.observedEntries indexOfObject:entry]];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context
@@ -169,6 +179,37 @@
             }
         }
     }
+}
+
+#pragma DVTTextAnnotationDelegate methods
+- (void)didDeleteOrReplaceParagraphForAnnotation:(id)arg1
+{
+    DLOG(@"bp");
+}
+
+- (void)didRemoveAnnotation:(id)arg1
+{
+    DLOG(@"bp");
+    AWBookmarkAnnotation *annotation = (AWBookmarkAnnotation *)arg1;
+    AWBookmarkEntry *entry;
+    for(AWBookmarkEntry *existingEntry in self.annotationsForEntries.allKeys)
+    {
+        AWBookmarkAnnotation *existingAnnotation = self.annotationsForEntries[existingEntry];
+        if([annotation isEqual:existingAnnotation])
+        {
+            entry = existingEntry;
+            break;
+        }
+    }
+    
+    entry = [self observedBookmarkEntryForBookmarkEntry:entry];
+    
+    entry.toBeDeleted = YES;
+}
+
+- (void)didMoveAnnotation:(id)arg1
+{
+    DLOG(@"bp");
 }
 
 @end
