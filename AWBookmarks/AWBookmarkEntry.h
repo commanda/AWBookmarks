@@ -12,7 +12,7 @@
 
 typedef NSString UUID;
 
-@interface AWBookmarkEntry : NSObject <NSCoding>
+@interface AWBookmarkEntry : NSObject <NSCoding, NSCopying>
 
 @property (nonatomic) NSURL *fileURL;
 @property NSURL *containingProjectURL;

@@ -66,6 +66,17 @@
     [encoder encodeObject:self.containingProjectURL forKey:@"containingProjectURL"];
 }
 
+- (id)copyWithZone:(NSZone *)zone
+{
+    AWBookmarkEntry *other = [[AWBookmarkEntry alloc] init];
+    other->_fileURL = self->_fileURL;
+    other->_lineNumber = self->_lineNumber;
+    other->_lineText = self->_lineText;
+    other->_uuid = self->_uuid;
+    other->_containingProjectURL = self->_containingProjectURL;
+    return other;
+}
+
 - (void)dealloc
 {
     [[FileWatcher sharedInstance] stopWatchingFileAtURL:_fileURL];
