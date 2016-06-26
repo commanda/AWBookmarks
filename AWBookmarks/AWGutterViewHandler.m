@@ -60,12 +60,15 @@
 
                      NSInvocation *invocation = info.originalInvocation;
                      [invocation invoke];
-                     //                     NSMutableArray *annotations;
-                     //                     [invocation getReturnValue:&annotations];
+                     NSArray *annotations;
+                     [invocation getReturnValue:&annotations];
 
-                     //                     annotations = [annotations mutableCopy];
                      // Need to retain the annotations so they aren't deallocated before we return
-                     //                     CFRetain((__bridge CFTypeRef)(annotations));
+                     CFRetain((__bridge CFTypeRef)(annotations));
+
+                     NSMutableArray *annotationsM = [annotations mutableCopy];
+                     CFRetain((__bridge CFTypeRef)(annotationsM));
+
                      // Find out which of our annotations belongs in this text view (TODO: there's probably a better way of doing this than checking the actual text, ugh)
                      //                     NSTextView *textView = info.instance;
                      //                     NSArray *entries = [self.bookmarkCollection bookmarksInDocumentWithText:textView.string];
@@ -77,7 +80,7 @@
                      //                             [annotations addObject:annotation];
                      //                         }
                      //                     }
-                     //                     [invocation setReturnValue:&annotations];
+                     [invocation setReturnValue:&annotationsM];
                      DLOG(@"hey i'm in yr visibleAnnotations");
                  }
                       error:&aspectHookError];
