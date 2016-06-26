@@ -181,6 +181,11 @@
     }
 }
 
+- (void)contextMenuDeleteBookmark
+{
+    DLOG(@"bp");
+}
+
 #pragma DVTTextAnnotationDelegate methods
 - (void)didDeleteOrReplaceParagraphForAnnotation:(id)arg1
 {
@@ -210,6 +215,13 @@
 - (void)didMoveAnnotation:(id)arg1
 {
     DLOG(@"bp");
+}
+
+- (id)contextMenuItemsForAnnotation:(id)arg1 inTextSidebarView:(id)arg2
+{
+    NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"Delete Bookmark" action:@selector(contextMenuDeleteBookmark) keyEquivalent:@""];
+    menuItem.target = self;
+    return @[menuItem];
 }
 
 @end
