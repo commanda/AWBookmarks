@@ -18,7 +18,8 @@
 
 @interface AWGutterViewHandler ()
 @property (nonatomic) AWBookmarkCollection *bookmarkCollection;
-@property NSMutableDictionary<UUID *, AWBookmarkAnnotation *> *observedBookmarkEntries;
+@property NSMutableDictionary<AWBookmarkEntry *, AWBookmarkAnnotation *> *annotationsForEntries;
+@property NSMutableSet<AWBookmarkEntry *> *observedEntries;
 
 @end
 
@@ -29,7 +30,8 @@
     if(self = [super init])
     {
         self.bookmarkCollection = bookmarkCollection;
-        self.observedBookmarkEntries = [@{} mutableCopy];
+        self.annotationsForEntries = [@{} mutableCopy];
+        self.observedEntries = [@[] mutableCopy];
 
         for(int i = 0; i < self.bookmarkCollection.count; i++)
         {
@@ -58,28 +60,27 @@
 
                      NSInvocation *invocation = info.originalInvocation;
                      [invocation invoke];
-//                     NSMutableArray *annotations;
-//                     [invocation getReturnValue:&annotations];
+                     //                     NSMutableArray *annotations;
+                     //                     [invocation getReturnValue:&annotations];
 
-//                     annotations = [annotations mutableCopy];
+                     //                     annotations = [annotations mutableCopy];
                      // Need to retain the annotations so they aren't deallocated before we return
-//                     CFRetain((__bridge CFTypeRef)(annotations));
+                     //                     CFRetain((__bridge CFTypeRef)(annotations));
                      // Find out which of our annotations belongs in this text view (TODO: there's probably a better way of doing this than checking the actual text, ugh)
-//                     NSTextView *textView = info.instance;
-//                     NSArray *entries = [self.bookmarkCollection bookmarksInDocumentWithText:textView.string];
-//                     for(AWBookmarkEntry *entry in entries)
-//                     {
-//                         AWBookmarkAnnotation *annotation = self.observedBookmarkEntries[entry.uuid];
-//                         if(annotation)
-//                         {
-//                             [annotations addObject:annotation];
-//                         }
-//                     }
-//                     [invocation setReturnValue:&annotations];
+                     //                     NSTextView *textView = info.instance;
+                     //                     NSArray *entries = [self.bookmarkCollection bookmarksInDocumentWithText:textView.string];
+                     //                     for(AWBookmarkEntry *entry in entries)
+                     //                     {
+                     //                         AWBookmarkAnnotation *annotation = self.annotationsForEntries[entry.uuid];
+                     //                         if(annotation)
+                     //                         {
+                     //                             [annotations addObject:annotation];
+                     //                         }
+                     //                     }
+                     //                     [invocation setReturnValue:&annotations];
                      DLOG(@"hey i'm in yr visibleAnnotations");
                  }
                       error:&aspectHookError];
-
 }
 
 - (void)swizzleMethodForDrawAnnotations
@@ -98,7 +99,7 @@
 
                      for(AWBookmarkEntry *entry in entries)
                      {
-                         AWBookmarkAnnotation *annotation = self.observedBookmarkEntries[entry.uuid];
+                         AWBookmarkAnnotation *annotation = self.annotationsForEntries[entry];
                          if(annotation)
                          {
                              [annotations addObject:annotation];
@@ -186,27 +187,36 @@
 
 - (void)addMarkerForBookmarkEntry:(AWBookmarkEntry *)entry
 {
-    if(![self.observedBookmarkEntries.allKeys containsObject:entry.uuid])
+    if(![self.annotationsForEntries.allKeys containsObject:entry])
     {
         AWBookmarkAnnotation *annotation = [[AWBookmarkAnnotation alloc] init];
         annotation.location = [[NSClassFromString(@"DVTTextDocumentLocation") alloc] initWithDocumentURL:entry.fileURL timestamp:@([NSDate timeIntervalSinceReferenceDate]) lineRange:NSMakeRange(entry.lineNumber.intValue - 1, 1)];
-        self.observedBookmarkEntries[entry.uuid] = annotation;
+        self.annotationsForEntries[entry] = annotation;
+
         [entry addObserver:self forKeyPath:@"toBeDeleted" options:NSKeyValueObservingOptionNew context:nil];
         [entry addObserver:self forKeyPath:@"changed" options:NSKeyValueObservingOptionNew context:nil];
+        [self.observedEntries addObject:entry];
 
         [[IDEHelpers gutterView] setNeedsDisplay:YES];
     }
 }
 
-- (void)deleteMarkerForUUID:(UUID *)uuid
+- (void)unobserveEntry:(AWBookmarkEntry *)entry
 {
-    if([self.observedBookmarkEntries.allKeys containsObject:uuid])
+    if([self.observedEntries containsObject:entry])
     {
-        AWBookmarkEntry *entry = [self.bookmarkCollection bookmarkForUUID:uuid];
         [entry removeObserver:self forKeyPath:@"toBeDeleted"];
         [entry removeObserver:self forKeyPath:@"changed"];
-        [self.observedBookmarkEntries removeObjectForKey:uuid];
-        
+        [self.observedEntries removeObject:entry];
+    }
+}
+
+- (void)deleteMarkerForEntry:(AWBookmarkEntry *)entry
+{
+    if([self.annotationsForEntries.allKeys containsObject:entry])
+    {
+        [self unobserveEntry:entry];
+        [self.annotationsForEntries removeObjectForKey:entry];
         [[IDEHelpers gutterView] setNeedsDisplay:YES];
     }
 }
@@ -221,30 +231,29 @@
             [self addMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
         }
 
-        // See if there are any bookmarks that have been deleted
+        // See if there are any bookmark entries that have been deleted
         NSMutableArray *toDelete = [@[] mutableCopy];
-        for(UUID *entry in self.observedBookmarkEntries)
+        for(AWBookmarkEntry *entry in self.observedEntries)
         {
-            if(![self.bookmarkCollection containsObjectWithUUID:entry])
+            if(![self.bookmarkCollection containsObject:entry])
             {
                 [toDelete addObject:entry];
             }
         }
-
-        for(UUID *uuid in toDelete)
+        for(AWBookmarkEntry *entry in toDelete)
         {
-            [self deleteMarkerForUUID:uuid];
+            [self unobserveEntry:entry];
+            [self deleteMarkerForEntry:entry];
         }
     }
     else if([object isKindOfClass:[AWBookmarkEntry class]])
     {
         AWBookmarkEntry *entry = (AWBookmarkEntry *)object;
-        if([self.observedBookmarkEntries.allKeys containsObject:entry.uuid])
+        if([self.annotationsForEntries.allKeys containsObject:entry])
         {
-            AWBookmarkEntry *entry = (AWBookmarkEntry *)object;
             if([keyPath isEqualToString:@"toBeDeleted"])
             {
-                [self deleteMarkerForUUID:entry.uuid];
+                [self deleteMarkerForEntry:entry];
             }
             else if([keyPath isEqualToString:@"changed"])
             {
