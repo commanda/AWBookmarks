@@ -38,7 +38,6 @@
             [self addMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
         }
 
-        //[self swizzleMethodForDrawLineNumbers];
         [self swizzleMethodForVisibleAnnotations];
         //[self swizzleMethodForDrawAnnotations];
     }
@@ -121,62 +120,6 @@
 
                  }
                       error:&aspectHookError];
-}
-
-- (void)swizzleMethodForDrawLineNumbers
-{
-
-    NSString *className = @"DVTTextSidebarView";
-    Class c = NSClassFromString(className);
-    [c aspect_hookSelector:@selector(_drawLineNumbersInSidebarRect:foldedIndexes:count:linesToInvert:linesToReplace:getParaRectBlock:)
-                withOptions:AspectPositionAfter
-                 usingBlock:^(id<AspectInfo> info, CGRect rect, NSUInteger *indexes, NSUInteger count, id a3, id a4, id paraRectBlock) {
-
-
-                     DVTTextSidebarView *view = info.instance;
-
-                     if(![view isKindOfClass:NSClassFromString(className)])
-                     {
-                         [info.originalInvocation invoke];
-                     }
-                     else
-                     {
-
-                         [view lockFocus];
-                         {
-                             NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
-
-                             NSArray *bookmarkedLineNumbers = [self.bookmarkCollection lineNumbersForURL:url];
-
-                             if(url && bookmarkedLineNumbers.count > 0)
-                             {
-                                 for(int i = 0; i < count - 1; i++)
-                                 {
-                                     NSUInteger lineNumber = indexes[i];
-                                     NSUInteger nextLineNumber = indexes[i + 1];
-                                     NSRange foldedRange = NSMakeRange(lineNumber, nextLineNumber - lineNumber);
-
-                                     for(NSUInteger j = foldedRange.location; j < NSMaxRange(foldedRange); j++)
-                                     {
-                                         if([bookmarkedLineNumbers containsObject:@(j)])
-                                         {
-                                             NSRect a0, a1;
-                                             [view getParagraphRect:&a0 firstLineRect:&a1 forLineNumber:lineNumber];
-
-                                             NSAttributedString *str = [[NSAttributedString alloc] initWithString:@"⛺"];
-                                             NSSize size = [str size];
-                                             CGPoint point = CGPointMake(a1.origin.x + a1.size.width - size.width,
-                                                                         a1.origin.y - 1);
-                                             [str drawAtPoint:point];
-                                         }
-                                     }
-                                 }
-                             }
-                         }
-                         [view unlockFocus];
-                     }
-                 }
-                      error:nil];
 }
 
 #pragma clang diagnostic pop
