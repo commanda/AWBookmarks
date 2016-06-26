@@ -216,22 +216,20 @@
     DLOG(@"bp");
 }
 
-- (void)didRemoveAnnotation:(id)arg1
+- (void)didRemoveAnnotation:(AWBookmarkAnnotation *)annotation
 {
-    AWBookmarkAnnotation *annotation = (AWBookmarkAnnotation *)arg1;
     AWBookmarkEntry *entry = [self entryForAnnotation:annotation];
     entry = [self observedBookmarkEntryForBookmarkEntry:entry];
     entry.toBeDeleted = YES;
 }
 
-- (void)didMoveAnnotation:(id)arg1
+- (void)didMoveAnnotation:(AWBookmarkAnnotation *)annotation
 {
     DLOG(@"bp");
 }
 
-- (id)contextMenuItemsForAnnotation:(id)arg1 inTextSidebarView:(id)arg2
+- (id)contextMenuItemsForAnnotation:(AWBookmarkAnnotation *)annotation inTextSidebarView:(id)arg2
 {
-    AWBookmarkAnnotation *annotation = (AWBookmarkAnnotation *)arg1;
     if([annotation isKindOfClass:[AWBookmarkAnnotation class]])
     {
         NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"Delete Bookmark" action:@selector(contextMenuDeleteBookmark:) keyEquivalent:@""];
