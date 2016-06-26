@@ -9,8 +9,8 @@
 #import <AppKit/AppKit.h>
 #import <Foundation/Foundation.h>
 
-#import "DVTTextDocumentLocation.h"
 #import "DVTTextAnnotationDelegate-Protocol.h"
+#import "DVTTextDocumentLocation.h"
 
 @interface DVTTextSidebarView : NSRulerView
 

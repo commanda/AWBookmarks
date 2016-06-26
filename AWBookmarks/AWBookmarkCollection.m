@@ -267,10 +267,10 @@
 - (NSArray *)bookmarksInDocumentWithText:(NSString *)textOfDocument
 {
     NSMutableSet *urls = [[NSMutableSet alloc] init];
-    [self.bookmarks enumerateObjectsUsingBlock:^(AWBookmarkEntry *obj, NSUInteger idx, BOOL *_Nonnull stop){
+    [self.bookmarks enumerateObjectsUsingBlock:^(AWBookmarkEntry *obj, NSUInteger idx, BOOL *_Nonnull stop) {
         [urls addObject:obj.fileURL];
     }];
-    
+
     NSMutableArray *entriesForTextDocument = [@[] mutableCopy];
     for(NSURL *url in urls)
     {

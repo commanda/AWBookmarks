@@ -6,8 +6,8 @@
 //  Copyright © 2016 Amanda Wixted. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
 #import "IDEHelpers.h"
+#import <Foundation/Foundation.h>
 
 @class AWBookmarkEntry;
 @class AWBookmarkCollection;

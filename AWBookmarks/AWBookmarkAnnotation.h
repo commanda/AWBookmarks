@@ -22,7 +22,7 @@
 @property BOOL wantsDisplayOverLineNumber;
 @property BOOL wantsReplaceLineNumber;
 @property (readonly) BOOL hideCarets;
-@property double precedence; // @synthesize precedence=_precedence;
+@property double precedence;         // @synthesize precedence=_precedence;
 @property int annotationStackPolicy; // @synthesize annotationStackPolicy=_annotationStackPolicy;
 
 

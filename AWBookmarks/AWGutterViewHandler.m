@@ -201,9 +201,9 @@
             break;
         }
     }
-    
+
     entry = [self observedBookmarkEntryForBookmarkEntry:entry];
-    
+
     entry.toBeDeleted = YES;
 }
 
