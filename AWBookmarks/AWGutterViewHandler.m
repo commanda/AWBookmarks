@@ -39,7 +39,6 @@
         }
 
         [self swizzleMethodForVisibleAnnotations];
-        //[self swizzleMethodForDrawAnnotations];
     }
     return self;
 }
@@ -81,43 +80,6 @@
                      }
                      [invocation setReturnValue:&annotationsM];
                      DLOG(@"hey i'm in yr visibleAnnotations");
-                 }
-                      error:&aspectHookError];
-}
-
-- (void)swizzleMethodForDrawAnnotations
-{
-    //- (void)_drawSidebarMarkersForAnnotations:(id)arg1 atIndexes:(id)arg2 textView:(id)arg3 getParaRectBlock:(id)arg4;
-    NSString *className = @"DVTTextSidebarView";
-    Class c = NSClassFromString(className);
-    NSError *aspectHookError;
-    [c aspect_hookSelector:@selector(_drawSidebarMarkersForAnnotations:atIndexes:textView:getParaRectBlock:)
-                withOptions:AspectPositionBefore
-                 usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, DVTSourceTextView *textView, id paraRectBlock) {
-
-
-                     NSURL *url = [[IDEHelpers currentSourceCodeDocument] fileURL];
-                     NSArray<AWBookmarkEntry *> *entries = [self.bookmarkCollection bookmarksForURL:url];
-
-                     for(AWBookmarkEntry *entry in entries)
-                     {
-                         AWBookmarkAnnotation *annotation = self.annotationsForEntries[entry];
-                         if(annotation)
-                         {
-                             [annotations addObject:annotation];
-                             [indexSet addIndex:annotations.count - 1];
-                         }
-                     }
-                     DLOG(@"hey i'm in yr drawSidebar");
-                 }
-                      error:&aspectHookError];
-
-
-    [c aspect_hookSelector:@selector(_drawSidebarMarkersForAnnotations:atIndexes:textView:getParaRectBlock:)
-                withOptions:AspectPositionAfter
-                 usingBlock:^(id<AspectInfo> info, NSMutableArray *annotations, NSMutableIndexSet *indexSet, NSTextView *textView, id paraRectBlock) {
-                     DLOG(@"hey i'm in yr drawSidebar");
-
                  }
                       error:&aspectHookError];
 }
