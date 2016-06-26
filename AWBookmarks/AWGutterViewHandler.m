@@ -181,21 +181,22 @@
     }
 }
 
-- (void)contextMenuDeleteBookmark
+- (void)contextMenuDeleteBookmark:(id)sender
 {
-    DLOG(@"bp");
+    NSMenuItem *menuItem = (NSMenuItem *)sender;
+    if([sender isKindOfClass:[NSMenuItem class]])
+    {
+        AWBookmarkEntry *entry = menuItem.representedObject;
+        if([entry isKindOfClass:[AWBookmarkEntry class]])
+        {
+            entry = [self observedBookmarkEntryForBookmarkEntry:entry];
+            entry.toBeDeleted = YES;
+        }
+    }
 }
 
-#pragma DVTTextAnnotationDelegate methods
-- (void)didDeleteOrReplaceParagraphForAnnotation:(id)arg1
+- (AWBookmarkEntry *)entryForAnnotation:(AWBookmarkAnnotation *)annotation
 {
-    DLOG(@"bp");
-}
-
-- (void)didRemoveAnnotation:(id)arg1
-{
-    DLOG(@"bp");
-    AWBookmarkAnnotation *annotation = (AWBookmarkAnnotation *)arg1;
     AWBookmarkEntry *entry;
     for(AWBookmarkEntry *existingEntry in self.annotationsForEntries.allKeys)
     {
@@ -206,9 +207,20 @@
             break;
         }
     }
+    return entry;
+}
 
+#pragma DVTTextAnnotationDelegate methods
+- (void)didDeleteOrReplaceParagraphForAnnotation:(id)arg1
+{
+    DLOG(@"bp");
+}
+
+- (void)didRemoveAnnotation:(id)arg1
+{
+    AWBookmarkAnnotation *annotation = (AWBookmarkAnnotation *)arg1;
+    AWBookmarkEntry *entry = [self entryForAnnotation:annotation];
     entry = [self observedBookmarkEntryForBookmarkEntry:entry];
-
     entry.toBeDeleted = YES;
 }
 
@@ -219,9 +231,15 @@
 
 - (id)contextMenuItemsForAnnotation:(id)arg1 inTextSidebarView:(id)arg2
 {
-    NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"Delete Bookmark" action:@selector(contextMenuDeleteBookmark) keyEquivalent:@""];
-    menuItem.target = self;
-    return @[menuItem];
+    AWBookmarkAnnotation *annotation = (AWBookmarkAnnotation *)arg1;
+    if([annotation isKindOfClass:[AWBookmarkAnnotation class]])
+    {
+        NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"Delete Bookmark" action:@selector(contextMenuDeleteBookmark:) keyEquivalent:@""];
+        menuItem.representedObject = [self entryForAnnotation:annotation];
+        menuItem.target = self;
+        return @[ menuItem ];
+    }
+    return nil;
 }
 
 @end

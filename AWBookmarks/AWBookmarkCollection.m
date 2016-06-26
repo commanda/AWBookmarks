@@ -109,8 +109,10 @@
     return self.bookmarks.count;
 }
 
-- (void)performBookmarkThisLine
+- (AWBookmarkEntry *)bookmarkEntryForCurrentContext
 {
+    AWBookmarkEntry *toReturn;
+
     DVTSourceTextView *textView = [IDEHelpers currentSourceTextView];
     NSString *wholeText = textView.string;
     NSRange selectedLettersRange = textView.selectedRange;
@@ -144,13 +146,27 @@
 
         if(![self.bookmarks containsObject:newEntry])
         {
-            [self willChangeValueForKey:@"count"];
-            [self.bookmarks addObject:newEntry];
-            [self didChangeValueForKey:@"count"];
-
-            [self observeBookmarkEntry:newEntry];
+            toReturn = newEntry;
         }
+        else
+        {
+            toReturn = [self.bookmarks objectAtIndex:[self.bookmarks indexOfObject:newEntry]];
+        }
+    }
+    return toReturn;
+}
 
+- (void)performBookmarkThisLine
+{
+    AWBookmarkEntry *entry = [self bookmarkEntryForCurrentContext];
+
+    if(entry && ![self.bookmarks containsObject:entry])
+    {
+        [self willChangeValueForKey:@"count"];
+        [self.bookmarks addObject:entry];
+        [self didChangeValueForKey:@"count"];
+
+        [self observeBookmarkEntry:entry];
         [self saveBookmarks];
     }
 }

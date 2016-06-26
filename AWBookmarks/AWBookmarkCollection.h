@@ -27,5 +27,6 @@
 - (NSUInteger)indexOfObject:(AWBookmarkEntry *)anObject;
 - (BOOL)containsObject:(AWBookmarkEntry *)anObject;
 - (BOOL)containsObjectWithUUID:(UUID *)uuid;
+- (AWBookmarkEntry *)bookmarkEntryForCurrentContext;
 
 @end
