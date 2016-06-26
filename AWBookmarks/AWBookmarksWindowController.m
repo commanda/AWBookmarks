@@ -12,7 +12,7 @@
 #import "CommonDefines.h"
 
 @interface AWDeleteButton : NSButton
-@property (weak) AWBookmarkEntry *entry;
+@property AWBookmarkEntry *entry;
 @end
 
 @implementation AWDeleteButton

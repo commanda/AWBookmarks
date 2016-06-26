@@ -186,6 +186,18 @@
     return NO;
 }
 
+- (AWBookmarkEntry *)bookmarkForUUID:(UUID *)uuid
+{
+    for(AWBookmarkEntry *entry in self.bookmarks)
+    {
+        if([entry.uuid isEqualToString:uuid])
+        {
+            return entry;
+        }
+    }
+    return nil;
+}
+
 - (void)deleteBookmarkEntry:(AWBookmarkEntry *)entry
 {
     if([self.bookmarks containsObject:entry])

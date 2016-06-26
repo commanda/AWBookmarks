@@ -22,6 +22,7 @@
 - (NSArray<NSNumber *> *)lineNumbersForURL:(NSURL *)url;
 - (NSArray<AWBookmarkEntry *> *)bookmarksForURL:(NSURL *)url;
 - (NSArray *)bookmarksInDocumentWithText:(NSString *)textOfDocument;
+- (AWBookmarkEntry *)bookmarkForUUID:(UUID *)uuid;
 - (void)performBookmarkThisLine;
 - (NSUInteger)indexOfObject:(AWBookmarkEntry *)anObject;
 - (BOOL)containsObject:(AWBookmarkEntry *)anObject;

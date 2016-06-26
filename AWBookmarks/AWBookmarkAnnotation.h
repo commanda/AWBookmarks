@@ -17,10 +17,11 @@
 @property (getter=isUserRemovable) BOOL userRemovable;
 @property (getter=isUserDraggable) BOOL userDraggable;
 @property BOOL wantsInvertedLineNumber;
-@property(getter=isVisible) BOOL visible; // @synthesize visible=_visible;
-@property (weak) id <DVTTextAnnotationDelegate> delegate; // @synthesize delegate=_delegate;
+@property (getter=isVisible) BOOL visible;               // @synthesize visible=_visible;
+@property (weak) id<DVTTextAnnotationDelegate> delegate; // @synthesize delegate=_delegate;
 @property BOOL wantsDisplayOverLineNumber;
 @property BOOL wantsReplaceLineNumber;
+@property (readonly) BOOL hideCarets;
 
 
 - (struct CGRect)sidebarMarkerRectForFirstLineRect:(struct CGRect)arg1;

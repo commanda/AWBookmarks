@@ -59,4 +59,9 @@
     return NO;
 }
 
+- (BOOL)hideCarets
+{
+    return YES;
+}
+
 @end

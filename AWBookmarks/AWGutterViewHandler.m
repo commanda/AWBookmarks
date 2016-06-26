@@ -58,44 +58,28 @@
 
                      NSInvocation *invocation = info.originalInvocation;
                      [invocation invoke];
-                     NSMutableArray *annotations;
-                     [invocation getReturnValue:&annotations];
-                     
-                     annotations = [annotations mutableCopy];
+//                     NSMutableArray *annotations;
+//                     [invocation getReturnValue:&annotations];
 
+//                     annotations = [annotations mutableCopy];
                      // Need to retain the annotations so they aren't deallocated before we return
-                     CFRetain((__bridge CFTypeRef)(annotations));
-
-                     
+//                     CFRetain((__bridge CFTypeRef)(annotations));
                      // Find out which of our annotations belongs in this text view (TODO: there's probably a better way of doing this than checking the actual text, ugh)
-                     NSTextView *textView = info.instance;
-                     
-                     NSArray *entries = [self.bookmarkCollection bookmarksInDocumentWithText:textView.string];
-                     for(AWBookmarkEntry *entry in entries)
-                     {
-                         AWBookmarkAnnotation *annotation = self.observedBookmarkEntries[entry.uuid];
-                         if(annotation)
-                         {
-                             [annotations addObject:annotation];
-                         }
-                     }
-                     
-                     [invocation setReturnValue:&annotations];
-
+//                     NSTextView *textView = info.instance;
+//                     NSArray *entries = [self.bookmarkCollection bookmarksInDocumentWithText:textView.string];
+//                     for(AWBookmarkEntry *entry in entries)
+//                     {
+//                         AWBookmarkAnnotation *annotation = self.observedBookmarkEntries[entry.uuid];
+//                         if(annotation)
+//                         {
+//                             [annotations addObject:annotation];
+//                         }
+//                     }
+//                     [invocation setReturnValue:&annotations];
                      DLOG(@"hey i'm in yr visibleAnnotations");
                  }
                       error:&aspectHookError];
 
-
-    [c aspect_hookSelector:@selector(visibleAnnotationsForLineNumberRange:)
-                withOptions:AspectPositionAfter
-                 usingBlock:^(id<AspectInfo> info, NSRange range) {
-                     DLOG(@"hey i'm after yr visibleAnnotations");
-
-                 }
-                      error:&aspectHookError];
-
-    DLOG(@"bp");
 }
 
 - (void)swizzleMethodForDrawAnnotations
@@ -214,14 +198,15 @@
     }
 }
 
-- (void)deleteMarkerForEntry:(AWBookmarkEntry *)entry
+- (void)deleteMarkerForUUID:(UUID *)uuid
 {
-    if([self.observedBookmarkEntries.allKeys containsObject:entry.uuid])
+    if([self.observedBookmarkEntries.allKeys containsObject:uuid])
     {
+        AWBookmarkEntry *entry = [self.bookmarkCollection bookmarkForUUID:uuid];
         [entry removeObserver:self forKeyPath:@"toBeDeleted"];
         [entry removeObserver:self forKeyPath:@"changed"];
-        [self.observedBookmarkEntries removeObjectForKey:entry.uuid];
-
+        [self.observedBookmarkEntries removeObjectForKey:uuid];
+        
         [[IDEHelpers gutterView] setNeedsDisplay:YES];
     }
 }
@@ -246,9 +231,9 @@
             }
         }
 
-        for(AWBookmarkEntry *entry in toDelete)
+        for(UUID *uuid in toDelete)
         {
-            [self deleteMarkerForEntry:entry];
+            [self deleteMarkerForUUID:uuid];
         }
     }
     else if([object isKindOfClass:[AWBookmarkEntry class]])
@@ -259,7 +244,7 @@
             AWBookmarkEntry *entry = (AWBookmarkEntry *)object;
             if([keyPath isEqualToString:@"toBeDeleted"])
             {
-                [self deleteMarkerForEntry:entry];
+                [self deleteMarkerForUUID:entry.uuid];
             }
             else if([keyPath isEqualToString:@"changed"])
             {
