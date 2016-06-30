@@ -80,22 +80,6 @@
                      [invocation setReturnValue:&annotationsM];
                  }
                       error:&aspectHookError];
-    //
-    //    [c aspect_hookSelector:@selector(visibleAnnotationsForLineNumberRange:)
-    //               withOptions:AspectPositionAfter
-    //                usingBlock:^(id<AspectInfo> info, NSRange range) {
-    //
-    //                    NSInvocation *invocation = info.originalInvocation;
-    //
-    //                    NSArray *annotations;
-    //                    [invocation getReturnValue:&annotations];
-    //
-    //
-    //                    // Need to retain the annotations so they aren't deallocated before we return
-    //                    CFRetain((__bridge CFTypeRef)(annotations));
-    //                    DLOG(@"POST annotations:\n%@", annotations);
-    //                }
-    //                     error:nil];
 }
 
 #pragma clang diagnostic pop
