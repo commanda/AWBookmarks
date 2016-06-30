@@ -31,7 +31,7 @@
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"%@: line: %lld", [super description], self.location.startingLineNumber];
+    return [NSString stringWithFormat:@"%@\nlocation: %@", [super description], self.location];
 }
 
 - (NSRange)paragraphRange
