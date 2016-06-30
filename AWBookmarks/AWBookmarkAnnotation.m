@@ -16,7 +16,7 @@
     if(self = [super init])
     {
         NSBundle *pluginBundle = [NSBundle bundleWithIdentifier:@"com.amandawixted.AWBookmarks"];
-        NSImage *image = [pluginBundle imageForResource:@"marker-correct-size"];
+        NSImage *image = [pluginBundle imageForResource:@"marker"];
         self.sidebarMarkerImage = image;
         self.wantsInvertedLineNumber = YES;
         self.userDraggable = YES;

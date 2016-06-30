@@ -35,9 +35,10 @@ TODO:
 - [x] have the markers draw at their full size, crossing over into the other gutter
 - [x] keep the annotation objects around instead of creating new ones each time
 - [x] make the annotations trigger a redraw
+- [ ] make a cuter annotation image
 - [ ] find a better way of getting what filename/url the current view is displaying
-- [ ] fix delete-from-gutter.crash
-- [ ] fix Xcode_blah.crash
+- [x] fix delete-from-gutter.crash
+- [x] fix Xcode_blah.crash
 - [ ] test with Xcode 8 Beta! if it works, add that uuid or whatever and release!
 
 V 2.0
