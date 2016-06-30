@@ -18,7 +18,6 @@
 - (void)didRemoveAnnotation:(id)arg1;
 - (void)didMoveAnnotation:(id)arg1;
 - (unsigned long long)annotation:(id)arg1 willMoveToParagraphNumber:(unsigned long long)arg2;
-- (void)didDragAnnotation:(id)arg1 inTextSidebarView:(id)arg2 event:(id)arg3;
 - (void)didEndRolloverOnAnnotation:(id)arg1 inTextSidebarView:(id)arg2 event:(id)arg3;
 - (void)didBeginRolloverOnAnnotation:(id)arg1 inTextSidebarView:(id)arg2 event:(id)arg3;
 - (void)didClickAnnotation:(id)arg1 inTextSidebarView:(id)arg2 event:(id)arg3;

@@ -206,10 +206,11 @@
 
         if(text)
         {
-            NSString *textCopy = [text mutableCopy];
-            NSArray *lines = [textCopy componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 
             NSMutableArray *lineEvaluations = [[NSMutableArray alloc] init];
+
+            NSString *textCopy = [text mutableCopy];
+            NSArray *lines = [textCopy componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
 
             int myLineIndex = _lineNumber.intValue - 1;
 
@@ -271,6 +272,20 @@
     else
     {
         performResolve();
+    }
+}
+
+- (void)changeToLine:(NSUInteger)newLineIndex
+{
+    if(newLineIndex != self.lineNumber.integerValue - 1)
+    {
+        NSString *text = [NSString stringWithContentsOfURL:self.fileURL encoding:NSUTF8StringEncoding error:nil];
+        [self willChangeValueForKey:@"changed"];
+        self.lineNumber = @(newLineIndex + 1);
+        NSArray *lines = [text componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
+        int myLineIndex = _lineNumber.intValue - 1;
+        self.lineText = lines[myLineIndex];
+        [self didChangeValueForKey:@"changed"];
     }
 }
 

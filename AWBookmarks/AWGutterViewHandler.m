@@ -18,7 +18,7 @@
 
 @interface AWGutterViewHandler ()
 @property (nonatomic) AWBookmarkCollection *bookmarkCollection;
-@property NSMutableDictionary<AWBookmarkEntry *, AWBookmarkAnnotation *> *annotationsForEntries;
+@property NSMutableDictionary<UUID *, AWBookmarkAnnotation *> *annotationsForEntries;
 @property NSMutableArray<AWBookmarkEntry *> *observedEntries;
 
 @end
@@ -35,7 +35,7 @@
 
         for(int i = 0; i < self.bookmarkCollection.count; i++)
         {
-            [self addMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
+            [self addAnnotationForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
         }
 
         [self swizzleMethodForVisibleAnnotations];
@@ -71,16 +71,31 @@
                      NSArray *entries = [self.bookmarkCollection bookmarksInDocumentWithText:textView.string];
                      for(AWBookmarkEntry *entry in entries)
                      {
-                         AWBookmarkAnnotation *annotation = self.annotationsForEntries[entry];
+                         AWBookmarkAnnotation *annotation = self.annotationsForEntries[entry.uuid];
                          if(annotation)
                          {
                              [annotationsM addObject:annotation];
                          }
                      }
                      [invocation setReturnValue:&annotationsM];
-                     DLOG(@"hey i'm in yr visibleAnnotations");
                  }
                       error:&aspectHookError];
+    //
+    //    [c aspect_hookSelector:@selector(visibleAnnotationsForLineNumberRange:)
+    //               withOptions:AspectPositionAfter
+    //                usingBlock:^(id<AspectInfo> info, NSRange range) {
+    //
+    //                    NSInvocation *invocation = info.originalInvocation;
+    //
+    //                    NSArray *annotations;
+    //                    [invocation getReturnValue:&annotations];
+    //
+    //
+    //                    // Need to retain the annotations so they aren't deallocated before we return
+    //                    CFRetain((__bridge CFTypeRef)(annotations));
+    //                    DLOG(@"POST annotations:\n%@", annotations);
+    //                }
+    //                     error:nil];
 }
 
 #pragma clang diagnostic pop
@@ -92,14 +107,15 @@
     [self.bookmarkCollection addObserver:self forKeyPath:@"count" options:NSKeyValueObservingOptionNew context:nil];
 }
 
-- (void)addMarkerForBookmarkEntry:(AWBookmarkEntry *)entry
+- (void)addAnnotationForBookmarkEntry:(AWBookmarkEntry *)entry
 {
-    if(![self.annotationsForEntries.allKeys containsObject:entry])
+    if(![self.annotationsForEntries.allKeys containsObject:entry.uuid])
     {
         AWBookmarkAnnotation *annotation = [[AWBookmarkAnnotation alloc] init];
         annotation.location = [[NSClassFromString(@"DVTTextDocumentLocation") alloc] initWithDocumentURL:entry.fileURL timestamp:@([NSDate timeIntervalSinceReferenceDate]) lineRange:NSMakeRange(entry.lineNumber.intValue - 1, 1)];
-        self.annotationsForEntries[entry] = annotation;
+        self.annotationsForEntries[entry.uuid] = annotation;
         annotation.delegate = self;
+        annotation.representedObject = entry;
 
         [entry addObserver:self forKeyPath:@"toBeDeleted" options:NSKeyValueObservingOptionNew context:nil];
         [entry addObserver:self forKeyPath:@"changed" options:NSKeyValueObservingOptionNew context:nil];
@@ -113,30 +129,20 @@
 {
     if([self.observedEntries containsObject:entry])
     {
-        // The argument entry is a copy of the entry we are actually observing, so let's get the original from our observedEntries array and unobserve it
-        AWBookmarkEntry *observedEntry = [self observedBookmarkEntryForBookmarkEntry:entry];
-
-        [observedEntry removeObserver:self forKeyPath:@"toBeDeleted"];
-        [observedEntry removeObserver:self forKeyPath:@"changed"];
-        [self.observedEntries removeObject:observedEntry];
+        [entry removeObserver:self forKeyPath:@"toBeDeleted"];
+        [entry removeObserver:self forKeyPath:@"changed"];
+        [self.observedEntries removeObject:entry];
     }
 }
 
 - (void)deleteMarkerForEntry:(AWBookmarkEntry *)entry
 {
-    if([self.annotationsForEntries.allKeys containsObject:entry])
+    if([self.annotationsForEntries.allKeys containsObject:entry.uuid])
     {
         [self unobserveEntry:entry];
-        [self.annotationsForEntries removeObjectForKey:entry];
+        [self.annotationsForEntries removeObjectForKey:entry.uuid];
         [[IDEHelpers gutterView] setNeedsDisplay:YES];
     }
-}
-
-- (AWBookmarkEntry *)observedBookmarkEntryForBookmarkEntry:(AWBookmarkEntry *)entry
-{
-    // The argument entry is a copy of the entry we are actually observing, so let's get the original from our observedEntries array
-    // (It is equal to, but not the same as, the original)
-    return [self.observedEntries objectAtIndex:[self.observedEntries indexOfObject:entry]];
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context
@@ -146,7 +152,7 @@
         // See if there are any new bookmarks
         for(int i = 0; i < self.bookmarkCollection.count; i++)
         {
-            [self addMarkerForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
+            [self addAnnotationForBookmarkEntry:[self.bookmarkCollection objectAtIndex:i]];
         }
 
         // See if there are any bookmark entries that have been deleted
@@ -167,7 +173,7 @@
     else if([object isKindOfClass:[AWBookmarkEntry class]])
     {
         AWBookmarkEntry *entry = (AWBookmarkEntry *)object;
-        if([self.annotationsForEntries.allKeys containsObject:entry])
+        if([self.annotationsForEntries.allKeys containsObject:entry.uuid])
         {
             if([keyPath isEqualToString:@"toBeDeleted"])
             {
@@ -175,7 +181,7 @@
             }
             else if([keyPath isEqualToString:@"changed"])
             {
-                [self addMarkerForBookmarkEntry:entry];
+                [self addAnnotationForBookmarkEntry:entry];
             }
         }
     }
@@ -189,25 +195,9 @@
         AWBookmarkEntry *entry = menuItem.representedObject;
         if([entry isKindOfClass:[AWBookmarkEntry class]])
         {
-            entry = [self observedBookmarkEntryForBookmarkEntry:entry];
             entry.toBeDeleted = YES;
         }
     }
-}
-
-- (AWBookmarkEntry *)entryForAnnotation:(AWBookmarkAnnotation *)annotation
-{
-    AWBookmarkEntry *entry;
-    for(AWBookmarkEntry *existingEntry in self.annotationsForEntries.allKeys)
-    {
-        AWBookmarkAnnotation *existingAnnotation = self.annotationsForEntries[existingEntry];
-        if([annotation isEqual:existingAnnotation])
-        {
-            entry = existingEntry;
-            break;
-        }
-    }
-    return entry;
 }
 
 #pragma DVTTextAnnotationDelegate methods
@@ -218,14 +208,35 @@
 
 - (void)didRemoveAnnotation:(AWBookmarkAnnotation *)annotation
 {
-    AWBookmarkEntry *entry = [self entryForAnnotation:annotation];
-    entry = [self observedBookmarkEntryForBookmarkEntry:entry];
-    entry.toBeDeleted = YES;
+    if([annotation isKindOfClass:[AWBookmarkAnnotation class]])
+    {
+        AWBookmarkEntry *entry = annotation.representedObject;
+        if([entry isKindOfClass:[AWBookmarkEntry class]])
+        {
+            entry.toBeDeleted = YES;
+        }
+    }
+}
+
+- (void)didDragAnnotation:(AWBookmarkAnnotation *)annotation inTextSidebarView:(DVTTextSidebarView *)sidebarView event:(id)arg3
+{
+    [self updateEntryForAnnotation:annotation];
+}
+
+- (void)updateEntryForAnnotation:(AWBookmarkAnnotation *)annotation
+{
+    if([annotation isKindOfClass:[AWBookmarkAnnotation class]] && [annotation.representedObject isKindOfClass:[AWBookmarkEntry class]])
+    {
+        AWBookmarkEntry *entry = annotation.representedObject;
+        [entry changeToLine:annotation.location.lineRange.location];
+
+        [[IDEHelpers gutterView] setNeedsDisplay:YES];
+    }
 }
 
 - (void)didMoveAnnotation:(AWBookmarkAnnotation *)annotation
 {
-    DLOG(@"bp");
+    [self updateEntryForAnnotation:annotation];
 }
 
 - (id)contextMenuItemsForAnnotation:(AWBookmarkAnnotation *)annotation inTextSidebarView:(id)arg2
@@ -233,7 +244,7 @@
     if([annotation isKindOfClass:[AWBookmarkAnnotation class]])
     {
         NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:@"Delete Bookmark" action:@selector(contextMenuDeleteBookmark:) keyEquivalent:@""];
-        menuItem.representedObject = [self entryForAnnotation:annotation];
+        menuItem.representedObject = annotation.representedObject;
         menuItem.target = self;
         return @[ menuItem ];
     }

@@ -24,6 +24,7 @@
 @property (readonly) BOOL hideCarets;
 @property double precedence;         // @synthesize precedence=_precedence;
 @property int annotationStackPolicy; // @synthesize annotationStackPolicy=_annotationStackPolicy;
+@property (weak) id representedObject;
 
 
 - (struct CGRect)sidebarMarkerRectForFirstLineRect:(struct CGRect)arg1;

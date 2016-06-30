@@ -24,5 +24,6 @@ typedef NSString UUID;
 
 - (void)resolve;
 - (void)highlightInTextView:(DVTSourceTextView *)textView;
+- (void)changeToLine:(NSUInteger)newLineIndex;
 
 @end
