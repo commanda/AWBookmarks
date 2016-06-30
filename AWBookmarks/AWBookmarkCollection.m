@@ -12,6 +12,7 @@
 #import "Aspects.h"
 #import "CommonDefines.h"
 #import "IDEHelpers.h"
+#import "NSArray+EffectiveEquals.h"
 
 @interface AWBookmarkCollection ()
 
@@ -144,13 +145,13 @@
             newEntry.containingProjectURL = [NSURL fileURLWithPath:projectPath];
         }
 
-        if(![self.bookmarks containsObject:newEntry])
+        if(![self.bookmarks effectivelyContainsObject:newEntry])
         {
             toReturn = newEntry;
         }
         else
         {
-            toReturn = [self.bookmarks objectAtIndex:[self.bookmarks indexOfObject:newEntry]];
+            toReturn = [self.bookmarks objectAtIndex:[self.bookmarks effectiveIndexOfObject:newEntry]];
         }
     }
     return toReturn;

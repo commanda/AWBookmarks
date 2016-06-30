@@ -8,11 +8,12 @@
 
 #import "FileWatcher.h"
 #import "IDEHelpers.h"
+#import "NSArray+EffectiveEquals.h"
 #import <Foundation/Foundation.h>
 
 typedef NSString UUID;
 
-@interface AWBookmarkEntry : NSObject <NSCoding, NSCopying>
+@interface AWBookmarkEntry : NSObject <NSCoding, NSCopying, EffectiveProtocol>
 
 @property (nonatomic) NSURL *fileURL;
 @property NSURL *containingProjectURL;

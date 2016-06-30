@@ -87,7 +87,7 @@
     return [NSString stringWithFormat:@"%@\n%@\nfilePath: %@\nlineNumber: %@\nlineText:%@\ncontainingProjectURL: %@", [super description], self.uuid, self.fileURL, self.lineNumber, self.lineText, self.containingProjectURL];
 }
 
-- (BOOL)isEqual:(id)object
+- (BOOL)isEffectivelyEqual:(id)object
 {
     BOOL toReturn = NO;
     if([object isKindOfClass:[AWBookmarkEntry class]])
