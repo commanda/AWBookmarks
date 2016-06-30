@@ -34,7 +34,7 @@ TODO:
 - [x] draw the markers in the correct files
 - [x] have the markers draw at their full size, crossing over into the other gutter
 - [x] keep the annotation objects around instead of creating new ones each time
-- [ ] make the annotations trigger a redraw
+- [x] make the annotations trigger a redraw
 - [ ] find a better way of getting what filename/url the current view is displaying
 - [ ] fix delete-from-gutter.crash
 - [ ] fix Xcode_blah.crash
