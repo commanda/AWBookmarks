@@ -31,5 +31,6 @@
 - (void)drawSidebarMarkerIconInRect:(struct CGRect)arg1 textView:(id)arg2;
 - (BOOL)drawsLineHighlight;
 - (long long)comparePrecedenceAndLayering:(id)arg1;
+- (long long)comparePrecedence:(id)arg1;
 
 @end

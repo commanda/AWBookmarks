@@ -70,4 +70,9 @@
     return 0;
 }
 
+- (long long)comparePrecedence:(id)arg1;
+{
+    return 0;
+}
+
 @end
