@@ -251,6 +251,7 @@
     {
         [self willChangeValueForKey:@"count"];
         [self didChangeValueForKey:@"count"];
+        [self saveBookmarks];
     }
 }
 
