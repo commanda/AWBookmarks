@@ -25,6 +25,7 @@
         self.wantsDisplayOverLineNumber = NO;
         self.wantsReplaceLineNumber = NO;
         self.precedence = 10.0;
+        self.severity = 0;
     }
     return self;
 }

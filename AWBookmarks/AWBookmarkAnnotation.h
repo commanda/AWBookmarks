@@ -24,6 +24,8 @@
 @property (readonly) BOOL hideCarets;
 @property double precedence;         // @synthesize precedence=_precedence;
 @property int annotationStackPolicy; // @synthesize annotationStackPolicy=_annotationStackPolicy;
+@property unsigned long long severity; // @synthesize severity=_severity;
+
 @property (weak) id representedObject;
 
 
@@ -32,5 +34,6 @@
 - (BOOL)drawsLineHighlight;
 - (long long)comparePrecedenceAndLayering:(id)arg1;
 - (long long)comparePrecedence:(id)arg1;
+
 
 @end
