@@ -30,19 +30,20 @@ TODO:
 - [x] uh... fix the bug where tapping on the TinyTimerTests line 114 entry brings you to line 34? and there isn't a marker there? has something to do with opening xcode after quitting without saving the file maybe? but lines 114 and 34 are identical, so maybe it's just finding the wrong occurrence?
 - [x] make sure the AWBookmarkEntry gets dealloced
 
-- [ ] really now, use the annotation drawing method instead of the line-drawing method. that way, the user can move and delete the breakpoint from the gutter, which it feels like they should be able to do
--draw the markers in the correct files
+- [x] really now, use the annotation drawing method instead of the line-drawing method. that way, the user can move and delete the breakpoint from the gutter, which it feels like they should be able to do
+- [x] draw the markers in the correct files
 - [x] have the markers draw at their full size, crossing over into the other gutter
 - [x] keep the annotation objects around instead of creating new ones each time
 - [ ] make the annotations trigger a redraw
 - [ ] find a better way of getting what filename/url the current view is displaying
-
+- [ ] fix delete-from-gutter.crash
+- [ ] fix Xcode_blah.crash
 - [ ] test with Xcode 8 Beta! if it works, add that uuid or whatever and release!
 
 V 2.0
 - [ ] instead of having the bookmarks on a separate panel, put them in the Navigator tab view in the main Xcode window
 - [ ] have an outlineview i think, where you expand a project to see its bookmarks
 - [ ] replace delete button with something nicer looking
-- [ ] add a "comments" section to the entry and display it on the tableview
-
+- [ ] add a "comments" section to the bookmark entry and display it on the tableview
+- [ ] attach bookmarks to a specific branch of a repo so you get them back when you checkout that repo
 
